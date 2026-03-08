@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TurnKit — Game Backend for Indie Developers</title>
+  <meta name="description" 
+    content="Leaderboards, multiplayer relay, and matchmaking for turn-based games. Zero backend code." />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased">
+
+  <!-- NAV -->
+  <nav class="border-b border-gray-800 px-6 py-4 flex items-center justify-between max-w-5xl mx-auto">
+    <span class="text-white font-bold text-xl tracking-tight">TurnKit</span>
+    <div class="flex gap-6 items-center text-sm text-gray-400">
+      <a href="https://github.com/YOUR_ORG" 
+         class="hover:text-white transition">GitHub</a>
+      <a href="https://discord.gg/YOUR_INVITE" 
+         class="hover:text-white transition">Discord</a>
+      <a href="#waitlist" 
+         class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition">
+        Get Early Access
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
+    <div class="inline-block bg-blue-950 text-blue-400 text-xs font-medium 
+                px-3 py-1 rounded-full mb-6 border border-blue-800">
+      Open Source · Free to Self-Host
+    </div>
+    <h1 class="text-5xl font-bold text-white leading-tight mb-6">
+      Game backend for<br/>indie developers
+    </h1>
+    <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+      Leaderboards, multiplayer relay, and matchmaking for turn-based games.
+      Zero backend code. Works with Unity and Godot.
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href="https://github.com/YOUR_ORG/leaderboard" 
+         class="bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
+        Self-host in 60 seconds →
+      </a>
+      <a href="#waitlist" 
+         class="border border-gray-700 text-gray-300 px-6 py-3 rounded-lg hover:border-gray-500 transition">
+        Get hosted version
+      </a>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="max-w-5xl mx-auto px-6 pb-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div class="text-green-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          Available Now
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Leaderboards</h3>
+        <p class="text-gray-400 text-sm">
+          Submit scores, query ranks, configure resets. 
+          Self-host free or use the hosted version.
+        </p>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 opacity-60">
+        <div class="text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          Coming Soon
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Turn Relay</h3>
+        <p class="text-gray-400 text-sm">
+          Authoritative multiplayer relay for turn-based games. 
+          Turn enforcement, hand hiding, player voting.
+        </p>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 opacity-60">
+        <div class="text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
+          Coming Soon
+        </div>
+        <h3 class="text-white font-semibold text-lg mb-2">Matchmaking</h3>
+        <p class="text-gray-400 text-sm">
+          Queue players, match by skill, validate game state 
+          before match starts.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRICING PREVIEW -->
+  <section class="max-w-5xl mx-auto px-6 pb-20 text-center">
+    <h2 class="text-3xl font-bold text-white mb-4">
+      Free until your game gets players
+    </h2>
+    <p class="text-gray-400 mb-4">
+      Up to 20 concurrent players free, forever. No credit card required.
+    </p>
+    <p class="text-gray-500 text-sm">
+      Need more? From $1.99/mo per module.
+    </p>
+  </section>
+
+  <!-- WAITLIST -->
+  <section id="waitlist" class="max-w-5xl mx-auto px-6 pb-24 text-center">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-12">
+      <h2 class="text-3xl font-bold text-white mb-3">
+        Get early access
+      </h2>
+      <p class="text-gray-400 mb-8">
+        Hosted leaderboards launching soon. Relay and matchmaking after that.
+        Join the list and get notified first.
+      </p>
+      <form id="waitlist-form" class="flex gap-3 justify-center flex-wrap">
+        <input 
+          type="email" 
+          id="email-input"
+          placeholder="your@email.com" 
+          required
+          class="bg-gray-800 border border-gray-700 text-white px-4 py-3 
+                 rounded-lg w-72 focus:outline-none focus:border-blue-500" />
+        <button 
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-500 text-white font-semibold 
+                 px-6 py-3 rounded-lg transition">
+          Join Waitlist
+        </button>
+      </form>
+      <p id="form-message" class="mt-4 text-sm text-gray-500"></p>
+      <p class="mt-6 text-gray-600 text-sm">
+        Or join the 
+        <a href="https://discord.gg/YOUR_INVITE" 
+           class="text-blue-400 hover:text-blue-300">Discord</a> 
+        to follow along.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-800 px-6 py-8 text-center text-gray-600 text-sm">
+    <div class="flex justify-center gap-6 mb-4">
+      <a href="https://github.com/YOUR_ORG" class="hover:text-gray-400 transition">GitHub</a>
+      <a href="https://discord.gg/YOUR_INVITE" class="hover:text-gray-400 transition">Discord</a>
+    </div>
+    <p>TurnKit.dev — built by an indie developer, for indie developers.</p>
+  </footer>
+
+  <!-- FORM HANDLER -->
+  <script>
+    document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value;
+      const msg = document.getElementById('form-message');
+      
+      msg.textContent = 'Submitting...';
+      msg.className = 'mt-4 text-sm text-gray-400';
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        if (res.ok) {
+          msg.textContent = "You're on the list. We'll be in touch.";
+          msg.className = 'mt-4 text-sm text-green-400';
+          document.getElementById('email-input').value = '';
+        } else {
+          throw new Error();
+        }
+      } catch {
+        msg.textContent = 'Something went wrong. Try joining the Discord instead.';
+        msg.className = 'mt-4 text-sm text-red-400';
+      }
+    });
+  </script>
+
+</body>
+</html>
