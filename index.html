@@ -3,181 +3,849 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurnKit — Game Backend for Indie Developers</title>
-  <meta name="description" 
-    content="Leaderboards, multiplayer relay, and matchmaking for turn-based games. Zero backend code." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer 
-  src="https://cloud.umami.is/script.js" 
-  data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7">
-</script>
-</head>
-<body class="bg-gray-950 text-gray-100 font-sans antialiased">
+  <title>TurnKit — Authoritative Relay for Turn-Based Multiplayer</title>
+  <meta name="description" content="TurnKit enforces turns and prevents cheating. Your game logic stays on the client. Authoritative relay for turn-based multiplayer games." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- NAV -->
-  <nav class="border-b border-gray-800 px-6 py-4 flex items-center justify-between max-w-5xl mx-auto">
-    <span class="text-white font-bold text-xl tracking-tight">TurnKit</span>
-    <div class="flex gap-6 items-center text-sm text-gray-400">
-      <a href="https://github.com/Brainzy" 
-         class="hover:text-white transition">GitHub</a>
-      <a href="https://discord.gg/SqMVU5xex3" 
-         class="hover:text-white transition">Discord</a>
-      <a href="#waitlist" 
-         class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition">
-        Get Early Access
-      </a>
+    :root {
+      --bg:          #080C10;
+      --surface:     #0D1117;
+      --surface2:    #111820;
+      --border:      #1C2733;
+      --border2:     #243040;
+      --text:        #E6EDF3;
+      --muted:       #7D8FA0;
+      --faint:       #3A4B5C;
+      --accent:      #2F9CEB;
+      --accent2:     #1A6FAA;
+      --accent-glow: rgba(47, 156, 235, 0.15);
+      --green:       #3DD68C;
+      --green-dim:   rgba(61, 214, 140, 0.1);
+      --amber:       #F0A429;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(24px, 5vw, 64px);
+      height: 60px;
+      background: rgba(8, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px);
+      position: relative;
+      z-index: 1;
+    }
+
+    section { padding: 80px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .hero {
+      padding: 100px 0 80px;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(47,156,235,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dim);
+      border: 1px solid rgba(61, 214, 140, 0.2);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    .hero-sub strong { color: var(--text); font-weight: 500; }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 22px;
+      border-radius: 3px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: #3AADF5; transform: translateY(-1px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 11px 22px;
+      border-radius: 3px;
+      text-decoration: none;
+      border: 1px solid var(--border2);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover { color: var(--text); border-color: var(--faint); }
+
+    .flow {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 64px;
+    }
+
+    .flow-node {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .flow-box {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      padding: 10px 20px;
+      border-radius: 3px;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .flow-box.accent {
+      border-color: var(--accent2);
+      background: rgba(47, 156, 235, 0.07);
+      color: var(--accent);
+    }
+
+    .flow-box.result {
+      border-color: rgba(61, 214, 140, 0.3);
+      background: var(--green-dim);
+      color: var(--green);
+    }
+
+    .flow-label {
+      font-size: 12px;
+      color: var(--faint);
+      font-style: italic;
+    }
+
+    .flow-arrow { padding: 4px 0 4px 20px; }
+
+    .flow-arrow::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, var(--border2), var(--accent2));
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 48px;
+      font-size: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .feature {
+      background: var(--surface);
+      padding: 32px;
+      transition: background 0.2s;
+    }
+
+    .feature:hover { background: var(--surface2); }
+
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-glow);
+      border: 1px solid rgba(47, 156, 235, 0.2);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .feature h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .config-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 32px;
+    }
+
+    .config-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      background: var(--surface);
+    }
+
+    .config-row:hover { background: var(--surface2); }
+
+    .config-key {
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+
+    .config-vals {
+      padding: 16px 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    .tag.active {
+      background: var(--accent-glow);
+      border-color: rgba(47, 156, 235, 0.3);
+      color: var(--accent);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      padding: 28px 20px;
+      transition: background 0.2s;
+    }
+
+    .pricing-card:hover { background: var(--surface2); }
+
+    .pricing-card.featured {
+      background: rgba(47, 156, 235, 0.05);
+      border-top: 2px solid var(--accent);
+    }
+
+    .pricing-tier {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .pricing-price {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .pricing-price.free { color: var(--green); }
+    .pricing-mo { font-size: 13px; color: var(--muted); font-family: var(--font-mono); font-weight: 400; }
+    .pricing-ccu { font-size: 12px; color: var(--faint); margin-top: 6px; }
+
+    .pricing-note {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .pricing-note strong { color: var(--text); font-weight: 500; }
+
+    .modules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .module-row {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      align-items: center;
+      background: var(--surface);
+      padding: 20px 28px;
+      gap: 24px;
+      transition: background 0.2s;
+    }
+
+    .module-row:hover { background: var(--surface2); }
+
+    .module-name {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .module-desc { font-size: 13px; color: var(--muted); }
+
+    .module-badge {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .badge-soon {
+      background: rgba(240, 164, 41, 0.1);
+      border: 1px solid rgba(240, 164, 41, 0.2);
+      color: var(--amber);
+    }
+
+    .webhooks-note { margin-top: 24px; font-size: 13px; color: var(--muted); padding-left: 4px; }
+    .webhooks-note strong { color: var(--text); font-weight: 500; }
+
+    .waitlist-box {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: clamp(36px, 5vw, 56px);
+    }
+
+    .waitlist-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .email-input {
+      flex: 1;
+      min-width: 240px;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 11px 16px;
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .email-input:focus { border-color: var(--accent); }
+    .email-input::placeholder { color: var(--faint); }
+
+    .form-message { margin-top: 14px; font-size: 13px; color: var(--muted); min-height: 20px; }
+    .form-message.success { color: var(--green); }
+    .form-message.error   { color: #F87171; }
+
+    .spam-note { margin-top: 12px; font-size: 12px; color: var(--faint); }
+    .spam-note a { color: var(--accent); text-decoration: none; }
+    .spam-note a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left { font-size: 13px; color: var(--faint); }
+
+    .footer-links { display: flex; gap: 20px; }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.6s forwards;
+    }
+
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.15s; }
+    .fade-up:nth-child(3) { animation-delay: 0.25s; }
+    .fade-up:nth-child(4) { animation-delay: 0.35s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      .features          { grid-template-columns: 1fr; }
+      .config-row        { grid-template-columns: 1fr; }
+      .config-key        { border-right: none; border-bottom: 1px solid var(--border); }
+      .module-row        { grid-template-columns: 1fr auto; }
+      .module-desc       { display: none; }
+      .pricing-grid      { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner      { flex-direction: column; align-items: flex-start; }
+      .flow-label        { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Turn<span>Kit</span></a>
+    <div class="nav-links">
+      <a href="https://github.com/TurnKit-dev" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord</a>
+      <a href="#waitlist" class="btn-primary" style="padding:8px 18px;font-size:12px;">Get Early Access</a>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
-    <div class="inline-block bg-blue-950 text-blue-400 text-xs font-medium 
-                px-3 py-1 rounded-full mb-6 border border-blue-800">
-      Open Source · Free to Self-Host
-    </div>
-    <h1 class="text-5xl font-bold text-white leading-tight mb-6">
-      Game backend for<br/>indie developers
-    </h1>
-    <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-      Leaderboards, multiplayer relay, and matchmaking for turn-based games.
-      Zero backend code. Works with Unity and Godot.
-    </p>
-    <div class="flex gap-4 justify-center flex-wrap">
-      <a href="https://github.com/Brainzy/RankDrop" 
-         class="bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-        Self-host in 60 seconds →
-      </a>
-      <a href="#waitlist" 
-         class="border border-gray-700 text-gray-300 px-6 py-3 rounded-lg hover:border-gray-500 transition">
-        Get hosted version
-      </a>
-    </div>
-  </section>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-tag">In Development</div>
 
-  <!-- MODULES -->
-  <section class="max-w-5xl mx-auto px-6 pb-20">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="fade-up">
+        <h1>Authoritative relay for<br/>turn-based multiplayer.</h1>
+      </div>
 
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <div class="text-green-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          Available Now
-        </div>
-        <h3 class="text-white font-semibold text-lg mb-2">Leaderboards</h3>
-        <p class="text-gray-400 text-sm">
-          Submit scores, query ranks, configure resets. 
-          Self-host free or use the hosted version.
+      <div class="fade-up">
+        <p class="hero-sub">
+          <strong>Your game logic stays on the client.</strong><br/>
+          TurnKit enforces turns and prevents cheating.
         </p>
       </div>
 
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 opacity-60">
-        <div class="text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          Coming Soon
-        </div>
-        <h3 class="text-white font-semibold text-lg mb-2">Turn Relay</h3>
-        <p class="text-gray-400 text-sm">
-          Authoritative multiplayer relay for turn-based games. 
-          Turn enforcement, hand hiding, player voting.
-        </p>
+      <div class="fade-up btn-row">
+        <a href="#waitlist" class="btn-primary">Get Early Access</a>
+        <a href="https://discord.gg/SqMVU5xex3" class="btn-secondary" target="_blank" rel="noopener">Join Discord</a>
       </div>
 
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 opacity-60">
-        <div class="text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          Coming Soon
+      <div class="fade-up">
+        <div class="flow">
+          <div class="flow-node">
+            <div class="flow-box">Game Client</div>
+            <span class="flow-label">sends move</span>
+          </div>
+          <div class="flow-arrow"></div>
+          <div class="flow-node">
+            <div class="flow-box accent">TurnKit Relay</div>
+            <span class="flow-label">validates turn · hides hands · enforces rules</span>
+          </div>
+          <div class="flow-arrow"></div>
+          <div class="flow-node">
+            <div class="flow-box result">Signed Match Result</div>
+            <span class="flow-label">tamper-proof · generated automatically</span>
+          </div>
         </div>
-        <h3 class="text-white font-semibold text-lg mb-2">Matchmaking</h3>
-        <p class="text-gray-400 text-sm">
-          Queue players, match by skill, validate game state 
-          before match starts.
-        </p>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-label">Turn Relay</div>
+      <h2>Built for the hard parts of<br/>turn-based multiplayer.</h2>
+      <p class="section-intro">The parts that take weeks to get right — TurnKit handles them out of the box.</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⟳</div>
+          <h3>Turn Enforcement</h3>
+          <p>Prevent players from acting out of turn. Server-side validation — no client-side tricks can bypass it.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">◑</div>
+          <h3>Hand Hiding</h3>
+          <p>Each player only receives the data they are allowed to see. Cards, stats, hidden moves — all filtered server-side.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">✓</div>
+          <h3>Player Voting</h3>
+          <p>Players vote based on your game rules. Validate moves before continuing, or let players dispute outcomes.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⬡</div>
+          <h3>Signed Match Results</h3>
+          <p>Tamper-proof match result generated automatically at match end. Cryptographically signed by the relay.</p>
+        </div>
       </div>
 
-    </div>
-  </section>
+      <div style="margin-top:48px;">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Every option is configurable per game.</p>
+        <div class="config-grid">
+          <div class="config-row">
+            <div class="config-key">Turn order</div>
+            <div class="config-vals">
+              <span class="tag active">Round robin</span>
+              <span class="tag">Free (no enforced order)</span>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-key">Player voting</div>
+            <div class="config-vals">
+              <span class="tag active">Validate move before continuing</span>
+              <span class="tag">Vote to continue</span>
+              <span class="tag">Off</span>
+            </div>
+          </div>
+          <div class="config-row">
+            <div class="config-key">On vote fail</div>
+            <div class="config-vals">
+              <span class="tag active">End match</span>
+              <span class="tag">Reject move</span>
+              <span class="tag">Skip turn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 
-  <!-- PRICING PREVIEW -->
-  <section class="max-w-5xl mx-auto px-6 pb-20 text-center">
-    <h2 class="text-3xl font-bold text-white mb-4">
-      Free until your game gets players
-    </h2>
-    <p class="text-gray-400 mb-4">
-      Up to 20 concurrent players free, forever. No credit card required.
-    </p>
-    <p class="text-gray-500 text-sm">
-      Need more? From $1.99/mo per module.
-    </p>
-  </section>
+  <div class="container">
+    <section>
+      <div class="section-label">Pricing</div>
+      <h2>Free to start.</h2>
+      <p class="section-intro">Concurrent players across all active matches. No credit card required to get started.</p>
 
-  <!-- WAITLIST -->
-  <section id="waitlist" class="max-w-5xl mx-auto px-6 pb-24 text-center">
-    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-12">
-      <h2 class="text-3xl font-bold text-white mb-3">
-        Get early access
-      </h2>
-      <p class="text-gray-400 mb-8">
-        Hosted leaderboards launching soon. Relay and matchmaking after that.
-        Join the list and get notified first.
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-tier">Dev</div>
+          <div class="pricing-price free">$0</div>
+          <div class="pricing-ccu">20 concurrent players</div>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-tier">Indie</div>
+          <div class="pricing-price">$4.99<span class="pricing-mo">/mo</span></div>
+          <div class="pricing-ccu">40 concurrent players</div>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Studio</div>
+          <div class="pricing-price">$9.99<span class="pricing-mo">/mo</span></div>
+          <div class="pricing-ccu">80 concurrent players</div>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price">$19.99<span class="pricing-mo">/mo</span></div>
+          <div class="pricing-ccu">160 concurrent players</div>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Scale</div>
+          <div class="pricing-price">$39.99<span class="pricing-mo">/mo</span></div>
+          <div class="pricing-ccu">320 concurrent players</div>
+        </div>
+      </div>
+
+      <div class="pricing-note">
+        <strong>Burst protection included.</strong> If your game spikes past its limit,
+        TurnKit automatically grants 24 hours of unlimited capacity — once per billing period.
+        Your players stay connected while you decide your next step.
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <section>
+      <div class="section-label">Modules</div>
+      <h2>Use only what you need.</h2>
+      <p class="section-intro">
+        Bring your own auth, database, or matchmaking — or use TurnKit modules as they become available.
+        Everything connects through webhooks.
       </p>
-      <form id="waitlist-form" class="flex gap-3 justify-center flex-wrap">
-        <input 
-          type="email" 
-          id="email-input"
-          placeholder="your@email.com" 
-          required
-          class="bg-gray-800 border border-gray-700 text-white px-4 py-3 
-                 rounded-lg w-72 focus:outline-none focus:border-blue-500" />
-        <button 
-          type="submit"
-          class="bg-blue-600 hover:bg-blue-500 text-white font-semibold 
-                 px-6 py-3 rounded-lg transition">
-          Join Waitlist
-        </button>
-      </form>
-      <p id="form-message" class="mt-4 text-sm text-gray-500"></p>
-      <p class="mt-6 text-gray-600 text-sm">
-        Or join the 
-        <a href="https://discord.gg/SqMVU5xex3" 
-           class="text-blue-400 hover:text-blue-300">Discord</a> 
-        to follow along.
+
+      <div class="modules-list">
+        <div class="module-row">
+          <div class="module-name">Turn Relay</div>
+          <div class="module-desc">Turn enforcement, hand hiding, player voting, signed results.</div>
+          <span class="module-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="module-row">
+          <div class="module-name">Matchmaking</div>
+          <div class="module-desc">Queue players and validate inventory before a match starts.</div>
+          <span class="module-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="module-row">
+          <div class="module-name">KVP Store</div>
+          <div class="module-desc">Store player data — inventory, currencies, stats, win rates.</div>
+          <span class="module-badge badge-soon">Coming Soon</span>
+        </div>
+        <div class="module-row">
+          <div class="module-name">Leaderboards</div>
+          <div class="module-desc">Global and seasonal rankings.</div>
+          <span class="module-badge badge-soon">Coming Soon</span>
+        </div>
+      </div>
+
+      <p class="webhooks-note">
+        <strong>Not locked in.</strong> Each module is optional. Use your own systems and connect
+        via webhooks, or adopt TurnKit modules gradually as your game grows.
       </p>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-gray-800 px-6 py-8 text-center text-gray-600 text-sm">
-    <div class="flex justify-center gap-6 mb-4">
-      <a href="https://github.com/Brainzy" class="hover:text-gray-400 transition">GitHub</a>
-      <a href="https://discord.gg/SqMVU5xex3" class="hover:text-gray-400 transition">Discord</a>
-    </div>
-    <p>TurnKit.dev — built by an indie developer, for indie developers.</p>
-  </footer>
+  <div class="container">
+    <section id="waitlist">
+      <div class="waitlist-box">
+        <div class="section-label">Early Access</div>
+        <h2>Follow the build.</h2>
+        <p class="waitlist-sub">Get updates as TurnKit develops. No spam — just progress.</p>
 
-  <!-- FORM HANDLER -->
+        <form id="waitlist-form">
+          <div class="form-row">
+            <input
+              type="email"
+              id="email-input"
+              class="email-input"
+              placeholder="your@email.com"
+              required
+            />
+            <button type="submit" class="btn-primary">Get Updates</button>
+          </div>
+          <p id="form-message" class="form-message"></p>
+          <p class="spam-note">
+            Or join the
+            <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord</a>
+            to follow along and ask questions directly.
+          </p>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-left">TurnKit.dev — built by an indie developer, for indie developers.</div>
+        <div class="footer-links">
+          <a href="https://github.com/TurnKit-dev" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
   <script>
     document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email-input').value;
-      const msg = document.getElementById('form-message');
-      
+      const email = document.getElementById('email-input').value.trim();
+      const msg   = document.getElementById('form-message');
+
       msg.textContent = 'Submitting...';
-      msg.className = 'mt-4 text-sm text-gray-400';
+      msg.className   = 'form-message';
 
       try {
         const res = await fetch('/api/waitlist', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body:    JSON.stringify({ email })
         });
 
         if (res.ok) {
           msg.textContent = "You're on the list. We'll be in touch.";
-          msg.className = 'mt-4 text-sm text-green-400';
+          msg.className   = 'form-message success';
           document.getElementById('email-input').value = '';
         } else {
           throw new Error();
         }
       } catch {
-        msg.textContent = 'Something went wrong. Try joining the Discord instead.';
-        msg.className = 'mt-4 text-sm text-red-400';
+        msg.textContent = 'Something went wrong. Join the Discord instead.';
+        msg.className   = 'form-message error';
       }
     });
   </script>
