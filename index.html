@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TurnKit — Authoritative Relay for Turn-Based Multiplayer</title>
@@ -69,16 +70,10 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-
-    .nav-logo span { color: var(--accent); }
+    <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:10px;">
+      <img src="/assets/logo.png" alt="TurnKit" style="height:28px;width:auto;" />
+      Turn<span>Kit</span>
+    </a>
 
     .nav-links {
       display: flex;
