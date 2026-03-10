@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta property="og:title" content="TurnKit — Authoritative Relay for Turn-Based Multiplayer" />
-  <meta property="og:description" content="Your game logic stays on the client. TurnKit enforces turns and prevents cheating." />
+  <meta property="og:title" content="TurnKit – Turn-Based Multiplayer Backend for Unity & Godot" />
+  <meta property="og:description" content="TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines." />
   <meta property="og:url" content="https://turnkit.dev" />
-  <meta property="og:image" content="https://turnkit.dev/assets/logo.png" />
+  <meta property="og:image" content="https://turnkit.dev/assets/og-card.png" />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="TurnKit — Authoritative Relay for Turn-Based Multiplayer" />
-  <meta name="twitter:description" content="Your game logic stays on the client. TurnKit enforces turns and prevents cheating." />
-  <meta name="twitter:image" content="https://turnkit.dev/assets/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TurnKit – Turn-Based Multiplayer Backend for Unity & Godot" />
+  <meta name="twitter:description" content="TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines." />
+  <meta name="twitter:image" content="https://turnkit.dev/assets/og-card.png" />
   <link rel="canonical" href="https://turnkit.dev" />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TurnKit — Authoritative Relay for Turn-Based Multiplayer</title>
-  <meta name="description" content="TurnKit enforces turns and prevents cheating. Your game logic stays on the client. Authoritative relay for turn-based multiplayer games." />
+  <title>TurnKit – Turn-Based Multiplayer Backend for Unity & Godot</title>
+  <meta name="description" content="TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines. Free to start." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TurnKit",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cloud",
+    "description": "Backend infrastructure for turn-based multiplayer games. Authoritative relay that enforces turns, hides player data, and prevents cheating. Works with Unity, Godot, or any engine.",
+    "url": "https://turnkit.dev",
+    "offers": {
+      "@type": "AggregateOffer",
+      "lowPrice": "0",
+      "highPrice": "79.99",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
   <script defer src="https://cloud.umami.is/script.js" data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,7 +90,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 clamp(24px, 5vw, 64px);
+      width: 100%;
+      padding: 0 clamp(16px, 4vw, 64px);
       height: 60px;
       background: rgba(8, 12, 16, 0.85);
       backdrop-filter: blur(12px);
@@ -87,18 +105,14 @@
       color: var(--text);
       text-decoration: none;
       letter-spacing: -0.02em;
+      flex-shrink: 0;
     }
-
-    <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/logo.png" alt="TurnKit" 
-           style="height:32px;width:32px;filter:drop-shadow(0 0 6px rgba(61,214,140,0.4));" />
-      Turn<span>Kit</span>
-    </a>
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
+      margin-left: auto;
     }
 
     .nav-links a {
@@ -106,9 +120,14 @@
       text-decoration: none;
       font-size: 13px;
       transition: color 0.2s;
+      white-space: nowrap;
     }
 
     .nav-links a:hover { color: var(--accent); }
+
+    @media (max-width: 480px) {
+      .nav-links .nav-text-link { display: none; }
+    }
 
     .container {
       max-width: 960px;
@@ -181,7 +200,7 @@
     .hero-sub {
       font-size: 16px;
       color: var(--muted);
-      max-width: 480px;
+      max-width: 520px;
       margin-bottom: 40px;
       line-height: 1.6;
     }
@@ -305,6 +324,48 @@
       max-width: 560px;
       margin-bottom: 48px;
       font-size: 15px;
+    }
+
+    /* What is TurnKit section */
+    .what-is {
+      padding: 64px 0;
+    }
+
+    .what-is-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    .what-is-body p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .what-is-body p strong { color: var(--text); font-weight: 500; }
+
+    .engine-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .engine-tag {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      font-size: 12px;
+      padding: 5px 14px;
+      border-radius: 2px;
+    }
+
+    .engine-tag span { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .what-is-body { grid-template-columns: 1fr; gap: 16px; }
     }
 
     .features {
@@ -605,13 +666,13 @@
 
   <nav>
     <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:10px;">
-      <img src="/assets/logo.png" alt="TurnKit" 
+      <img src="/assets/logo.png" alt="TurnKit turn-based multiplayer backend logo"
            style="height:32px;width:32px;filter:drop-shadow(0 0 6px rgba(61,214,140,0.4));" />
       <span>Turn<span style="color:var(--accent);">Kit</span></span>
     </a>
     <div class="nav-links">
-      <a href="https://github.com/Brainzy" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/Brainzy" target="_blank" rel="noopener" class="nav-text-link">GitHub</a>
+      <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener" class="nav-text-link">Discord</a>
       <a href="#waitlist" class="btn-primary" style="padding:8px 18px;font-size:12px;">Get Early Access</a>
     </div>
   </nav>
@@ -621,13 +682,13 @@
       <div class="hero-tag">In Development</div>
 
       <div class="fade-up">
-        <h1>Authoritative relay for<br/>turn-based multiplayer.</h1>
+        <h1>Backend infrastructure for<br/>turn-based multiplayer games.</h1>
       </div>
 
       <div class="fade-up">
         <p class="hero-sub">
-          <strong>Your game logic stays on the client.</strong><br/>
-          TurnKit enforces turns and prevents cheating.
+          <strong>TurnKit is an authoritative game server that enforces turns, hides player data, and prevents cheating.</strong>
+          Your game logic stays on the client — works with Unity, Godot, or any engine.
         </p>
       </div>
 
@@ -657,6 +718,38 @@
     </section>
   </div>
 
+  <!-- What is TurnKit — SEO definitional section -->
+  <div class="container">
+    <section class="what-is">
+      <div class="section-label">Overview</div>
+      <h2>What is TurnKit?</h2>
+      <div class="what-is-body">
+        <p>
+          TurnKit is <strong>backend infrastructure for turn-based multiplayer games</strong>.
+          It provides an authoritative relay that connects your game clients,
+          validates turns server-side, filters what each player can see, and generates
+          a cryptographically signed match result when the game ends. Players vote on
+          moves automatically in the background — the relay decides the outcome based
+          on your configuration. No custom game server required.
+        </p>
+        <p>
+          A typical match flow: <strong>Matchmaking</strong> queues players and checks
+          inventory is valid before the game starts. <strong>TurnRelay</strong> enforces
+          turns and keeps the match fair. <strong>PlayerStore</strong> handles rewards,
+          currencies, and the in-game shop after the match ends.
+          <strong>Leaderboards</strong> records the final score. Each module is optional
+          — use one or all four.
+        </p>
+      </div>
+      <div class="engine-tags">
+        <div class="engine-tag">Works with <span>Unity</span></div>
+        <div class="engine-tag">Works with <span>Godot</span></div>
+        <div class="engine-tag">Works with <span>any engine</span></div>
+        <div class="engine-tag">REST + WebSocket <span>API</span></div>
+      </div>
+    </section>
+  </div>
+
   <div class="container">
     <section>
       <div class="section-label">Turn Relay</div>
@@ -667,22 +760,22 @@
         <div class="feature">
           <div class="feature-icon">⟳</div>
           <h3>Turn Enforcement</h3>
-          <p>Prevent players from acting out of turn. Server-side validation — no client-side tricks can bypass it.</p>
+          <p>Prevent players from acting out of turn. Server-side turn validation means no client-side tricks can bypass it — critical for card games, board games, and any asynchronous multiplayer format.</p>
         </div>
         <div class="feature">
           <div class="feature-icon">◑</div>
           <h3>Hand Hiding</h3>
-          <p>Each player only receives the data they are allowed to see. Cards, stats, hidden moves — all filtered server-side.</p>
+          <p>Each player only receives the data they are allowed to see. Cards, stats, hidden moves — all filtered server-side before delivery. No cheating via packet inspection.</p>
         </div>
         <div class="feature">
           <div class="feature-icon">✓</div>
           <h3>Player Voting</h3>
-          <p>Players vote automatically based on your game rules. Validate moves before continuing, or let game run and handle outcomes later.</p>
+          <p>Players vote automatically based on your game rules. Validate moves before continuing, or let the game run and handle outcomes later. Configurable per game type.</p>
         </div>
         <div class="feature">
           <div class="feature-icon">⬡</div>
           <h3>Signed Match Results</h3>
-          <p>Secure match result generated automatically at match end. Cryptographically signed by the relay.</p>
+          <p>A cryptographically signed result is generated automatically at match end. PlayerStore can apply rewards, Leaderboards can record the score, or connect your own module via webhook.</p>
         </div>
       </div>
 
@@ -723,7 +816,7 @@
       <h2>Free to start.</h2>
       <p class="section-intro">Concurrent players across all active matches. No credit card required to get started.</p>
 
-      <div class="pricing-grid">
+      <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr);">
         <div class="pricing-card">
           <div class="pricing-tier">Dev</div>
           <div class="pricing-price free">$0</div>
@@ -749,6 +842,11 @@
           <div class="pricing-price">$39.99<span class="pricing-mo">/mo</span></div>
           <div class="pricing-ccu">320 concurrent players</div>
         </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Enterprise</div>
+          <div class="pricing-price">$79.99<span class="pricing-mo">/mo</span></div>
+          <div class="pricing-ccu">640 concurrent players</div>
+        </div>
       </div>
 
       <div class="pricing-note">
@@ -770,8 +868,8 @@
 
       <div class="modules-list">
         <div class="module-row">
-          <div class="module-name">Turn Relay</div>
-          <div class="module-desc">Turn enforcement, hand hiding, player voting, signed results.</div>
+          <div class="module-name">TurnRelay</div>
+          <div class="module-desc">Turn enforcement, hand hiding, background player voting, signed results.</div>
           <span class="module-badge badge-soon">Coming Soon</span>
         </div>
         <div class="module-row">
@@ -780,8 +878,8 @@
           <span class="module-badge badge-soon">Coming Soon</span>
         </div>
         <div class="module-row">
-          <div class="module-name">KVP Store</div>
-          <div class="module-desc">Store player data — inventory, currencies, stats, win rates.</div>
+          <div class="module-name">PlayerStore</div>
+          <div class="module-desc">Inventory, currencies, stats, and in-game shop — players spend gold, receive items.</div>
           <span class="module-badge badge-soon">Coming Soon</span>
         </div>
         <div class="module-row">
