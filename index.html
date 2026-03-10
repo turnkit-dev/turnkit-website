@@ -464,7 +464,7 @@
 
     .pricing-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -657,6 +657,8 @@
       .module-row        { grid-template-columns: 1fr auto; }
       .module-desc       { display: none; }
       .pricing-grid      { grid-template-columns: repeat(2, 1fr); }
+      .pricing-card      { padding: 20px 14px; }
+      .pricing-price     { font-size: 20px; }
       .footer-inner      { flex-direction: column; align-items: flex-start; }
       .flow-label        { display: none; }
     }
@@ -816,7 +818,7 @@
       <h2>Free to start.</h2>
       <p class="section-intro">Concurrent players across all active matches. No credit card required to get started.</p>
 
-      <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="pricing-grid">
         <div class="pricing-card">
           <div class="pricing-tier">Dev</div>
           <div class="pricing-price free">$0</div>
