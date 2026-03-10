@@ -59,7 +59,10 @@
       --font-mono:    'DM Mono', monospace;
     }
 
-    html { scroll-behavior: smooth; }
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
 
     body {
       background: var(--bg);
@@ -271,6 +274,9 @@
       font-size: 13px;
       color: var(--text);
       white-space: nowrap;
+      max-width: calc(100vw - 80px);
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .flow-box.accent {
@@ -795,7 +801,7 @@
             <div class="config-key">Player voting</div>
             <div class="config-vals">
               <span class="tag active">Validate move before continuing</span>
-              <span class="tag">Game continues, handle votes when they come</span>
+              <span class="tag">Game does not wait for votes, handle when they come</span>
               <span class="tag">Off</span>
             </div>
           </div>
