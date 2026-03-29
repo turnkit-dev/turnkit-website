@@ -1,193 +1,196 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 
-// Initialize Vercel rate limiting
-// 5 submissions per email per day
-const ratelimit = new Ratelimit({
+// ✅ Primary: email-based limit (business rule)
+const emailRateLimit = new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(5, '24 h'),
-  prefix: 'turnkit_ratelimit',
+  prefix: 'turnkit_email',
+});
+
+// ✅ Secondary: IP-based limit (infra protection)
+const ipRateLimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(60, '1 h'),
+  prefix: 'turnkit_ip',
 });
 
 export default async function handler(req, res) {
-  // CORS protection
+  // -----------------------------
+  // CORS (optional but safe)
+  // -----------------------------
   const allowedOrigins = [
     'https://turnkit.dev',
     'https://www.turnkit.dev',
-    // Add dev environment if needed
-    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null
+    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
   ].filter(Boolean);
-  
+
   const origin = req.headers.origin;
-  
+
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
   }
-  
-  // Handle preflight OPTIONS request
+
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
   }
 
-  // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Content-Type validation
-  const contentType = req.headers['content-type'];
-  if (!contentType || !contentType.includes('application/json')) {
+  // -----------------------------
+  // Content-Type check
+  // -----------------------------
+  if (!req.headers['content-type']?.includes('application/json')) {
     return res.status(415).json({ error: 'Content-Type must be application/json' });
   }
 
-  // Environment variable validation
   if (!process.env.RESEND_API_KEY) {
-    console.error('[ERROR] Missing RESEND_API_KEY environment variable');
-    return res.status(500).json({ error: 'Service temporarily unavailable' });
+    console.error('[ERROR] Missing RESEND_API_KEY');
+    return res.status(500).json({ error: 'Service unavailable' });
   }
 
-  // Extract and validate email
+  // -----------------------------
+  // Extract IP (Vercel-safe)
+  // -----------------------------
+  const rawIp =
+    req.headers['x-forwarded-for']?.toString() ||
+    req.headers['x-real-ip'] ||
+    '';
+
+  const ip = rawIp.split(',')[0].trim() || '127.0.0.1';
+
+  // -----------------------------
+  // Body validation
+  // -----------------------------
   const { email, honeypot } = req.body;
 
-  // Honeypot check (bot trap)
+  // Honeypot (bot trap)
   if (honeypot) {
-    console.log('[SECURITY] Honeypot triggered - bot detected');
-    // Return success to fool bots
+    console.log('[SECURITY] Honeypot triggered');
     return res.status(200).json({ success: true });
   }
 
-  // Email validation
   if (!email || typeof email !== 'string') {
     return res.status(400).json({ error: 'Email is required' });
   }
 
   const trimmedEmail = email.trim().toLowerCase();
 
-  // Length check (RFC 5321)
   if (trimmedEmail.length < 3 || trimmedEmail.length > 254) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
-  // Comprehensive email regex
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  
+  // Simpler, practical regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(trimmedEmail)) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
-  // Block common disposable email domains
+  // Basic disposable blocking (lightweight)
   const disposableDomains = [
-    'tempmail.com', 'throwaway.email', 'guerrillamail.com',
-    '10minutemail.com', 'mailinator.com', 'trashmail.com'
+    'tempmail.com',
+    'guerrillamail.com',
+    '10minutemail.com',
+    'mailinator.com',
   ];
-  
+
   const domain = trimmedEmail.split('@')[1];
   if (disposableDomains.includes(domain)) {
-    return res.status(400).json({ error: 'Disposable email addresses are not allowed' });
+    return res.status(400).json({ error: 'Disposable email not allowed' });
   }
 
-  // Rate limiting using Vercel KV
+  // -----------------------------
+  // Rate limiting
+  // -----------------------------
   try {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
-    const identifier = `ip:${Array.isArray(ip) ? ip[0] : ip.split(',')[0]}`;
+    // ✅ Email-based (primary)
+    const emailResult = await emailRateLimit.limit(`email:${trimmedEmail}`);
 
-    const { success, limit, remaining, reset } = await ratelimit.limit(identifier);
+    if (!emailResult.success) {
+      const retryAfter = Math.ceil((emailResult.reset - Date.now()) / 1000);
 
-    res.setHeader('X-RateLimit-Limit', limit.toString());
-    res.setHeader('X-RateLimit-Remaining', remaining.toString());
-    res.setHeader('X-RateLimit-Reset', reset.toString());
+      res.setHeader('Retry-After', retryAfter.toString());
 
-    if (!success) {
-      console.log(`[RATE_LIMIT] IP ${identifier} exceeded rate limit`);
       return res.status(429).json({
-        error: 'Too many requests from this connection. Please try again later.',
-        retryAfter: Math.ceil((reset - Date.now()) / 1000)
+        error: 'Too many submissions for this email. Try again later.',
+        retryAfter,
       });
     }
-  } catch (rateLimitError) {
-    console.error('[ERROR] Rate limit check failed:', rateLimitError.message);
+
+    // ✅ IP-based (secondary)
+    const ipResult = await ipRateLimit.limit(`ip:${ip}`);
+
+    if (!ipResult.success) {
+      const retryAfter = Math.ceil((ipResult.reset - Date.now()) / 1000);
+
+      res.setHeader('Retry-After', retryAfter.toString());
+
+      return res.status(429).json({
+        error: 'Too many requests from your network. Try again later.',
+        retryAfter,
+      });
+    }
+
+    // Optional headers (debug/visibility)
+    res.setHeader('X-RateLimit-Remaining-IP', ipResult.remaining.toString());
+    res.setHeader('X-RateLimit-Remaining-Email', emailResult.remaining.toString());
+
+  } catch (err) {
+    console.error('[RATE_LIMIT_ERROR]', err);
+    // ✅ fail-open (better UX for landing page)
   }
 
-  // IP-based rate limiting (additional layer)
-  const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
-  
+  // -----------------------------
+  // Resend API call
+  // -----------------------------
   try {
-    const ipIdentifier = `ip:${ip}`;
-    const ipRateLimit = new Ratelimit({
-      redis: kv,
-      limiter: Ratelimit.slidingWindow(20, '1 h'), // 20 requests per hour per IP
-      prefix: 'turnkit_waitlist_ip',
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch('https://api.resend.com/contacts', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: trimmedEmail,
+        unsubscribed: false,
+      }),
+      signal: controller.signal,
     });
 
-    const { success: ipSuccess } = await ipRateLimit.limit(ipIdentifier);
-
-    if (!ipSuccess) {
-      console.log(`[RATE_LIMIT] IP ${ip} exceeded rate limit`);
-      return res.status(429).json({
-        error: 'Too many requests from your network. Please try again later.'
-      });
-    }
-  } catch (ipRateLimitError) {
-    console.error('[ERROR] IP rate limit check failed:', ipRateLimitError.message);
-  }
-
-  // Submit to Resend
-  try {
-    const response = await fetch(
-      'https://api.resend.com/contacts',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: trimmedEmail,
-          unsubscribed: false,
-        }),
-      }
-    );
+    clearTimeout(timeout);
 
     const data = await response.json();
 
     if (response.ok) {
-      console.log(`[SUCCESS] Contact added: ${trimmedEmail.substring(0, 3)}***`);
+      console.log(`[SUCCESS] ${trimmedEmail.substring(0, 3)}***`);
       return res.status(200).json({ success: true });
-    } 
-    
-    // Handle specific Resend errors
+    }
+
+    // Avoid leaking existence
     if (response.status === 400 && data.message?.includes('already exists')) {
-      console.log(`[INFO] Contact already exists: ${trimmedEmail.substring(0, 3)}***`);
-      // Return success to avoid revealing if email is already subscribed
       return res.status(200).json({ success: true });
     }
 
     if (response.status === 401) {
-      console.error('[ERROR] Resend API authentication failed - check API key');
+      console.error('[ERROR] Resend auth failed');
       return res.status(500).json({ error: 'Service configuration error' });
     }
 
-    if (response.status === 404) {
-      console.error('[ERROR] Resend audience not found - check AUDIENCE_ID');
-      return res.status(500).json({ error: 'Service configuration error' });
-    }
+    console.error('[ERROR] Resend error:', data);
+    return res.status(500).json({ error: 'Unable to process request' });
 
-    // Generic error for other failures
-    console.error(`[ERROR] Resend API error: ${response.status} - ${data.message || 'Unknown error'}`);
-    return res.status(500).json({ error: 'Unable to process request. Please try again later.' });
-
-  } catch (fetchError) {
-    console.error('[ERROR] Network error calling Resend API:', fetchError.message);
-    return res.status(500).json({ error: 'Service temporarily unavailable. Please try again later.' });
+  } catch (err) {
+    console.error('[ERROR] Resend network error:', err.message);
+    return res.status(500).json({
+      error: 'Service temporarily unavailable. Try again later.',
+    });
   }
 }
-
-/*
-// Edge runtime config for better performance
-export const config = {
-  runtime: 'edge',
-};
-*/
