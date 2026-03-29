@@ -4,8 +4,7 @@
     "private": true,
     "scripts": {
       "dev": "npx vercel dev",
-      "build": "install",
-      "deploy": "npx vercel --prod"
+      "build": "true"
     },
     "dependencies": {
       "@upstash/ratelimit": "^2.0.8",
