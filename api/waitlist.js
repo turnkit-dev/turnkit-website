@@ -185,7 +185,9 @@ export default async function handler(req, res) {
   }
 }
 
+/*
 // Edge runtime config for better performance
 export const config = {
   runtime: 'edge',
 };
+*/
