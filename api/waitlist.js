@@ -91,25 +91,24 @@ export default async function handler(req, res) {
 
   // Rate limiting using Vercel KV
   try {
-    const identifier = `email:${trimmedEmail}`;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+    const identifier = `ip:${Array.isArray(ip) ? ip[0] : ip.split(',')[0]}`;
+
     const { success, limit, remaining, reset } = await ratelimit.limit(identifier);
 
-    // Set rate limit headers
     res.setHeader('X-RateLimit-Limit', limit.toString());
     res.setHeader('X-RateLimit-Remaining', remaining.toString());
     res.setHeader('X-RateLimit-Reset', reset.toString());
 
     if (!success) {
-      console.log(`[RATE_LIMIT] Email ${trimmedEmail} exceeded rate limit`);
+      console.log(`[RATE_LIMIT] IP ${identifier} exceeded rate limit`);
       return res.status(429).json({
-        error: 'Too many requests. Please try again later.',
+        error: 'Too many requests from this connection. Please try again later.',
         retryAfter: Math.ceil((reset - Date.now()) / 1000)
       });
     }
   } catch (rateLimitError) {
-    // If rate limiting fails, log but continue (fail open)
     console.error('[ERROR] Rate limit check failed:', rateLimitError.message);
-    // In production, you might want to fail closed instead
   }
 
   // IP-based rate limiting (additional layer)
