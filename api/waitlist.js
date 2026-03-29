@@ -6,6 +6,7 @@ import { kv } from '@vercel/kv';
 const ratelimit = new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(5, '24 h'),
+  prefix: 'turnkit_ratelimit',
 });
 
 export default async function handler(req, res) {
