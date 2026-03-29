@@ -3,13 +3,13 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "npx vercel dev",
-        "build": "echo 'Skipping build step...'",
-        "deploy": "npx vercel --prod"
+      "dev": "npx vercel dev",
+      "build": "install",
+      "deploy": "npx vercel --prod"
     },
     "dependencies": {
-        "@upstash/ratelimit": "^2.0.8",
-        "@upstash/redis": "^1.37.0",
-        "@vercel/kv": "^2.0.0"
+      "@upstash/ratelimit": "^2.0.8",
+      "@upstash/redis": "^1.37.0",
+      "@vercel/kv": "^2.0.0"
     }
-}
+  }
