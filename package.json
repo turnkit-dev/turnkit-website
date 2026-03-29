@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "dev": "vercel dev",
-        "build": "vercel build",
-        "deploy": "vercel --prod"
+        "dev": "npx vercel dev",
+        "build": "echo 'Skipping build step...'",
+        "deploy": "npx vercel --prod"
     },
     "dependencies": {
         "@upstash/ratelimit": "^2.0.8",
