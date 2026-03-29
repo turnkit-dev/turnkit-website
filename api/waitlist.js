@@ -1,4 +1,4 @@
-import { Ratelimit } from '@vercel/ratelimit';
+import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 
 // Initialize Vercel rate limiting
@@ -6,8 +6,6 @@ import { kv } from '@vercel/kv';
 const ratelimit = new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(5, '24 h'),
-  analytics: true,
-  prefix: 'turnkit_waitlist',
 });
 
 export default async function handler(req, res) {
