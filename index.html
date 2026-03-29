@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cloud.umami.is;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: https:;
+    connect-src 'self' https://cloud.umami.is;
+    frame-ancestors 'none';
+    base-uri 'self';
+    form-action 'self';
+  ">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  
+  <!-- SEO Meta Tags -->
   <meta property="og:title" content="TurnKit – Turn-Based Multiplayer Backend for Unity & Godot" />
   <meta property="og:description" content="TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines." />
   <meta property="og:url" content="https://turnkit.dev" />
@@ -235,6 +252,11 @@
     }
 
     .btn-primary:hover { background: #3AADF5; transform: translateY(-1px); }
+    .btn-primary:disabled { 
+      background: var(--border2); 
+      cursor: not-allowed; 
+      transform: none;
+    }
 
     .btn-secondary {
       display: inline-flex;
@@ -605,6 +627,16 @@
     .email-input:focus { border-color: var(--accent); }
     .email-input::placeholder { color: var(--faint); }
 
+    /* Honeypot field - hidden from real users */
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .form-message { margin-top: 14px; font-size: 13px; color: var(--muted); min-height: 20px; }
     .form-message.success { color: var(--green); }
     .form-message.error   { color: #F87171; }
@@ -913,14 +945,28 @@
 
         <form id="waitlist-form">
           <div class="form-row">
+            <!-- Honeypot field - bots will fill this, humans won't see it -->
+            <input
+              type="text"
+              name="website"
+              id="website"
+              class="hp-field"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
+            
             <input
               type="email"
               id="email-input"
+              name="email"
               class="email-input"
               placeholder="your@email.com"
               required
+              maxlength="254"
+              autocomplete="email"
             />
-            <button type="submit" class="btn-primary">Get Updates</button>
+            <button type="submit" id="submit-btn" class="btn-primary">Get Updates</button>
           </div>
           <p id="form-message" class="form-message"></p>
           <p class="spam-note">
@@ -946,33 +992,105 @@
   </div>
 
   <script>
-    document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email-input').value.trim();
-      const msg   = document.getElementById('form-message');
+    (function() {
+      'use strict';
 
-      msg.textContent = 'Submitting...';
-      msg.className   = 'form-message';
+      const form = document.getElementById('waitlist-form');
+      const emailInput = document.getElementById('email-input');
+      const submitBtn = document.getElementById('submit-btn');
+      const msg = document.getElementById('form-message');
+      const honeypot = document.getElementById('website');
 
-      try {
-        const res = await fetch('/api/waitlist', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ email })
-        });
+      let isSubmitting = false;
 
-        if (res.ok) {
-          msg.textContent = "You're on the list. We'll be in touch.";
-          msg.className   = 'form-message success';
-          document.getElementById('email-input').value = '';
-        } else {
-          throw new Error();
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Prevent double submission
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        const email = emailInput.value.trim();
+        const honeypotValue = honeypot.value;
+
+        // Basic client-side validation
+        if (!email || email.length > 254) {
+          showMessage('Please enter a valid email address.', 'error');
+          isSubmitting = false;
+          return;
         }
-      } catch {
-        msg.textContent = 'Something went wrong. Join the Discord instead.';
-        msg.className   = 'form-message error';
+
+        // Simple email format check
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showMessage('Please enter a valid email address.', 'error');
+          isSubmitting = false;
+          return;
+        }
+
+        // Update UI
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        msg.textContent = '';
+        msg.className = 'form-message';
+
+        try {
+          const response = await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: email,
+              honeypot: honeypotValue
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            showMessage("You're on the list! Check your email for confirmation.", 'success');
+            emailInput.value = '';
+            
+            // Track successful signup (optional)
+            if (window.umami) {
+              window.umami.track('waitlist-signup');
+            }
+          } else if (response.status === 429) {
+            const retryAfter = data.retryAfter || 3600;
+            const hours = Math.ceil(retryAfter / 3600);
+            showMessage(
+              `Too many attempts. Please try again in ${hours} hour${hours > 1 ? 's' : ''}.`,
+              'error'
+            );
+          } else if (response.status === 400) {
+            showMessage(data.error || 'Please enter a valid email address.', 'error');
+          } else {
+            showMessage('Something went wrong. Please try again or join our Discord.', 'error');
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
+          showMessage('Network error. Please check your connection and try again.', 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Get Updates';
+          isSubmitting = false;
+        }
+      });
+
+      function showMessage(text, type) {
+        msg.textContent = text;
+        msg.className = `form-message ${type}`;
       }
-    });
+
+      // Clear message when user starts typing again
+      emailInput.addEventListener('input', () => {
+        if (msg.textContent) {
+          msg.textContent = '';
+          msg.className = 'form-message';
+        }
+      });
+    })();
   </script>
 
 </body>

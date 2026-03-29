@@ -1,0 +1,15 @@
+{
+    "name": "turnkit-website",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "vercel dev",
+        "build": "vercel build",
+        "deploy": "vercel --prod"
+    },
+    "dependencies": {
+        "@upstash/ratelimit": "^2.0.8",
+        "@upstash/redis": "^1.37.0",
+        "@vercel/kv": "^2.0.0"
+    }
+}
