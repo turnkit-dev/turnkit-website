@@ -1,235 +1,752 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TurnKit WebSocket Docs</title>
-  <meta name="description" content="TurnKit relay websocket protocol reference.">
-  <style>
-    :root {
-      --bg: #080c10;
-      --surface: #0d1117;
-      --surface-2: #111820;
-      --border: #1c2733;
-      --text: #c9d3dd;
-      --muted: #7d8fa0;
-      --accent: #2f9ceb;
-      --accent-2: #3dd68c;
-      --warn: #f0a429;
-      --font-ui: "Segoe UI", sans-serif;
-      --font-code: "Consolas", "SFMono-Regular", monospace;
-    }
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cloud.umami.is;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data: https:;
+    connect-src 'self' https://cloud.umami.is;
+    frame-ancestors 'none';
+    base-uri 'self';
+    form-action 'self';
+  ">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
-    * {
-      box-sizing: border-box;
-    }
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content="WebSocket Protocol – TurnKit Docs" />
+    <meta property="og:description" content="Complete WebSocket protocol reference for TurnKit Relay. Real-time turn enforcement, hand hiding, and match state synchronization." />
+    <meta property="og:url" content="https://turnkit.dev/docs/websocket" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://turnkit.dev/docs/websocket" />
+    <link rel="icon" type="image/png" href="/assets/logo.png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Protocol – TurnKit Docs</title>
+    <meta name="description" content="Complete WebSocket protocol reference for TurnKit Relay. Real-time turn enforcement, hand hiding, and match state synchronization." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at top, rgba(47, 156, 235, 0.14), transparent 28%),
-        linear-gradient(180deg, #0a1016 0%, var(--bg) 100%);
-      color: var(--text);
-      font: 15px/1.7 var(--font-ui);
-    }
+        :root {
+            --bg:          #080C10;
+            --surface:     #0D1117;
+            --surface-2:   #111820;
+            --border:      #1C2733;
+            --border-2:    #243040;
+            --text:        #C9D3DD;
+            --muted:       #7D8FA0;
+            --faint:       #3A4B5C;
+            --accent:      #2F9CEB;
+            --accent-2:    #1A6FAA;
+            --accent-glow: rgba(47, 156, 235, 0.15);
+            --green:       #3DD68C;
+            --warn:        #F0A429;
+            --font-display: 'Syne', sans-serif;
+            --font-code:   'DM Mono', monospace;
+        }
 
-    .wrap {
-      width: min(1100px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 40px 0 72px;
-    }
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
 
-    .hero,
-    .card,
-    .note,
-    pre {
-      border: 1px solid var(--border);
-      background: rgba(13, 17, 23, 0.92);
-      border-radius: 18px;
-    }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-code);
+            font-size: 15px;
+            line-height: 1.7;
+        }
 
-    .hero {
-      padding: 28px;
-      margin-bottom: 20px;
-    }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                    linear-gradient(var(--border) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    .eyebrow {
-      color: var(--accent);
-      font: 600 12px/1 var(--font-code);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
+        /* Header */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 clamp(16px, 4vw, 32px);
+            height: 60px;
+            background: rgba(8, 12, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
 
-    h1,
-    h2,
-    h3 {
-      margin: 0 0 12px;
-      line-height: 1.15;
-    }
+        .nav-logo, .nav-logo:visited {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
 
-    h1 {
-      font-size: clamp(32px, 5vw, 54px);
-    }
+        .nav-logo img {
+            height: 32px;
+            width: 32px;
+            filter: drop-shadow(0 0 6px rgba(61,214,140,0.4));
+        }
 
-    h2 {
-      margin-top: 34px;
-      font-size: 24px;
-    }
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-left: 40px;
+        }
 
-    h3 {
-      font-size: 18px;
-    }
+        .nav-center a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
 
-    p,
-    ul,
-    ol {
-      margin: 0 0 14px;
-      color: var(--text);
-    }
+        .nav-center a:hover,
+        .nav-center a.active {
+            color: var(--text);
+        }
 
-    .muted,
-    .grid p,
-    .grid li,
-    td {
-      color: var(--muted);
-    }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-left: auto;
+        }
 
-    code,
-    pre,
-    table {
-      font-family: var(--font-code);
-    }
+        .search-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-2);
+            color: var(--muted);
+            font-family: var(--font-code);
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
 
-    code {
-      padding: 2px 6px;
-      border-radius: 8px;
-      background: var(--surface-2);
-      color: #eef5fb;
-    }
+        .search-btn:hover {
+            border-color: var(--faint);
+            color: var(--text);
+        }
 
-    pre {
-      margin: 0 0 18px;
-      padding: 18px;
-      overflow: auto;
-    }
+        .search-kbd {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 11px;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin: 18px 0 10px;
-    }
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border-2);
+            color: var(--text);
+            font-size: 18px;
+            padding: 6px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            line-height: 1;
+        }
 
-    .card,
-    .note {
-      padding: 18px;
-    }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: #fff;
+            font-family: var(--font-code);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 3px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
 
-    .note {
-      border-color: rgba(240, 164, 41, 0.3);
-      background: rgba(240, 164, 41, 0.08);
-    }
+        .btn-primary:hover {
+            background: #3AADF5;
+        }
 
-    .ok {
-      color: var(--accent-2);
-    }
+        /* Layout */
+        .docs-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
 
-    .warn {
-      color: var(--warn);
-    }
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            padding: 32px 24px;
+            background: var(--bg);
+            transition: transform 0.3s ease;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 10px 0 18px;
-      background: rgba(13, 17, 23, 0.82);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      display: block;
-    }
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
 
-    thead,
-    tbody,
-    tr {
-      width: 100%;
-      display: table;
-      table-layout: fixed;
-    }
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 12px;
+        }
 
-    th,
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      text-align: left;
-      word-break: break-word;
-    }
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
 
-    th {
-      color: #eef5fb;
-      background: var(--surface-2);
-    }
+        .sidebar-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 3px;
+            transition: all 0.2s;
+            display: block;
+        }
 
-    tr:last-child td {
-      border-bottom: 0;
-    }
+        .sidebar-links a:hover {
+            color: var(--text);
+            background: var(--surface);
+        }
 
-    a {
-      color: var(--accent);
-    }
+        .sidebar-links a.active {
+            color: var(--accent);
+            background: var(--accent-glow);
+        }
 
-    @media (max-width: 720px) {
-      .wrap {
-        width: min(100% - 20px, 1100px);
-        padding-top: 20px;
-      }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 48px clamp(24px, 5vw, 64px);
+            max-width: 900px;
+        }
 
-      .hero,
-      .card,
-      .note,
-      pre {
-        border-radius: 14px;
-      }
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
 
-      th,
-      td {
-        padding: 10px;
-      }
-    }
-  </style>
+        .breadcrumb a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--text);
+        }
+
+        .breadcrumb-sep {
+            color: var(--faint);
+        }
+
+        /* Table of Contents */
+        .toc {
+            width: 220px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            padding: 48px 24px;
+            border-left: 1px solid var(--border);
+        }
+
+        .toc-title {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--faint);
+            margin-bottom: 12px;
+        }
+
+        .toc-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 1.4;
+            transition: color 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding-left: 12px;
+        }
+
+        .toc-links a:hover {
+            color: var(--text);
+        }
+
+        .toc-links a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        /* Typography */
+        .eyebrow {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .lead {
+            font-size: 16px;
+            color: var(--muted);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text);
+            margin: 48px 0 20px;
+            scroll-margin-top: 80px;
+        }
+
+        h2:first-child {
+            margin-top: 0;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 32px 0 16px;
+            scroll-margin-top: 80px;
+        }
+
+        p, ul, ol {
+            margin: 0 0 20px;
+            color: var(--text);
+        }
+
+        ul, ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--muted);
+        }
+
+        li strong {
+            color: var(--text);
+        }
+
+        /* Code */
+        code {
+            font-family: var(--font-code);
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: var(--surface-2);
+            color: #eef5fb;
+            font-size: 13px;
+        }
+
+        pre {
+            margin: 0 0 24px;
+            padding: 20px;
+            overflow-x: auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+            font-size: 13px;
+            line-height: 1.6;
+            display: block;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 32px 0;
+        }
+
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+        }
+
+        .info-card h3 {
+            font-size: 14px;
+            margin: 0 0 8px;
+            color: var(--text);
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0;
+            word-break: break-all;
+        }
+
+        /* Note */
+        .note {
+            background: rgba(240, 164, 41, 0.08);
+            border: 1px solid rgba(240, 164, 41, 0.3);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 24px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .note strong {
+            color: var(--warn);
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--text);
+            font-weight: 500;
+            background: var(--surface-2);
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        td code {
+            white-space: nowrap;
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 12, 16, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 1024px) {
+            .toc {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-center,
+            .search-btn {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                transform: translateX(-100%);
+                z-index: 99;
+                width: 280px;
+                box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                padding: 32px 20px;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin: 32px 0 16px;
+            }
+
+            h3 {
+                font-size: 16px;
+                margin: 24px 0 12px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            pre {
+                padding: 16px;
+                margin-left: -20px;
+                margin-right: -20px;
+                border-radius: 0;
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .table-wrap {
+                margin-left: -20px;
+                margin-right: -20px;
+                border-radius: 0;
+                border-left: 0;
+                border-right: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-primary {
+                padding: 8px 12px;
+            }
+
+            .nav-logo span {
+                font-size: 16px;
+            }
+        }
+
+        /* Scrollbar */
+        .sidebar::-webkit-scrollbar,
+        .toc::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track,
+        .toc::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb,
+        .toc::-webkit-scrollbar-thumb {
+            background: var(--border-2);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover,
+        .toc::-webkit-scrollbar-thumb:hover {
+            background: var(--faint);
+        }
+    </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="hero">
-      <div class="eyebrow">TurnKit Relay</div>
-      <h1>WebSocket protocol</h1>
-      <p>Authoritative turn relay for active matches. This page reflects the current server implementation in <code>com.turnkit.platform.relay</code>.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Endpoint</h3>
-          <p><code>wss://api.turnkit.dev/v1/client/relay/ws?sessionId=&lt;uuid&gt;</code></p>
-        </div>
-        <div class="card">
-          <h3>Auth</h3>
-          <p><code>Authorization: Bearer &lt;clientKey&gt;</code><br><code>X-Player-Id: &lt;playerId&gt;</code></p>
-        </div>
-        <div class="card">
-          <h3>Format</h3>
-          <p>Text frames with JSON. Every message uses a top-level <code>type</code>.</p>
-        </div>
-      </div>
-    </section>
 
-    <section>
-      <h2>Handshake</h2>
-      <ul>
-        <li><code>sessionId</code> is required in the query string and must be a valid UUID.</li>
-        <li><code>Authorization</code> must contain a valid TurnKit client key.</li>
-        <li><code>X-Player-Id</code> is required, non-blank, and capped at 128 characters.</li>
-        <li>The game key must have the Turn Relay module enabled.</li>
-      </ul>
-      <pre><code>const ws = new WebSocket(
+<!-- Navigation -->
+<nav>
+    <a href="/" class="nav-logo">
+        <img src="/assets/logo.png" alt="TurnKit logo" />
+        <span>Turn<span style="color:var(--accent);">Kit</span></span>
+    </a>
+
+    <div class="nav-center">
+        <a href="/docs/" class="active">Docs</a>
+        <a href="/docs/api/">API Reference</a>
+        <a href="/examples/">Examples</a>
+    </div>
+
+    <div class="nav-right">
+        <button class="search-btn">
+            <span>Search</span>
+            <span class="search-kbd">⌘K</span>
+        </button>
+        <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;font-size:13px;display:none;">Discord</a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+        <a href="/#waitlist" class="btn-primary">Sign Up</a>
+    </div>
+</nav>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobile-overlay"></div>
+
+<div class="docs-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Getting Started</div>
+            <div class="sidebar-links">
+                <a href="/docs/quickstart/unity/">Unity Quickstart</a>
+                <a href="/docs/quickstart/rest-api/">REST API Quickstart</a>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Features</div>
+            <div class="sidebar-links">
+                <a href="/docs/relay/">Turn Relay</a>
+                <a href="/docs/leaderboards/">Leaderboards</a>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">API Reference</div>
+            <div class="sidebar-links">
+                <a href="/docs/api/" target="_blank">REST API</a>
+                <a href="/docs/websocket/" class="active">WebSocket Protocol</a>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Resources</div>
+            <div class="sidebar-links">
+                <a href="/examples/">Code Examples</a>
+                <a href="/pricing/">Pricing</a>
+                <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord Community</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="/docs/">Docs</a>
+            <span class="breadcrumb-sep">/</span>
+            <span>WebSocket Protocol</span>
+        </div>
+
+        <div class="eyebrow">TurnKit Relay</div>
+        <h1>WebSocket Protocol</h1>
+        <p class="lead">
+            Authoritative turn relay for active matches. This page reflects the current server implementation in <code>com.turnkit.platform.relay</code>.
+        </p>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Endpoint</h3>
+                <p><code>wss://api.turnkit.dev/v1/client/relay/ws?sessionId=&lt;uuid&gt;</code></p>
+            </div>
+            <div class="info-card">
+                <h3>Auth</h3>
+                <p><code>Authorization: Bearer &lt;clientKey&gt;</code><br><code>X-Player-Id: &lt;playerId&gt;</code></p>
+            </div>
+            <div class="info-card">
+                <h3>Format</h3>
+                <p>Text frames with JSON. Every message uses a top-level <code>type</code>.</p>
+            </div>
+        </div>
+
+        <h2 id="handshake">Handshake</h2>
+        <ul>
+            <li><code>sessionId</code> is required in the query string and must be a valid UUID.</li>
+            <li><code>Authorization</code> must contain a valid TurnKit client key.</li>
+            <li><code>X-Player-Id</code> is required, non-blank, and capped at 128 characters.</li>
+            <li>The game key must have the Turn Relay module enabled.</li>
+        </ul>
+
+        <pre><code>const ws = new WebSocket(
   `wss://api.turnkit.dev/v1/client/relay/ws?sessionId=${sessionId}`,
   [],
   {
@@ -239,74 +756,75 @@
     }
   }
 )</code></pre>
-      <div class="note">
-        Browser WebSocket APIs do not allow custom headers. For browser clients, connect through your own authenticated backend or expose a browser-safe upgrade flow first.
-      </div>
-    </section>
 
-    <section>
-      <h2>Session lifecycle</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Connect phase</h3>
-          <p>Sessions start in <code>CONNECTING</code>. All players must connect within <code>30</code> seconds or the match ends with <code>CONNECT_TIMEOUT</code>.</p>
+        <div class="note">
+            <strong>Note:</strong> Browser WebSocket APIs do not allow custom headers. For browser clients, connect through your own authenticated backend or expose a browser-safe upgrade flow first.
         </div>
-        <div class="card">
-          <h3>Active phase</h3>
-          <p>When all players are present, each player receives <code>MATCH_STARTED</code>. If turn enforcement is round robin, the current player timer starts immediately.</p>
-        </div>
-        <div class="card">
-          <h3>Heartbeat</h3>
-          <p>The server checks heartbeats every <code>15</code> seconds. Missing <code>2</code> ping windows disconnects that socket.</p>
-        </div>
-        <div class="card">
-          <h3>Reconnect</h3>
-          <p>Disconnected players enter a grace period defined by match config <code>waitReconnectSeconds</code>. After that they count as permanently disconnected.</p>
-        </div>
-      </div>
-    </section>
 
-    <section>
-      <h2>Client to server</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Payload</th>
-            <th>Rules</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>PING</code></td>
-            <td><code>{ "type": "PING" }</code></td>
-            <td>Records heartbeat and returns <code>PONG</code>.</td>
-          </tr>
-          <tr>
-            <td><code>MOVE</code></td>
-            <td><code>json</code>, <code>shouldEndMyTurn</code>, <code>actions</code></td>
-            <td>Accepted only while session is active. Round robin sessions reject moves from non-active players. Optional <code>json</code> is capped at <code>1024</code> bytes.</td>
-          </tr>
-          <tr>
-            <td><code>VOTE</code></td>
-            <td><code>moveNumber</code>, <code>isValid</code></td>
-            <td>Only meaningful when sync voting is enabled and that move is currently pending vote.</td>
-          </tr>
-          <tr>
-            <td><code>END_GAME</code></td>
-            <td><code>{ "type": "END_GAME" }</code></td>
-            <td>Session ends with <code>END_GAME</code> only after every player has sent it.</td>
-          </tr>
-          <tr>
-            <td><code>RECONNECT</code></td>
-            <td><code>lastMoveNumber</code></td>
-            <td>Requests delta replay or full resync after reconnect.</td>
-          </tr>
-        </tbody>
-      </table>
+        <h2 id="lifecycle">Session Lifecycle</h2>
 
-      <h3>MOVE shape</h3>
-      <pre><code>{
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Connect Phase</h3>
+                <p>Sessions start in <code>CONNECTING</code>. All players must connect within 30 seconds or the match ends with <code>CONNECT_TIMEOUT</code>.</p>
+            </div>
+            <div class="info-card">
+                <h3>Active Phase</h3>
+                <p>When all players are present, each receives <code>MATCH_STARTED</code>. If turn enforcement is round robin, the current player timer starts immediately.</p>
+            </div>
+            <div class="info-card">
+                <h3>Heartbeat</h3>
+                <p>The server checks heartbeats every 15 seconds. Missing 2 ping windows disconnects that socket.</p>
+            </div>
+            <div class="info-card">
+                <h3>Reconnect</h3>
+                <p>Disconnected players enter a grace period defined by match config <code>waitReconnectSeconds</code>. After that they count as permanently disconnected.</p>
+            </div>
+        </div>
+
+        <h2 id="client-to-server">Client to Server</h2>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Payload</th>
+                    <th>Rules</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>PING</code></td>
+                    <td><code>{ "type": "PING" }</code></td>
+                    <td>Records heartbeat and returns <code>PONG</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>MOVE</code></td>
+                    <td><code>json</code>, <code>shouldEndMyTurn</code>, <code>actions</code></td>
+                    <td>Accepted only while session is active. Round robin sessions reject moves from non-active players. Optional <code>json</code> is capped at 1024 bytes.</td>
+                </tr>
+                <tr>
+                    <td><code>VOTE</code></td>
+                    <td><code>moveNumber</code>, <code>isValid</code></td>
+                    <td>Only meaningful when sync voting is enabled and that move is currently pending vote.</td>
+                </tr>
+                <tr>
+                    <td><code>END_GAME</code></td>
+                    <td><code>{ "type": "END_GAME" }</code></td>
+                    <td>Session ends with <code>END_GAME</code> only after every player has sent it.</td>
+                </tr>
+                <tr>
+                    <td><code>RECONNECT</code></td>
+                    <td><code>lastMoveNumber</code></td>
+                    <td>Requests delta replay or full resync after reconnect.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 id="move-shape">MOVE Shape</h3>
+        <pre><code>{
   "type": "MOVE",
   "json": {
     "cardId": "c_17",
@@ -326,37 +844,39 @@
   ]
 }</code></pre>
 
-      <h3>Action variants</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Fields</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>SPAWN</code></td>
-            <td><code>items</code>, <code>toList</code></td>
-          </tr>
-          <tr>
-            <td><code>MOVE</code></td>
-            <td><code>selector</code>, <code>fromList</code>, <code>toList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
-          </tr>
-          <tr>
-            <td><code>REMOVE</code></td>
-            <td><code>selector</code>, <code>fromList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
-          </tr>
-          <tr>
-            <td><code>SHUFFLE</code></td>
-            <td><code>list</code></td>
-          </tr>
-        </tbody>
-      </table>
+        <h3 id="action-variants">Action Variants</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Fields</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>SPAWN</code></td>
+                    <td><code>items</code>, <code>toList</code></td>
+                </tr>
+                <tr>
+                    <td><code>MOVE</code></td>
+                    <td><code>selector</code>, <code>fromList</code>, <code>toList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
+                </tr>
+                <tr>
+                    <td><code>REMOVE</code></td>
+                    <td><code>selector</code>, <code>fromList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
+                </tr>
+                <tr>
+                    <td><code>SHUFFLE</code></td>
+                    <td><code>list</code></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-      <h3>Selector variants</h3>
-      <p><code>TOP</code>, <code>BOTTOM</code>, <code>RANDOM</code>, <code>ALL</code>, <code>BY_ITEM_IDS</code>, <code>BY_SLUGS</code></p>
-      <pre><code>{
+        <h3 id="selector-variants">Selector Variants</h3>
+        <p><code>TOP</code>, <code>BOTTOM</code>, <code>RANDOM</code>, <code>ALL</code>, <code>BY_ITEM_IDS</code>, <code>BY_SLUGS</code></p>
+        <pre><code>{
   "action": "REMOVE",
   "selector": "BY_SLUGS",
   "slugs": ["poison", "bleed"],
@@ -364,55 +884,56 @@
   "repeat": 1,
   "ignoreOwnership": true
 }</code></pre>
-    </section>
 
-    <section>
-      <h2>Server to client</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Purpose</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>MATCH_STARTED</code></td>
-            <td>Full session snapshot for that player, including visible list contents, active player, seed, and current move number.</td>
-          </tr>
-          <tr>
-            <td><code>MOVE_MADE</code></td>
-            <td>Committed move delta broadcast to connected players.</td>
-          </tr>
-          <tr>
-            <td><code>TURN_CHANGED</code></td>
-            <td>Sent when the active player changes in round robin mode.</td>
-          </tr>
-          <tr>
-            <td><code>VOTE_FAILED</code></td>
-            <td>Sync vote failed. Includes failed move number and configured fail action.</td>
-          </tr>
-          <tr>
-            <td><code>GAME_ENDED</code></td>
-            <td>Terminal state. Socket is closed after broadcast.</td>
-          </tr>
-          <tr>
-            <td><code>PONG</code></td>
-            <td>Heartbeat acknowledgement.</td>
-          </tr>
-          <tr>
-            <td><code>SYNC_COMPLETE</code></td>
-            <td>Reconnect catch-up finished for the current server move number.</td>
-          </tr>
-          <tr>
-            <td><code>ERROR</code></td>
-            <td>Request rejected. Includes machine code, message, and current <code>serverMoveNumber</code>.</td>
-          </tr>
-        </tbody>
-      </table>
+        <h2 id="server-to-client">Server to Client</h2>
 
-      <h3>MATCH_STARTED</h3>
-      <pre><code>{
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>MATCH_STARTED</code></td>
+                    <td>Full session snapshot for that player, including visible list contents, active player, seed, and current move number.</td>
+                </tr>
+                <tr>
+                    <td><code>MOVE_MADE</code></td>
+                    <td>Committed move delta broadcast to connected players.</td>
+                </tr>
+                <tr>
+                    <td><code>TURN_CHANGED</code></td>
+                    <td>Sent when the active player changes in round robin mode.</td>
+                </tr>
+                <tr>
+                    <td><code>VOTE_FAILED</code></td>
+                    <td>Sync vote failed. Includes failed move number and configured fail action.</td>
+                </tr>
+                <tr>
+                    <td><code>GAME_ENDED</code></td>
+                    <td>Terminal state. Socket is closed after broadcast.</td>
+                </tr>
+                <tr>
+                    <td><code>PONG</code></td>
+                    <td>Heartbeat acknowledgement.</td>
+                </tr>
+                <tr>
+                    <td><code>SYNC_COMPLETE</code></td>
+                    <td>Reconnect catch-up finished for the current server move number.</td>
+                </tr>
+                <tr>
+                    <td><code>ERROR</code></td>
+                    <td>Request rejected. Includes machine code, message, and current <code>serverMoveNumber</code>.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 id="match-started">MATCH_STARTED</h3>
+        <pre><code>{
   "type": "MATCH_STARTED",
   "sessionId": "6c151663-94a8-4f85-a7a4-a6c58d0f8fa1",
   "players": [
@@ -437,8 +958,8 @@
   "serverMoveNumber": 0
 }</code></pre>
 
-      <h3>MOVE_MADE</h3>
-      <pre><code>{
+        <h3 id="move-made">MOVE_MADE</h3>
+        <pre><code>{
   "type": "MOVE_MADE",
   "actingPlayerId": "p1",
   "moveNumber": 4,
@@ -457,80 +978,165 @@
     }
   ]
 }</code></pre>
-    </section>
 
-    <section>
-      <h2>Reconnect behavior</h2>
-      <ul>
-        <li>If the client sends <code>RECONNECT</code> with <code>lastMoveNumber</code> equal to the server move number, the server only returns <code>SYNC_COMPLETE</code>.</li>
-        <li>If the client is behind but still within the last <code>10</code> moves, the server replays missed <code>MOVE_MADE</code> messages.</li>
-        <li>If the client is further behind, the server sends a fresh <code>MATCH_STARTED</code> snapshot instead.</li>
-        <li>After reconnect sync, the player enters a <code>2</code> second sync window. Moves from that player during that window are rejected with <code>SYNC_WINDOW</code>.</li>
-      </ul>
-      <pre><code>{ "type": "RECONNECT", "lastMoveNumber": 12 }</code></pre>
-    </section>
+        <h2 id="reconnect">Reconnect Behavior</h2>
+        <ul>
+            <li>If the client sends <code>RECONNECT</code> with <code>lastMoveNumber</code> equal to the server move number, the server only returns <code>SYNC_COMPLETE</code>.</li>
+            <li>If the client is behind but still within the last 10 moves, the server replays missed <code>MOVE_MADE</code> messages.</li>
+            <li>If the client is further behind, the server sends a fresh <code>MATCH_STARTED</code> snapshot instead.</li>
+            <li>After reconnect sync, the player enters a 2 second sync window. Moves from that player during that window are rejected with <code>SYNC_WINDOW</code>.</li>
+        </ul>
+        <pre><code>{ "type": "RECONNECT", "lastMoveNumber": 12 }</code></pre>
 
-    <section>
-      <h2>Error codes</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Meaning</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>NOT_ACTIVE</code></td>
-            <td>Move was sent before the session became active.</td>
-          </tr>
-          <tr>
-            <td><code>SYNC_WINDOW</code></td>
-            <td>Player is still inside the post-reconnect sync delay.</td>
-          </tr>
-          <tr>
-            <td><code>NOT_YOUR_TURN</code></td>
-            <td>Round robin mode rejected a move from a non-active player.</td>
-          </tr>
-          <tr>
-            <td><code>PAYLOAD_TOO_LARGE</code></td>
-            <td><code>MOVE.json</code> exceeded <code>1024</code> bytes.</td>
-          </tr>
-          <tr>
-            <td><code>INVALID_JSON</code></td>
-            <td>The optional <code>json</code> payload could not be serialized.</td>
-          </tr>
-          <tr>
-            <td><code>ACTION_FAILED</code></td>
-            <td>An action was invalid for the current authoritative state.</td>
-          </tr>
-          <tr>
-            <td><code>STALE_SOCKET</code></td>
-            <td>Message or disconnect came from a superseded socket.</td>
-          </tr>
-          <tr>
-            <td><code>SUPERSEDED_CONNECTION</code></td>
-            <td>An older socket was closed because a newer one connected.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+        <h2 id="error-codes">Error Codes</h2>
 
-    <section>
-      <h2>Terminal reasons</h2>
-      <p><code>END_GAME</code>, <code>VOTE_FAIL</code>, <code>TIMEOUT</code>, <code>ALL_DISCONNECTED</code>, <code>CONNECT_TIMEOUT</code>, <code>ONE_PLAYER_LEFT</code></p>
-      <p class="muted">The current session package emits all of these reasons, with <code>ALL_DISCONNECTED</code> reserved in the protocol enum for relay-level terminal handling.</p>
-    </section>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Meaning</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>NOT_ACTIVE</code></td>
+                    <td>Move was sent before the session became active.</td>
+                </tr>
+                <tr>
+                    <td><code>SYNC_WINDOW</code></td>
+                    <td>Player is still inside the post-reconnect sync delay.</td>
+                </tr>
+                <tr>
+                    <td><code>NOT_YOUR_TURN</code></td>
+                    <td>Round robin mode rejected a move from a non-active player.</td>
+                </tr>
+                <tr>
+                    <td><code>PAYLOAD_TOO_LARGE</code></td>
+                    <td><code>MOVE.json</code> exceeded 1024 bytes.</td>
+                </tr>
+                <tr>
+                    <td><code>INVALID_JSON</code></td>
+                    <td>The optional <code>json</code> payload could not be serialized.</td>
+                </tr>
+                <tr>
+                    <td><code>ACTION_FAILED</code></td>
+                    <td>An action was invalid for the current authoritative state.</td>
+                </tr>
+                <tr>
+                    <td><code>STALE_SOCKET</code></td>
+                    <td>Message or disconnect came from a superseded socket.</td>
+                </tr>
+                <tr>
+                    <td><code>SUPERSEDED_CONNECTION</code></td>
+                    <td>An older socket was closed because a newer one connected.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <section>
-      <h2>Client guidance</h2>
-      <ul>
-        <li>Send <code>PING</code> on an interval shorter than <code>15</code> seconds.</li>
-        <li>Treat <code>serverMoveNumber</code> as the authoritative cursor for reconnects.</li>
-        <li>Do not assume hidden lists contain real slugs. Invisible items arrive with empty <code>slug</code> values in snapshots.</li>
-        <li>Expect the socket to close after <code>GAME_ENDED</code> and after stale socket rejection.</li>
-      </ul>
-    </section>
-  </main>
+        <h2 id="terminal-reasons">Terminal Reasons</h2>
+        <p><code>END_GAME</code>, <code>VOTE_FAIL</code>, <code>TIMEOUT</code>, <code>ALL_DISCONNECTED</code>, <code>CONNECT_TIMEOUT</code>, <code>ONE_PLAYER_LEFT</code></p>
+        <p style="color: var(--muted); font-size: 14px; margin-top: 12px;">
+            The current session package emits all of these reasons, with <code>ALL_DISCONNECTED</code> reserved in the protocol enum for relay-level terminal handling.
+        </p>
+
+        <h2 id="client-guidance">Client Guidance</h2>
+        <ul>
+            <li>Send <code>PING</code> on an interval shorter than 15 seconds.</li>
+            <li>Treat <code>serverMoveNumber</code> as the authoritative cursor for reconnects.</li>
+            <li>Do not assume hidden lists contain real slugs. Invisible items arrive with empty <code>slug</code> values in snapshots.</li>
+            <li>Expect the socket to close after <code>GAME_ENDED</code> and after stale socket rejection.</li>
+        </ul>
+    </main>
+
+    <!-- Table of Contents -->
+    <aside class="toc">
+        <div class="toc-title">On This Page</div>
+        <div class="toc-links">
+            <a href="#handshake">Handshake</a>
+            <a href="#lifecycle">Session Lifecycle</a>
+            <a href="#client-to-server">Client to Server</a>
+            <a href="#move-shape">MOVE Shape</a>
+            <a href="#action-variants">Action Variants</a>
+            <a href="#selector-variants">Selector Variants</a>
+            <a href="#server-to-client">Server to Client</a>
+            <a href="#match-started">MATCH_STARTED</a>
+            <a href="#move-made">MOVE_MADE</a>
+            <a href="#reconnect">Reconnect Behavior</a>
+            <a href="#error-codes">Error Codes</a>
+            <a href="#terminal-reasons">Terminal Reasons</a>
+            <a href="#client-guidance">Client Guidance</a>
+        </div>
+    </aside>
+</div>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    function toggleMobileMenu() {
+        sidebar.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+    }
+
+    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    mobileOverlay.addEventListener('click', toggleMobileMenu);
+
+    // Close mobile menu when clicking a link
+    const sidebarLinks = sidebar.querySelectorAll('a');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                toggleMobileMenu();
+            }
+        });
+    });
+
+    // Table of Contents active state on scroll
+    const tocLinks = document.querySelectorAll('.toc-links a');
+    const sections = Array.from(tocLinks).map(link => {
+        const id = link.getAttribute('href').substring(1);
+        return document.getElementById(id);
+    }).filter(Boolean);
+
+    function updateTocActiveState() {
+        let current = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            if (window.scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateTocActiveState);
+    updateTocActiveState();
+
+    // Search button placeholder (implement your search functionality)
+    const searchBtn = document.querySelector('.search-btn');
+    searchBtn.addEventListener('click', () => {
+        alert('Search functionality coming soon! Use Ctrl/Cmd+F for now.');
+    });
+
+    // Keyboard shortcut for search
+    document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            searchBtn.click();
+        }
+    });
+</script>
+
 </body>
 </html>
