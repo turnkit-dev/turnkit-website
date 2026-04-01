@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TurnKit WebSocket Docs</title>
+  <meta name="description" content="TurnKit relay websocket protocol reference.">
+  <style>
+    :root {
+      --bg: #080c10;
+      --surface: #0d1117;
+      --surface-2: #111820;
+      --border: #1c2733;
+      --text: #c9d3dd;
+      --muted: #7d8fa0;
+      --accent: #2f9ceb;
+      --accent-2: #3dd68c;
+      --warn: #f0a429;
+      --font-ui: "Segoe UI", sans-serif;
+      --font-code: "Consolas", "SFMono-Regular", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top, rgba(47, 156, 235, 0.14), transparent 28%),
+        linear-gradient(180deg, #0a1016 0%, var(--bg) 100%);
+      color: var(--text);
+      font: 15px/1.7 var(--font-ui);
+    }
+
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero,
+    .card,
+    .note,
+    pre {
+      border: 1px solid var(--border);
+      background: rgba(13, 17, 23, 0.92);
+      border-radius: 18px;
+    }
+
+    .hero {
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font: 600 12px/1 var(--font-code);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 54px);
+    }
+
+    h2 {
+      margin-top: 34px;
+      font-size: 24px;
+    }
+
+    h3 {
+      font-size: 18px;
+    }
+
+    p,
+    ul,
+    ol {
+      margin: 0 0 14px;
+      color: var(--text);
+    }
+
+    .muted,
+    .grid p,
+    .grid li,
+    td {
+      color: var(--muted);
+    }
+
+    code,
+    pre,
+    table {
+      font-family: var(--font-code);
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: #eef5fb;
+    }
+
+    pre {
+      margin: 0 0 18px;
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 18px 0 10px;
+    }
+
+    .card,
+    .note {
+      padding: 18px;
+    }
+
+    .note {
+      border-color: rgba(240, 164, 41, 0.3);
+      background: rgba(240, 164, 41, 0.08);
+    }
+
+    .ok {
+      color: var(--accent-2);
+    }
+
+    .warn {
+      color: var(--warn);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px;
+      background: rgba(13, 17, 23, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: block;
+    }
+
+    thead,
+    tbody,
+    tr {
+      width: 100%;
+      display: table;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      text-align: left;
+      word-break: break-word;
+    }
+
+    th {
+      color: #eef5fb;
+      background: var(--surface-2);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(100% - 20px, 1100px);
+        padding-top: 20px;
+      }
+
+      .hero,
+      .card,
+      .note,
+      pre {
+        border-radius: 14px;
+      }
+
+      th,
+      td {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">TurnKit Relay</div>
+      <h1>WebSocket protocol</h1>
+      <p>Authoritative turn relay for active matches. This page reflects the current server implementation in <code>com.turnkit.platform.relay</code>.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Endpoint</h3>
+          <p><code>wss://api.turnkit.dev/v1/client/relay/ws?sessionId=&lt;uuid&gt;</code></p>
+        </div>
+        <div class="card">
+          <h3>Auth</h3>
+          <p><code>Authorization: Bearer &lt;clientKey&gt;</code><br><code>X-Player-Id: &lt;playerId&gt;</code></p>
+        </div>
+        <div class="card">
+          <h3>Format</h3>
+          <p>Text frames with JSON. Every message uses a top-level <code>type</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Handshake</h2>
+      <ul>
+        <li><code>sessionId</code> is required in the query string and must be a valid UUID.</li>
+        <li><code>Authorization</code> must contain a valid TurnKit client key.</li>
+        <li><code>X-Player-Id</code> is required, non-blank, and capped at 128 characters.</li>
+        <li>The game key must have the Turn Relay module enabled.</li>
+      </ul>
+      <pre><code>const ws = new WebSocket(
+  `wss://api.turnkit.dev/v1/client/relay/ws?sessionId=${sessionId}`,
+  [],
+  {
+    headers: {
+      Authorization: `Bearer ${clientKey}`,
+      "X-Player-Id": playerId
+    }
+  }
+)</code></pre>
+      <div class="note">
+        Browser WebSocket APIs do not allow custom headers. For browser clients, connect through your own authenticated backend or expose a browser-safe upgrade flow first.
+      </div>
+    </section>
+
+    <section>
+      <h2>Session lifecycle</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Connect phase</h3>
+          <p>Sessions start in <code>CONNECTING</code>. All players must connect within <code>30</code> seconds or the match ends with <code>CONNECT_TIMEOUT</code>.</p>
+        </div>
+        <div class="card">
+          <h3>Active phase</h3>
+          <p>When all players are present, each player receives <code>MATCH_STARTED</code>. If turn enforcement is round robin, the current player timer starts immediately.</p>
+        </div>
+        <div class="card">
+          <h3>Heartbeat</h3>
+          <p>The server checks heartbeats every <code>15</code> seconds. Missing <code>2</code> ping windows disconnects that socket.</p>
+        </div>
+        <div class="card">
+          <h3>Reconnect</h3>
+          <p>Disconnected players enter a grace period defined by match config <code>waitReconnectSeconds</code>. After that they count as permanently disconnected.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Client to server</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Payload</th>
+            <th>Rules</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>PING</code></td>
+            <td><code>{ "type": "PING" }</code></td>
+            <td>Records heartbeat and returns <code>PONG</code>.</td>
+          </tr>
+          <tr>
+            <td><code>MOVE</code></td>
+            <td><code>json</code>, <code>shouldEndMyTurn</code>, <code>actions</code></td>
+            <td>Accepted only while session is active. Round robin sessions reject moves from non-active players. Optional <code>json</code> is capped at <code>1024</code> bytes.</td>
+          </tr>
+          <tr>
+            <td><code>VOTE</code></td>
+            <td><code>moveNumber</code>, <code>isValid</code></td>
+            <td>Only meaningful when sync voting is enabled and that move is currently pending vote.</td>
+          </tr>
+          <tr>
+            <td><code>END_GAME</code></td>
+            <td><code>{ "type": "END_GAME" }</code></td>
+            <td>Session ends with <code>END_GAME</code> only after every player has sent it.</td>
+          </tr>
+          <tr>
+            <td><code>RECONNECT</code></td>
+            <td><code>lastMoveNumber</code></td>
+            <td>Requests delta replay or full resync after reconnect.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>MOVE shape</h3>
+      <pre><code>{
+  "type": "MOVE",
+  "json": {
+    "cardId": "c_17",
+    "targetLane": "discard"
+  },
+  "shouldEndMyTurn": true,
+  "actions": [
+    {
+      "action": "MOVE",
+      "selector": "BY_ITEM_IDS",
+      "itemIds": ["c_17"],
+      "fromList": "hand",
+      "toList": "discard",
+      "repeat": 1,
+      "ignoreOwnership": false
+    }
+  ]
+}</code></pre>
+
+      <h3>Action variants</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Fields</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>SPAWN</code></td>
+            <td><code>items</code>, <code>toList</code></td>
+          </tr>
+          <tr>
+            <td><code>MOVE</code></td>
+            <td><code>selector</code>, <code>fromList</code>, <code>toList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
+          </tr>
+          <tr>
+            <td><code>REMOVE</code></td>
+            <td><code>selector</code>, <code>fromList</code>, <code>repeat</code>, <code>ignoreOwnership</code></td>
+          </tr>
+          <tr>
+            <td><code>SHUFFLE</code></td>
+            <td><code>list</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Selector variants</h3>
+      <p><code>TOP</code>, <code>BOTTOM</code>, <code>RANDOM</code>, <code>ALL</code>, <code>BY_ITEM_IDS</code>, <code>BY_SLUGS</code></p>
+      <pre><code>{
+  "action": "REMOVE",
+  "selector": "BY_SLUGS",
+  "slugs": ["poison", "bleed"],
+  "fromList": "status",
+  "repeat": 1,
+  "ignoreOwnership": true
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Server to client</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>MATCH_STARTED</code></td>
+            <td>Full session snapshot for that player, including visible list contents, active player, seed, and current move number.</td>
+          </tr>
+          <tr>
+            <td><code>MOVE_MADE</code></td>
+            <td>Committed move delta broadcast to connected players.</td>
+          </tr>
+          <tr>
+            <td><code>TURN_CHANGED</code></td>
+            <td>Sent when the active player changes in round robin mode.</td>
+          </tr>
+          <tr>
+            <td><code>VOTE_FAILED</code></td>
+            <td>Sync vote failed. Includes failed move number and configured fail action.</td>
+          </tr>
+          <tr>
+            <td><code>GAME_ENDED</code></td>
+            <td>Terminal state. Socket is closed after broadcast.</td>
+          </tr>
+          <tr>
+            <td><code>PONG</code></td>
+            <td>Heartbeat acknowledgement.</td>
+          </tr>
+          <tr>
+            <td><code>SYNC_COMPLETE</code></td>
+            <td>Reconnect catch-up finished for the current server move number.</td>
+          </tr>
+          <tr>
+            <td><code>ERROR</code></td>
+            <td>Request rejected. Includes machine code, message, and current <code>serverMoveNumber</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>MATCH_STARTED</h3>
+      <pre><code>{
+  "type": "MATCH_STARTED",
+  "sessionId": "6c151663-94a8-4f85-a7a4-a6c58d0f8fa1",
+  "players": [
+    { "playerId": "p1", "slot": 0 },
+    { "playerId": "p2", "slot": 1 }
+  ],
+  "yourTurn": true,
+  "activePlayerId": "p1",
+  "lists": [
+    {
+      "name": "hand",
+      "ownerPlayerIds": ["p1"],
+      "visibleToPlayerIds": ["p1"]
+    }
+  ],
+  "listContents": {
+    "hand": [
+      { "id": "c_17", "slug": "fireball", "creatorSlot": 0 }
+    ]
+  },
+  "randomSeed": 918221,
+  "serverMoveNumber": 0
+}</code></pre>
+
+      <h3>MOVE_MADE</h3>
+      <pre><code>{
+  "type": "MOVE_MADE",
+  "actingPlayerId": "p1",
+  "moveNumber": 4,
+  "json": {
+    "cardId": "c_17"
+  },
+  "changes": [
+    {
+      "type": "MOVE",
+      "fromList": "hand",
+      "toList": "discard",
+      "items": [
+        { "id": "c_17", "slug": "fireball", "creatorSlot": 0 }
+      ],
+      "actingPlayerSlot": "0"
+    }
+  ]
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Reconnect behavior</h2>
+      <ul>
+        <li>If the client sends <code>RECONNECT</code> with <code>lastMoveNumber</code> equal to the server move number, the server only returns <code>SYNC_COMPLETE</code>.</li>
+        <li>If the client is behind but still within the last <code>10</code> moves, the server replays missed <code>MOVE_MADE</code> messages.</li>
+        <li>If the client is further behind, the server sends a fresh <code>MATCH_STARTED</code> snapshot instead.</li>
+        <li>After reconnect sync, the player enters a <code>2</code> second sync window. Moves from that player during that window are rejected with <code>SYNC_WINDOW</code>.</li>
+      </ul>
+      <pre><code>{ "type": "RECONNECT", "lastMoveNumber": 12 }</code></pre>
+    </section>
+
+    <section>
+      <h2>Error codes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>NOT_ACTIVE</code></td>
+            <td>Move was sent before the session became active.</td>
+          </tr>
+          <tr>
+            <td><code>SYNC_WINDOW</code></td>
+            <td>Player is still inside the post-reconnect sync delay.</td>
+          </tr>
+          <tr>
+            <td><code>NOT_YOUR_TURN</code></td>
+            <td>Round robin mode rejected a move from a non-active player.</td>
+          </tr>
+          <tr>
+            <td><code>PAYLOAD_TOO_LARGE</code></td>
+            <td><code>MOVE.json</code> exceeded <code>1024</code> bytes.</td>
+          </tr>
+          <tr>
+            <td><code>INVALID_JSON</code></td>
+            <td>The optional <code>json</code> payload could not be serialized.</td>
+          </tr>
+          <tr>
+            <td><code>ACTION_FAILED</code></td>
+            <td>An action was invalid for the current authoritative state.</td>
+          </tr>
+          <tr>
+            <td><code>STALE_SOCKET</code></td>
+            <td>Message or disconnect came from a superseded socket.</td>
+          </tr>
+          <tr>
+            <td><code>SUPERSEDED_CONNECTION</code></td>
+            <td>An older socket was closed because a newer one connected.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Terminal reasons</h2>
+      <p><code>END_GAME</code>, <code>VOTE_FAIL</code>, <code>TIMEOUT</code>, <code>ALL_DISCONNECTED</code>, <code>CONNECT_TIMEOUT</code>, <code>ONE_PLAYER_LEFT</code></p>
+      <p class="muted">The current session package emits all of these reasons, with <code>ALL_DISCONNECTED</code> reserved in the protocol enum for relay-level terminal handling.</p>
+    </section>
+
+    <section>
+      <h2>Client guidance</h2>
+      <ul>
+        <li>Send <code>PING</code> on an interval shorter than <code>15</code> seconds.</li>
+        <li>Treat <code>serverMoveNumber</code> as the authoritative cursor for reconnects.</li>
+        <li>Do not assume hidden lists contain real slugs. Invisible items arrive with empty <code>slug</code> values in snapshots.</li>
+        <li>Expect the socket to close after <code>GAME_ENDED</code> and after stale socket rejection.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
