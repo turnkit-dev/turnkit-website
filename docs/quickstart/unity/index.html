@@ -538,10 +538,15 @@
             background: rgba(8, 12, 16, 0.8);
             backdrop-filter: blur(4px);
             z-index: 98;
+            pointer-events: auto;
         }
 
         .mobile-overlay.active {
             display: block;
+        }
+        
+        .sidebar {
+            z-index: 99;
         }
 
         @media (max-width: 1024px) {
@@ -560,6 +565,11 @@
                 display: block;
             }
 
+            .mobile-overlay.active {
+                display: block;
+                left: 280px;
+            }
+            
             .sidebar {
                 position: fixed;
                 top: 60px;
