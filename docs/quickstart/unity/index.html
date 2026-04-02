@@ -693,95 +693,31 @@
         <div class="eyebrow">Getting Started</div>
         <h1>Unity Quickstart</h1>
         <p class="lead">
-            Import the package, sign in once, let TurnKit create the required keys and defaults, then open the example scene and run a real multiplayer flow.
+            Install package and initial setup.
         </p>
 
         <h2 id="install">Install Package</h2>
-        <p>
-            The current install path is a direct GitHub release download.
-        </p>
         <ol>
-            <li>Download <a href="https://https://github.com/Brainzy/TurnKit-Client/releases/latest/download/TurnKit.unitypackage" target="_blank" rel="noopener">TurnKit.unitypackage</a>.</li>
-            <li>Import it into an existing Unity project or a clean test project.</li>
-            <li>Wait for Unity to recompile and finish asset import.</li>
-            <li>TurnKit starts its setup window automatically after import.</li>
+            <li>Download <a href="https://https://github.com/Brainzy/TurnKit-Client/releases/latest/download/TurnKit.unitypackage" target="_blank" rel="noopener">TurnKit.unitypackage</a> and import into your Unity project.</li>
         </ol>
 
         <h2 id="signin">Initial Setup And Sign In</h2>
         <p>
-            TurnKit uses a two-step onboarding flow. First it asks for the project name inside Unity. Then it opens the browser for authentication and comes back with the project already provisioned.
+            Fill project name and continue to login.
         </p>
-
-        <div class="table-wrap">
-            <table>
-                <thead>
-                <tr>
-                    <th>Step</th>
-                    <th>What happens</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><code>1</code></td>
-                    <td>Unity detects that no local TurnKit project setup exists and opens the initial screen from <code>OnInit</code>.</td>
-                </tr>
-                <tr>
-                    <td><code>2</code></td>
-                    <td>The project name is prefilled from the Unity project. The user can continue to login or cancel.</td>
-                </tr>
-                <tr>
-                    <td><code>3</code></td>
-                    <td>The developer signs in with Google or GitHub.</td>
-                </tr>
-                <tr>
-                    <td><code>4</code></td>
-                    <td>TurnKit creates the developer account and project resources if they do not exist yet.</td>
-                </tr>
-                <tr>
-                    <td><code>5</code></td>
-                    <td>The Unity editor returns to the get-started screen with everything generated and linked.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <p>
+            After login everything is generated and linked.
+        </p>
 
         <h3 id="get-started-window">Get Started Window</h3>
-        <p>
-            After login, TurnKit shows a fully configured get-started screen inside Unity.
-        </p>
-        <pre><code>Welcome to TurnKit!
-TurnKit is now fully configured.
-We've created a Game Key, Client Key, and example relay config for you.
-
-Next Steps
-Next steps - let's get you playing fast
-
-A. Test with 2 Unity Editors
-[ Clone Project & Open New Editor ]
-
-B. Try a sample scene
-Tic-Tac-Toe (Recommended)
-[ Open Scene ]
-
-Rock Paper Scissors
-[ Open Scene ]
-
-C. Create your own relay config
-[ Open Relay Configuration ]
-
-[ Open Docs ]
-[ Join Discord ]
-[ Open Dashboard ]</code></pre>
+        <p>Use <code>Clone Project &amp; Open New Editor</code>, or for more control use the Unity menu at <code>TurnKit/ParrelSync</code>.</p>
+        <p>Run the sample scene in two Unity editors.</p>
 
         <div class="note">
             <strong>Note:</strong> The client key is only shown on first creation. If you need a new one later, create it in <a href="https://turnkit.dev/dashboard" target="_blank" rel="noopener">Dashboard</a>.
         </div>
 
         <h2 id="generated-resources">Generated Resources</h2>
-        <p>
-            After sign-in, the package should provision the pieces needed to make the first sample work without additional dashboard setup.
-        </p>
-
         <div class="info-grid">
             <div class="info-card">
                 <h3>Developer Account</h3>
@@ -805,60 +741,9 @@ C. Create your own relay config
             </div>
             <div class="info-card">
                 <h3>Addressable Asset</h3>
-                <p>Unity stores the example scene runtime config in <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code>.</p>
+                <p>Unity stores the runtime config in <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code>.</p>
             </div>
         </div>
-
-        <h3 id="asset-shape">Addressable Asset Contents</h3>
-        <p>
-            The generated config asset at <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code> is the handoff point between setup and runtime.
-        </p>
-        <pre><code>{
-  serverUrl: https://api.turnkit.dev
-  projectName: TurnKit-Client
-  gameKeyId: fec4fe13-44c8-49f7-8794-5e6289efba42
-  clientKey: tk_live_U2BOEi_tF3VAay9mvrrFYtxy4DggWAk1
-  status: connected
-  relayConfigs:
-  - id: e5be1173-a30b-4be9-8894-b8cb131f0027
-    slug: example
-    maxPlayers: 2
-    turnEnforcement: ROUND_ROBIN
-    votingMode: SYNC
-    votesRequired: 2
-    votesToFail: 1
-    failAction: SKIP_TURN
-    matchTimeoutMinutes: 10
-    turnTimeoutSeconds: 120
-    waitReconnectSeconds: 45
-    lists:
-    - name: p1_hidden
-      tag: hand
-      owner: Player1
-      visibleTo: Player1
-    - name: p2_hidden
-      tag: hand
-      ownerSlots: Player2
-      visibleToSlots: Player2
-    - name: results_public
-      tag: table
-      ownerSlots: Player1, Player2
-      visibleToSlots: Player1, Player2
-    - name: discard_public
-      tag: discard
-      ownerSlots: Player1, Player2
-      visibleToSlots: Player1, Player2
-}</code></pre>
-
-        <h2 id="parrelsync">Local Multiplayer With ParrelSync</h2>
-        <p>
-            The example is multiplayer, so local testing matters. ParrelSync is embedded and exposed directly in the get-started flow.
-        </p>
-        <ul>
-            <li>Use <code>Clone Project &amp; Open New Editor</code> for the fastest path to two-editor testing.</li>
-            <li>If you want more control, use the Unity menu at <code>TurnKit/ParrelSync</code>.</li>
-            <li>Run the sample scene in two Unity editors.</li>
-        </ul>
     </main>
 
     <aside class="toc">
@@ -868,9 +753,6 @@ C. Create your own relay config
             <a href="#signin">Initial Setup And Sign In</a>
             <a href="#get-started-window">Get Started Window</a>
             <a href="#generated-resources">Generated Resources</a>
-            <a href="#asset-shape">Addressable Asset Contents</a>
-            <a href="#parrelsync">Local Multiplayer With ParrelSync</a>
-            <a href="#example-scene">Open The Example Scene</a>
         </div>
     </aside>
 </div>
