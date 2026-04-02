@@ -390,6 +390,26 @@
             color: var(--text);
         }
 
+        main p a,
+        main li a {
+            color: #7fc4ff;
+            text-decoration-color: rgba(127, 196, 255, 0.45);
+            text-underline-offset: 0.18em;
+        }
+
+        main p a:visited,
+        main li a:visited {
+            color: #7fc4ff;
+        }
+
+        main p a:hover,
+        main p a:focus-visible,
+        main li a:hover,
+        main li a:focus-visible {
+            color: #b2ddff;
+            text-decoration-color: currentColor;
+        }
+
         ul, ol {
             padding-left: 24px;
         }
