@@ -805,7 +805,7 @@ C. Create your own relay config
             </div>
             <div class="info-card">
                 <h3>Addressable Asset</h3>
-                <p>Unity stores the runtime config in <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code> for the example scene to load.</p>
+                <p>Unity stores the example scene runtime config in <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code>.</p>
             </div>
         </div>
 
@@ -816,41 +816,38 @@ C. Create your own relay config
         <pre><code>{
   serverUrl: https://api.turnkit.dev
   projectName: TurnKit-Client
-  gameKeyId: 00d5dbd9-fb8c-44aa-8cea-02d8c6e4b5a1
+  gameKeyId: fec4fe13-44c8-49f7-8794-5e6289efba42
   clientKey: tk_live_U2BOEi_tF3VAay9mvrrFYtxy4DggWAk1
-  defaultLeaderboard: global
-  enableLogging: 1
+  status: connected
   relayConfigs:
   - id: e5be1173-a30b-4be9-8894-b8cb131f0027
     slug: example
     maxPlayers: 2
-    turnEnforcement: 0
-    ignoreAllOwnership: 0
-    votingEnabled: 1
-    votingMode: 0
+    turnEnforcement: ROUND_ROBIN
+    votingMode: SYNC
     votesRequired: 2
     votesToFail: 1
-    failAction: 0
+    failAction: SKIP_TURN
     matchTimeoutMinutes: 10
     turnTimeoutSeconds: 120
     waitReconnectSeconds: 45
     lists:
     - name: p1_hidden
       tag: hand
-      ownerSlots: 01000000
-      visibleToSlots:
+      owner: Player1
+      visibleTo: Player1
     - name: p2_hidden
       tag: hand
-      ownerSlots: 02000000
-      visibleToSlots:
+      ownerSlots: Player2
+      visibleToSlots: Player2
     - name: results_public
       tag: table
-      ownerSlots: 0100000002000000
-      visibleToSlots:
+      ownerSlots: Player1, Player2
+      visibleToSlots: Player1, Player2
     - name: discard_public
       tag: discard
-      ownerSlots: 0100000002000000
-      visibleToSlots:
+      ownerSlots: Player1, Player2
+      visibleToSlots: Player1, Player2
 }</code></pre>
 
         <h2 id="parrelsync">Local Multiplayer With ParrelSync</h2>
