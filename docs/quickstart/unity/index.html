@@ -696,33 +696,6 @@
             Import the package, sign in once, let TurnKit create the required keys and defaults, then open the example scene and run a real multiplayer flow.
         </p>
 
-        <div class="info-grid">
-            <div class="info-card">
-                <h3>Install Source</h3>
-                <p>Start with the GitHub release package. The onboarding flow stays the same if distribution changes later.</p>
-            </div>
-            <div class="info-card">
-                <h3>First Run</h3>
-                <p>TurnKit opens an initial setup screen, then sends you through browser sign-in and returns to a ready-to-use get-started flow.</p>
-            </div>
-            <div class="info-card">
-                <h3>Result</h3>
-                <p>A developer account, game key, client key, relay config, default leaderboard, and sample scene flow are ready.</p>
-            </div>
-        </div>
-
-        <h2 id="overview">Overview</h2>
-        <p>
-            The quick start is meant to feel close to one-click onboarding. After import, TurnKit handles account creation, project bootstrap, and client config generation so you do not need to wire your first multiplayer scene by hand.
-        </p>
-        <ul>
-            <li>Download the package from GitHub.</li>
-            <li>Import or unpack it into a Unity project.</li>
-            <li>Let TurnKit open its initial setup flow automatically.</li>
-            <li>Sign in with Google or GitHub.</li>
-            <li>Come back to Unity with keys, configs, sample scenes, and two-editor testing ready.</li>
-        </ul>
-
         <h2 id="install">Install Package</h2>
         <p>
             The current install path is a direct GitHub release download.
@@ -733,10 +706,6 @@
             <li>Wait for Unity to recompile and finish asset import.</li>
             <li>TurnKit starts its setup window automatically after import.</li>
         </ol>
-
-        <div class="note">
-            <strong>Note:</strong> The first screen pre-fills the project name from the Unity project and offers <code>Continue to Login</code> or <code>Cancel</code>.
-        </div>
 
         <h2 id="signin">Initial Setup And Sign In</h2>
         <p>
@@ -802,7 +771,11 @@ C. Create your own relay config
 
 [ Open Docs ]
 [ Join Discord ]
-[ Open Account ]</code></pre>
+[ Open Dashboard ]</code></pre>
+
+        <div class="note">
+            <strong>Note:</strong> The client key is only shown on first creation. If you need a new one later, create it in <a href="https://turnkit.dev/dashboard" target="_blank" rel="noopener">Dashboard</a> because it is not stored server-side.
+        </div>
 
         <h2 id="generated-resources">Generated Resources</h2>
         <p>
@@ -841,27 +814,44 @@ C. Create your own relay config
             The generated config asset at <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code> is the handoff point between setup and runtime.
         </p>
         <pre><code>{
-  "clientKey": "tk_client_...",
-  "relay": {
-    "httpBaseUrl": "https://api.turnkit.dev",
-    "websocketUrl": "wss://api.turnkit.dev/v1/client/relay/ws"
-  },
-  "leaderboardSlug": "default",
-  "gameId": "your-game",
-  "environment": "production"
+  serverUrl: https://api.turnkit.dev
+  projectName: TurnKit-Client
+  gameKeyId: 00d5dbd9-fb8c-44aa-8cea-02d8c6e4b5a1
+  clientKey:
+  defaultLeaderboard: global
+  enableLogging: 1
+  relayConfigs:
+  - id: e5be1173-a30b-4be9-8894-b8cb131f0027
+    slug: example
+    maxPlayers: 2
+    turnEnforcement: 0
+    ignoreAllOwnership: 0
+    votingEnabled: 1
+    votingMode: 0
+    votesRequired: 2
+    votesToFail: 1
+    failAction: 0
+    matchTimeoutMinutes: 10
+    turnTimeoutSeconds: 120
+    waitReconnectSeconds: 45
+    lists:
+    - name: p1_hidden
+      tag: hand
+      ownerSlots: 01000000
+      visibleToSlots:
+    - name: p2_hidden
+      tag: hand
+      ownerSlots: 02000000
+      visibleToSlots:
+    - name: results_public
+      tag: table
+      ownerSlots: 0100000002000000
+      visibleToSlots:
+    - name: discard_public
+      tag: discard
+      ownerSlots: 0100000002000000
+      visibleToSlots:
 }</code></pre>
-
-        <h2 id="example-scene">Open The Example Scene</h2>
-        <p>
-            When setup completes, the editor can take the user straight to a working sample. The example scene should be the first proof that auth, relay, and saved config all resolved correctly.
-        </p>
-        <ol>
-            <li>Finish browser sign-in and return to Unity.</li>
-            <li>Review the get-started screen after TurnKit reports the project is fully configured.</li>
-            <li>Use <code>Open Scene</code> for Tic-Tac-Toe or Rock Paper Scissors.</li>
-            <li>Enter Play Mode and connect using the generated addressable config.</li>
-            <li>Create or join a session and validate the default leaderboard integration.</li>
-        </ol>
 
         <h2 id="parrelsync">Local Multiplayer With ParrelSync</h2>
         <p>
@@ -873,62 +863,23 @@ C. Create your own relay config
             <li>Run the sample scene in two Unity editors to exercise session join, move sync, and reconnect behavior locally.</li>
         </ul>
 
-        <h2 id="saved-state">What Gets Saved</h2>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                <tr>
-                    <th>Saved item</th>
-                    <th>Used by</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><code>clientKey</code></td>
-                    <td>Unity client API calls and relay access.</td>
-                </tr>
-                <tr>
-                    <td><code>relay config</code></td>
-                    <td>Example scene connection setup.</td>
-                </tr>
-                <tr>
-                    <td><code>leaderboard slug</code></td>
-                    <td>Submitting and reading scores from the default leaderboard.</td>
-                </tr>
-                <tr>
-                    <td><code>server url</code></td>
-                    <td>REST and WebSocket entry points.</td>
-                </tr>
-                <tr>
-                    <td><code>TurnKitConfig.asset</code></td>
-                    <td>Loading the generated runtime config from <code>TurnKit/Runtime/Resources/TurnKitConfig.asset</code>.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h2 id="next-steps">Next Steps</h2>
-        <ul>
-            <li>Replace the generated example config with your own game-specific relay settings.</li>
-            <li>Create a custom leaderboard instead of relying on the default starter slug.</li>
-            <li>Swap the sample scene for your actual gameplay scene while keeping the same generated config asset.</li>
-            <li>Use the WebSocket protocol docs once you move from the starter scene to a custom relay client.</li>
-        </ul>
+        <h2 id="example-scene">Open The Example Scene</h2>
+        <ol>
+            <li>Use <code>Open Scene</code> for Tic-Tac-Toe or Rock Paper Scissors.</li>
+            <li>Enter Play Mode on both Unity Editors and click <code>Find Match</code>.</li>
+        </ol>
     </main>
 
     <aside class="toc">
         <div class="toc-title">On This Page</div>
         <div class="toc-links">
-            <a href="#overview">Overview</a>
             <a href="#install">Install Package</a>
             <a href="#signin">Initial Setup And Sign In</a>
             <a href="#get-started-window">Get Started Window</a>
             <a href="#generated-resources">Generated Resources</a>
             <a href="#asset-shape">Addressable Asset Contents</a>
-            <a href="#example-scene">Open The Example Scene</a>
             <a href="#parrelsync">Local Multiplayer With ParrelSync</a>
-            <a href="#saved-state">What Gets Saved</a>
-            <a href="#next-steps">Next Steps</a>
+            <a href="#example-scene">Open The Example Scene</a>
         </div>
     </aside>
 </div>
