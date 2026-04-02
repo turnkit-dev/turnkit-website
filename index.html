@@ -135,6 +135,11 @@
       margin-left: auto;
     }
 
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+    }
+
     .nav-links a {
       color: var(--text);
       text-decoration: none;
@@ -145,8 +150,75 @@
 
     .nav-links a:hover { color: var(--accent); }
 
-    @media (max-width: 480px) {
-      .nav-links .nav-text-link { display: none; }
+    .nav-menu-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      background: transparent;
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .nav-menu-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    .nav-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: clamp(16px, 4vw, 64px);
+      min-width: 180px;
+      background: rgba(13, 17, 23, 0.98);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 8px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .nav-menu a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 3px;
+    }
+
+    .nav-menu a:hover {
+      background: var(--surface2);
+    }
+
+    .nav-menu.is-open {
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        position: sticky;
+      }
+
+      .nav-links {
+        gap: 10px;
+      }
+
+      .nav-links .nav-text-link {
+        display: none;
+      }
+
+      .nav-menu-toggle {
+        display: inline-flex;
+      }
+    }
+
+    @media (min-width: 641px) {
+      .nav-menu.is-open {
+        display: none;
+      }
     }
 
     .container {
@@ -713,7 +785,16 @@
     <div class="nav-links">
       <a href="/docs/websocket/" class="nav-text-link">Docs</a>
       <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener" class="nav-text-link">Discord</a>
-      <a href="#waitlist" class="btn-primary" style="padding:8px 18px;font-size:12px;">Get Early Access</a>
+      <a href="#waitlist" class="btn-primary nav-cta" style="padding:8px 18px;font-size:12px;">Get Early Access</a>
+      <button type="button" class="nav-menu-toggle" id="nav-menu-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7H20M4 12H20M4 17H20" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="/docs/websocket/">Docs</a>
+      <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener">Discord</a>
     </div>
   </nav>
 
@@ -1000,8 +1081,37 @@
       const submitBtn = document.getElementById('submit-btn');
       const msg = document.getElementById('form-message');
       const honeypot = document.getElementById('website');
+      const navMenuToggle = document.getElementById('nav-menu-toggle');
+      const navMenu = document.getElementById('nav-menu');
 
       let isSubmitting = false;
+
+      if (navMenuToggle && navMenu) {
+        navMenuToggle.addEventListener('click', () => {
+          const isOpen = navMenu.classList.toggle('is-open');
+          navMenuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!navMenu.classList.contains('is-open')) {
+            return;
+          }
+
+          if (navMenu.contains(event.target) || navMenuToggle.contains(event.target)) {
+            return;
+          }
+
+          navMenu.classList.remove('is-open');
+          navMenuToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 640) {
+            navMenu.classList.remove('is-open');
+            navMenuToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
