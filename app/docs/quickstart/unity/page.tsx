@@ -1,0 +1,89 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { DocsShell } from '@/components/docs-shell';
+import { unityQuickstartPageMeta } from '@/content/docs-content';
+
+export const metadata: Metadata = {
+  title: 'Unity Quickstart - TurnKit Docs',
+  description: unityQuickstartPageMeta.description,
+  alternates: {
+    canonical: unityQuickstartPageMeta.path,
+  },
+  openGraph: {
+    title: 'Unity Quickstart - TurnKit Docs',
+    description: unityQuickstartPageMeta.description,
+    url: `https://turnkit.dev${unityQuickstartPageMeta.path}`,
+    type: 'article',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Unity Quickstart - TurnKit Docs',
+    description: unityQuickstartPageMeta.description,
+  },
+};
+
+export default function UnityQuickstartPage() {
+  return (
+    <DocsShell meta={unityQuickstartPageMeta}>
+      <p className="mb-5 text-text">
+        1. Download{' '}
+        <a
+          href="https://github.com/Brainzy/TurnKit-Client/releases/latest/download/TurnKit.unitypackage"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+        >
+          TurnKit.unitypackage
+        </a>{' '}
+        and import it into your Unity project.
+      </p>
+      <p className="mb-10 text-text">2. Fill project name and continue to login. After login everything is generated and linked.</p>
+
+      <h2 id="get-started-window" className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">
+        Get Started Window
+      </h2>
+      <p className="mb-5 text-text">
+        3. Use <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Clone Project &amp; Open New Editor</code>, or
+        for more control use the Unity menu at <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TurnKit/ParrelSync</code>.
+      </p>
+      <p className="mb-5 text-text">4. Run the sample scene in two Unity editors.</p>
+
+      <div className="mb-6 rounded-[6px] border border-[rgba(240,164,41,0.3)] bg-[rgba(240,164,41,0.08)] px-5 py-4 text-[14px] leading-[1.6]">
+        <strong className="text-amber">Note:</strong> The client key is only shown on first creation. If you need a new one later,
+        create it in the{' '}
+        <Link href="/" className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]">
+          Dashboard
+        </Link>
+        .
+      </div>
+
+      <h2 id="generated-resources" className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">
+        Generated Resources
+      </h2>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {[
+          ['Developer Account', 'Your TurnKit account is created or linked during the browser auth step.'],
+          ['Game Key', 'A server-side game key is created for the project backend configuration.'],
+          ['Client Key', 'A client-safe key is generated for the Unity runtime.'],
+          ['Relay Example', 'Default relay settings are created so the sample scene can connect immediately.'],
+          ['Leaderboard', 'A default leaderboard is created on the server and linked into the sample config.'],
+          ['Addressable Asset', 'Unity stores the runtime config in TurnKitConfig.asset.'],
+        ].map(([title, description]) => (
+          <div key={title} className="rounded-[6px] border border-border bg-surface p-5">
+            <h3 className="mb-2 text-sm font-semibold text-text">{title}</h3>
+            <p className="text-[13px] text-muted">
+              {description.includes('TurnKitConfig.asset') ? (
+                <>
+                  Unity stores the runtime config in{' '}
+                  <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TurnKitConfig.asset</code>.
+                </>
+              ) : (
+                description
+              )}
+            </p>
+          </div>
+        ))}
+      </div>
+    </DocsShell>
+  );
+}
