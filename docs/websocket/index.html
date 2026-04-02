@@ -740,10 +740,9 @@
 
         <h2 id="handshake">Handshake</h2>
         <ul>
-            <li><code>POST /v1/client/relay/queue</code> now returns <code>relayToken</code> alongside <code>sessionId</code> and <code>slot</code>.</li>
+            <li><code>POST /v1/client/relay/queue</code> returns <code>relayToken</code> alongside <code>sessionId</code> and <code>slot</code>.</li>
             <li>Use that <code>relayToken</code> when opening <code>/v1/client/relay/ws</code>.</li>
             <li>Authenticate with either <code>Authorization: Bearer &lt;relayToken&gt;</code> or <code>?token=&lt;relayToken&gt;</code>.</li>
-            <li>Do not send <code>X-Player-Id</code> or <code>sessionId</code> for relay websocket auth anymore.</li>
         </ul>
 
         <pre><code>const ws = new WebSocket(
