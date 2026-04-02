@@ -664,8 +664,8 @@
             <span class="search-kbd">⌘K</span>
         </button>
         <a href="https://discord.gg/SqMVU5xex3" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;font-size:13px;display:none;">Discord</a>
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">☰</button>
         <a href="/#waitlist" class="btn-primary">Sign Up</a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">☰</button>
     </div>
 </nav>
 
@@ -775,21 +775,33 @@
     const sidebar = document.getElementById('sidebar');
     const mobileOverlay = document.getElementById('mobile-overlay');
 
+    function setMobileMenu(isOpen) {
+        sidebar.classList.toggle('active', isOpen);
+        mobileOverlay.classList.toggle('active', isOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
     function toggleMobileMenu() {
-        sidebar.classList.toggle('active');
-        mobileOverlay.classList.toggle('active');
+        setMobileMenu(!sidebar.classList.contains('active'));
     }
 
     mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    mobileOverlay.addEventListener('click', toggleMobileMenu);
+    mobileOverlay.addEventListener('click', () => setMobileMenu(false));
 
     const sidebarLinks = sidebar.querySelectorAll('a');
     sidebarLinks.forEach(link => {
         link.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
-                toggleMobileMenu();
+                setMobileMenu(false);
             }
         });
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            setMobileMenu(false);
+        }
     });
 
     const tocLinks = document.querySelectorAll('.toc-links a');
