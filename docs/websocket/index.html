@@ -726,11 +726,11 @@
         <div class="info-grid">
             <div class="info-card">
                 <h3>Endpoint</h3>
-                <p><code>wss://api.turnkit.dev/v1/client/relay/ws?sessionId=&lt;uuid&gt;</code></p>
+                <p><code>wss://api.turnkit.dev/v1/client/relay/ws</code></p>
             </div>
             <div class="info-card">
                 <h3>Auth</h3>
-                <p><code>Authorization: Bearer &lt;clientKey&gt;</code><br><code>X-Player-Id: &lt;playerId&gt;</code></p>
+                <p><code>Authorization: Bearer &lt;relayToken&gt;</code><br><code>?token=&lt;relayToken&gt;</code></p>
             </div>
             <div class="info-card">
                 <h3>Format</h3>
@@ -740,25 +740,28 @@
 
         <h2 id="handshake">Handshake</h2>
         <ul>
-            <li><code>sessionId</code> is required in the query string and must be a valid UUID.</li>
-            <li><code>Authorization</code> must contain a valid TurnKit client key.</li>
-            <li><code>X-Player-Id</code> is required, non-blank, and capped at 128 characters.</li>
-            <li>The game key must have the Turn Relay module enabled.</li>
+            <li><code>POST /v1/client/relay/queue</code> now returns <code>relayToken</code> alongside <code>sessionId</code> and <code>slot</code>.</li>
+            <li>Use that <code>relayToken</code> when opening <code>/v1/client/relay/ws</code>.</li>
+            <li>Authenticate with either <code>Authorization: Bearer &lt;relayToken&gt;</code> or <code>?token=&lt;relayToken&gt;</code>.</li>
+            <li>Do not send <code>X-Player-Id</code> or <code>sessionId</code> for relay websocket auth anymore.</li>
         </ul>
 
         <pre><code>const ws = new WebSocket(
-  `wss://api.turnkit.dev/v1/client/relay/ws?sessionId=${sessionId}`,
+  "wss://api.turnkit.dev/v1/client/relay/ws",
   [],
   {
     headers: {
-      Authorization: `Bearer ${clientKey}`,
-      "X-Player-Id": playerId
+      Authorization: `Bearer ${relayToken}`
     }
   }
 )</code></pre>
 
+        <pre><code>const ws = new WebSocket(
+  `wss://api.turnkit.dev/v1/client/relay/ws?token=${encodeURIComponent(relayToken)}`
+)</code></pre>
+
         <div class="note">
-            <strong>Note:</strong> Browser WebSocket APIs do not allow custom headers. For browser clients, connect through your own authenticated backend or expose a browser-safe upgrade flow first.
+            <strong>Note:</strong> Browser WebSocket APIs do not allow custom headers. In browsers, use <code>?token=&lt;relayToken&gt;</code>.
         </div>
 
         <h2 id="lifecycle">Session Lifecycle</h2>
