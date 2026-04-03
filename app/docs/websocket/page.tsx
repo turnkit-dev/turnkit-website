@@ -31,13 +31,13 @@ export default function WebsocketDocsPage() {
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <InfoCard title="Endpoint">
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">wss://api.turnkit.dev/v1/client/relay/ws</code>
+          <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">wss://api.turnkit.dev/v1/client/relay/ws</code>
         </InfoCard>
         <InfoCard title="Auth">
           <p className="text-[13px] text-muted">
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Authorization: Bearer &lt;relayToken&gt;</code>
+            <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Authorization: Bearer &lt;relayToken&gt;</code>
             <br />
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">?token=&lt;relayToken&gt;</code>
+            <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">?token=&lt;relayToken&gt;</code>
           </p>
         </InfoCard>
         <InfoCard title="Format">
