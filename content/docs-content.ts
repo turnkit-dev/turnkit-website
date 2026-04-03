@@ -77,6 +77,18 @@ export const websocketPageMeta: DocsPageMeta = {
   ],
 };
 
+export const apiPageMeta: DocsPageMeta = {
+  title: 'REST API',
+  description: 'REST API reference for TurnKit server endpoints generated from the OpenAPI specification.',
+  path: '/docs/api',
+  eyebrow: 'API Reference',
+  breadcrumbLabel: 'REST API',
+  toc: [
+    { href: '#overview', label: 'Overview' },
+    { href: '#reference', label: 'Reference' },
+  ],
+};
+
 export const unityQuickstartPageMeta: DocsPageMeta = {
   title: 'Unity Quickstart',
   description:

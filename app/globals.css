@@ -47,3 +47,61 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
+
+.scalar-theme-turnkit {
+  --scalar-background-1: #0a0f14;
+  --scalar-background-2: #1a1f26;
+  --scalar-background-3: #1a1f26;
+  --scalar-color-1: #ffffff;
+  --scalar-color-2: #a1a1aa;
+  --scalar-color-3: #7b8794;
+  --scalar-color-accent: #00d4ff;
+  --scalar-link-color: #00d4ff;
+  --scalar-link-color-hover: #00d4ff;
+  --scalar-border-color: #334155;
+  --scalar-color-blue: #00d4ff;
+  --scalar-color-green: #22c55e;
+  --scalar-shadow-1: none;
+  --scalar-shadow-2: none;
+  background: #0a0f14;
+  color: #a1a1aa;
+}
+
+.scalar-theme-turnkit .t-doc__sidebar,
+.scalar-theme-turnkit .references-sidebar,
+.scalar-theme-turnkit .reference-layout,
+.scalar-theme-turnkit .scalar-app,
+.scalar-theme-turnkit .api-reference,
+.scalar-theme-turnkit .reference-section,
+.scalar-theme-turnkit .reference-card,
+.scalar-theme-turnkit .reference-content,
+.scalar-theme-turnkit .section-container,
+.scalar-theme-turnkit .card,
+.scalar-theme-turnkit .scalar-card {
+  background: #1a1f26;
+}
+
+.scalar-theme-turnkit a,
+.scalar-theme-turnkit .markdown a {
+  color: #00d4ff;
+}
+
+.scalar-theme-turnkit .tag[data-method="get"],
+.scalar-theme-turnkit .http-verb.get,
+.scalar-theme-turnkit .method.get {
+  background: #00d4ff !important;
+  color: #0a0f14 !important;
+}
+
+.scalar-theme-turnkit .tag[data-method="post"],
+.scalar-theme-turnkit .http-verb.post,
+.scalar-theme-turnkit .method.post {
+  background: #22c55e !important;
+  color: #0a0f14 !important;
+}
+
+.scalar-theme-turnkit [aria-current="true"],
+.scalar-theme-turnkit .active-page,
+.scalar-theme-turnkit .active {
+  color: #ffffff !important;
+}

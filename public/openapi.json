@@ -1,0 +1,3935 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TurnKit API",
+    "description": "TurnKit game backend — multi-tenant leaderboard, matchmaking, relay and player store for indie games.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Relay Configs",
+      "description": "Manage TurnRelay match configurations"
+    },
+    {
+      "name": "Player ID Auth",
+      "description": "Configure player identity verification per game key"
+    },
+    {
+      "name": "Relay Queue",
+      "description": "Join matchmaking queue"
+    },
+    {
+      "name": "Player Auth",
+      "description": "TurnKit player authentication (TURNKIT_AUTH mode only)"
+    }
+  ],
+  "paths": {
+    "/v1/dev/relay-configs/{slug}": {
+      "get": {
+        "tags": [
+          "Relay Configs"
+        ],
+        "summary": "Get a relay config by slug",
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Relay Configs"
+        ],
+        "summary": "Update a relay config — replaces lists entirely",
+        "description": "Updates an existing relay configuration. Enum values: turnEnforcement: ROUND_ROBIN, FREE; votingMode: SYNC, ASYNC; failAction: SKIP_TURN, END_GAME",
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Relay Configs"
+        ],
+        "summary": "Delete a relay config",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/player-id/smtp": {
+      "get": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Get SMTP config (password masked)",
+        "operationId": "getSmtp",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmtpConfigDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Save SMTP config for TurnKit player auth emails",
+        "operationId": "saveSmtp",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SmtpConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Delete SMTP config",
+        "operationId": "deleteSmtp",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/player-id/mode": {
+      "put": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Set player ID mode for a game key",
+        "operationId": "setMode",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetModeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/webhooks/lemonsqueezy": {
+      "post": {
+        "tags": [
+          "lemon-squeezy-webhook-controller"
+        ],
+        "operationId": "handle",
+        "parameters": [
+          {
+            "name": "X-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/relay-configs": {
+      "get": {
+        "tags": [
+          "Relay Configs"
+        ],
+        "summary": "List all relay configs for a game key",
+        "operationId": "list",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Relay Configs"
+        ],
+        "summary": "Create a relay config",
+        "description": "Creates a new relay configuration with the specified parameters. Enum values: turnEnforcement: ROUND_ROBIN, FREE; votingMode: SYNC, ASYNC; failAction: SKIP_TURN, END_GAME",
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys": {
+      "get": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "List game keys",
+        "description": "Retrieves all game keys owned by the authenticated developer",
+        "operationId": "listGameKeys",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GameKey"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "Create game key",
+        "description": "Creates a new game key with the specified name for the authenticated developer",
+        "operationId": "createGameKey",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameKey"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/player-id/secret/rotate": {
+      "post": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Rotate player ID secret. Previous secret immediately invalidated.",
+        "operationId": "rotateSecret",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/player-id/secret/generate": {
+      "post": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Generate player ID secret. Returned ONCE — store securely. Invalidates previous secret.",
+        "operationId": "generateSecret",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards": {
+      "get": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "List all leaderboards",
+        "description": "Retrieves all leaderboards for the current game key",
+        "operationId": "list_1",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Create a new leaderboard",
+        "description": "Creates a new leaderboard with the specified configuration. Available enum values: sortOrder: ASC (for time-based where lower is better), DESC (for points where higher is better); scoreStrategy: BEST_ONLY (keeps only best score per player), MULTIPLE_ENTRIES (stores all submissions), CUMULATIVE (sums all submissions); resetFrequency: NONE, DAILY, WEEKLY, MONTHLY",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaderboardCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/{slug}/reset": {
+      "post": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Reset leaderboard scores",
+        "description": "Resets all scores for a leaderboard. Optionally archives scores before reset and applies a reset label",
+        "operationId": "reset",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archive",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "resetLabel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/banned-players/{playerId}": {
+      "post": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Ban player",
+        "description": "Bans a player from all leaderboards for the current game key",
+        "operationId": "banPlayer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Unban player",
+        "description": "Removes a player from the banned list for the current game key",
+        "operationId": "unbanPlayer",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/client-keys": {
+      "get": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "List client keys",
+        "description": "Retrieves all active client keys for the specified game key",
+        "operationId": "list_2",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientKey"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "Generate client key",
+        "description": "Generates a new client key for the specified game key",
+        "operationId": "generate",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Default"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientKeyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard/{gameKeyId}/upgrade": {
+      "post": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Get upgrade checkout URL",
+        "description": "Generates a Lemon Squeezy checkout URL for upgrading to a paid tier",
+        "operationId": "getCheckoutUrl",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard/{gameKeyId}/auto-upgrade": {
+      "post": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Toggle auto-upgrade",
+        "description": "Enables or disables automatic tier upgrades when limits are exceeded",
+        "operationId": "toggleAutoUpgrade",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoUpgradeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/client/relay/queue": {
+      "post": {
+        "tags": [
+          "Relay Queue"
+        ],
+        "summary": "Join matchmaking queue for a relay config. Returns sessionId to connect WebSocket.",
+        "operationId": "join",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/leaderboards/{slug}/scores": {
+      "post": {
+        "tags": [
+          "Client — Leaderboards"
+        ],
+        "summary": "Submit a score",
+        "operationId": "submitScore",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "The unique slug of the leaderboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "global-speedrun-v1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoreSubmissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScoreSubmitResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/otp/verify": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Verify OTP and receive a player JWT. Token valid for 14 days.",
+        "operationId": "verifyOtp",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpVerifyResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/otp/request": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Request an OTP for a player email. Rate limited: 3 per 10 minutes.",
+        "operationId": "requestOtp",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/admin/admin/variants/reload": {
+      "post": {
+        "tags": [
+          "Internal Admin"
+        ],
+        "summary": "Reload variants",
+        "description": "Reloads Lemon Squeezy variant configurations from cache",
+        "operationId": "reloadVariants",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/{slug}": {
+      "delete": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Delete leaderboard",
+        "description": "Permanently deletes a leaderboard and all its scores",
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Update leaderboard display name",
+        "description": "Updates only the display name of an existing leaderboard",
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/{slug}/scores": {
+      "get": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Get leaderboard scores",
+        "description": "Retrieves paginated scores for a specific leaderboard",
+        "operationId": "getScores",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScoreEntryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/banned-players": {
+      "get": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "List banned players",
+        "description": "Retrieves all banned player IDs for the current game key",
+        "operationId": "listBanned",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard": {
+      "get": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Get dashboard overview",
+        "description": "Retrieves overview of all game keys with current CCU, tiers, and billing status",
+        "operationId": "getOverview",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard/{gameKeyId}/ccu": {
+      "get": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Get CCU chart data",
+        "description": "Retrieves hourly CCU peak data for the last 7 days for a specific game key",
+        "operationId": "getCcuChart",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CcuHourlyPeak"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard/{gameKeyId}/billing": {
+      "get": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Get billing information",
+        "description": "Retrieves billing status, tiers, and limits for a specific game key",
+        "operationId": "getBilling",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/auth-status": {
+      "get": {
+        "tags": [
+          "unity-auth-controller"
+        ],
+        "operationId": "getAuthStatus",
+        "parameters": [
+          {
+            "name": "pollId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/ping": {
+      "get": {
+        "tags": [
+          "Client — Leaderboards"
+        ],
+        "summary": "Ping endpoint",
+        "description": "Health check endpoint that returns current game key status and CCU",
+        "operationId": "ping",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/leaderboards/{slug}/top": {
+      "get": {
+        "tags": [
+          "Client — Leaderboards"
+        ],
+        "summary": "Get top scores",
+        "operationId": "getTopScores",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "The unique slug of the leaderboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "global-speedrun-v1"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopScoresListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/leaderboards/{slug}/me": {
+      "get": {
+        "tags": [
+          "Client — Leaderboards"
+        ],
+        "summary": "Get player rank and surrounding scores",
+        "operationId": "getPlayerScore",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "The unique slug of the leaderboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "global-speedrun-v1"
+          },
+          {
+            "name": "surrounding",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerScoreWithoutMetadataResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/leaderboards/{slug}/combined": {
+      "get": {
+        "tags": [
+          "Client — Leaderboards"
+        ],
+        "summary": "Get top scores + player context in one request",
+        "operationId": "getCombined",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "The unique slug of the leaderboard",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "global-speedrun-v1"
+          },
+          {
+            "name": "topLimit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "surrounding",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CombinedLeaderboardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}": {
+      "delete": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "Delete game key",
+        "description": "Permanently deletes a game key and all associated data",
+        "operationId": "deleteGameKey",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/leaderboards/{slug}/scores/{scoreId}": {
+      "delete": {
+        "tags": [
+          "Dev — Leaderboards"
+        ],
+        "summary": "Remove specific score",
+        "description": "Removes a specific score entry from a leaderboard",
+        "operationId": "removeScore",
+        "parameters": [
+          {
+            "name": "scoreId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/client-keys/{clientKeyId}": {
+      "delete": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "Revoke client key",
+        "description": "Revokes a client key, making it invalid for future API calls",
+        "operationId": "revoke",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "clientKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/client/relay/queue/{slug}": {
+      "delete": {
+        "tags": [
+          "Relay Queue"
+        ],
+        "summary": "Leave the matchmaking queue",
+        "operationId": "leave",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "ListConfigRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "ownerSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "visibleToSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "description": "Relay configuration update request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
+        "properties": {
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnEnforcement": {
+            "type": "string",
+            "enum": [
+              "ROUND_ROBIN",
+              "FREE"
+            ]
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "ignoreAllOwnership": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string",
+            "enum": [
+              "SYNC",
+              "ASYNC"
+            ]
+          },
+          "votesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesToFail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failAction": {
+            "type": "string",
+            "enum": [
+              "SKIP_TURN",
+              "END_GAME"
+            ]
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "waitReconnectSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListConfigRequest"
+            }
+          }
+        }
+      },
+      "ListConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "ownerSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "visibleToSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnEnforcement": {
+            "type": "string",
+            "enum": [
+              "ROUND_ROBIN",
+              "FREE"
+            ]
+          },
+          "ignoreAllOwnership": {
+            "type": "boolean"
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string",
+            "enum": [
+              "SYNC",
+              "ASYNC"
+            ]
+          },
+          "votesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesToFail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failAction": {
+            "type": "string",
+            "enum": [
+              "SKIP_TURN",
+              "END_GAME"
+            ]
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "waitReconnectSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListConfigResponse"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SmtpConfigRequest": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "fromAddress": {
+            "type": "string"
+          },
+          "fromName": {
+            "type": "string"
+          }
+        }
+      },
+      "SetModeRequest": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "SIGNED",
+              "TURNKIT_AUTH"
+            ]
+          }
+        }
+      },
+      "CreateRequest": {
+        "type": "object",
+        "description": "Relay configuration request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnEnforcement": {
+            "type": "string",
+            "enum": [
+              "ROUND_ROBIN",
+              "FREE"
+            ]
+          },
+          "ignoreAllOwnership": {
+            "type": "boolean"
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string",
+            "enum": [
+              "SYNC",
+              "ASYNC"
+            ]
+          },
+          "votesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesToFail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failAction": {
+            "type": "string",
+            "enum": [
+              "SKIP_TURN",
+              "END_GAME"
+            ]
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "waitReconnectSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListConfigRequest"
+            }
+          }
+        }
+      },
+      "GameKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "developerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "DELETED"
+            ]
+          },
+          "burstUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "burstExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "burstPeakCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "autoUpgrade": {
+            "type": "boolean"
+          },
+          "playerIdMode": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "SIGNED",
+              "TURNKIT_AUTH"
+            ]
+          },
+          "player_id_secret_hash": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SecretResponse": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string"
+          }
+        }
+      },
+      "LeaderboardCreateRequest": {
+        "type": "object",
+        "description": "Request object for creating a new leaderboard",
+        "example": {
+          "slug": "global-speedrun-v1",
+          "displayName": "Global Speedrun Rankings",
+          "sortOrder": "ASC",
+          "scoreStrategy": "BEST_ONLY",
+          "minScore": 0,
+          "maxScore": 1000000,
+          "resetFrequency": "NONE",
+          "archiveOnReset": false
+        },
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Unique identifier for the leaderboard. Used in API URLs.",
+            "example": "global-speedrun-v1",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The name displayed to players in-game.",
+            "example": "Global High Scores",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "sortOrder": {
+            "type": "string",
+            "default": "DESC",
+            "description": "Determines the ranking logic. DESC (default) for points where higher is better. ASC for time/speedruns where lower is better.",
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "example": "DESC"
+          },
+          "scoreStrategy": {
+            "type": "string",
+            "default": "BEST_ONLY",
+            "description": "Strategy for handling score submissions. BEST_ONLY (default) keeps only the best score per player. MULTIPLE_ENTRIES stores every submission. CUMULATIVE sums all submissions of same player.",
+            "enum": [
+              "BEST_ONLY",
+              "MULTIPLE_ENTRIES",
+              "CUMULATIVE"
+            ],
+            "example": "BEST_ONLY"
+          },
+          "minScore": {
+            "type": "number",
+            "format": "double",
+            "default": 0,
+            "description": "Optional minimum score value allowed for submission",
+            "example": 0
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double",
+            "default": 1000000,
+            "description": "Optional maximum score value allowed for submission",
+            "example": 1000000
+          },
+          "resetFrequency": {
+            "type": "string",
+            "default": "NONE",
+            "description": "Frequency of automatic resets. NONE (default), DAILY, WEEKLY, MONTHLY.",
+            "enum": [
+              "NONE",
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY"
+            ],
+            "example": "NONE"
+          },
+          "archiveOnReset": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, scores are archived before automatic reset. Default is false.",
+            "example": false
+          }
+        },
+        "required": [
+          "displayName",
+          "slug"
+        ]
+      },
+      "Leaderboard": {
+        "type": "object",
+        "description": "Represents a leaderboard configuration",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gameKeyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string",
+            "description": "Unique slug for the leaderboard",
+            "example": "global-high-scores"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the leaderboard",
+            "example": "Global High Scores"
+          },
+          "sortOrder": {
+            "type": "string",
+            "description": "Sorting order for the leaderboard. Options: DESC, ASC",
+            "enum": [
+              "DESC",
+              "ASC"
+            ],
+            "example": "DESC"
+          },
+          "scoreStrategy": {
+            "type": "string",
+            "description": "Strategy for handling score submissions. Options: BEST_ONLY, MULTIPLE_ENTRIES, CUMULATIVE",
+            "enum": [
+              "BEST_ONLY",
+              "MULTIPLE_ENTRIES",
+              "CUMULATIVE"
+            ],
+            "example": "BEST_ONLY"
+          },
+          "minScore": {
+            "type": "number",
+            "format": "double",
+            "description": "Optional minimum score value allowed for submission, default is 0.",
+            "example": 0
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double",
+            "description": "Optional maximum score value allowed for submission, default is 1000000.",
+            "example": 1000000
+          },
+          "resetFrequency": {
+            "type": "string",
+            "description": "Frequency of automatic resets. Options: NONE, DAILY, WEEKLY, MONTHLY",
+            "enum": [
+              "NONE",
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY"
+            ],
+            "example": "NONE"
+          },
+          "archiveOnReset": {
+            "type": "boolean",
+            "description": "If true, scores are archived before automatic reset",
+            "example": false
+          },
+          "nextResetAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of the next scheduled reset",
+            "example": "2026-11-01T00:00:00Z"
+          }
+        }
+      },
+      "ClientKeyResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "fullKey": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "AutoUpgradeRequest": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "creatorSlot": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "JoinRequest": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Item"
+              }
+            }
+          }
+        }
+      },
+      "JoinResponse": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relayToken": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "ScoreSubmissionRequest": {
+        "type": "object",
+        "description": "Request object for submitting a new score",
+        "properties": {
+          "scoreValue": {
+            "type": "number",
+            "format": "double",
+            "description": "Score to be added (Supports decimals)",
+            "example": 1550.5
+          },
+          "metadata": {
+            "type": "string",
+            "description": "Optional metadata string associated with the score (Max 1000 chars)",
+            "example": "Level 5 - Warrior",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "scoreValue"
+        ]
+      },
+      "ScoreSubmitResponse": {
+        "type": "object",
+        "description": "Response object returned after a score submission",
+        "example": {
+          "rank": 13,
+          "score": 1550.5
+        },
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The rank of the submitted score",
+            "example": 13
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "description": "The submitted score value",
+            "example": 1550.5
+          }
+        }
+      },
+      "OtpVerifyRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "otp": {
+            "type": "string"
+          }
+        }
+      },
+      "OtpVerifyResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          }
+        }
+      },
+      "OtpRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "SmtpConfigDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          },
+          "fromAddress": {
+            "type": "string"
+          },
+          "fromName": {
+            "type": "string"
+          }
+        }
+      },
+      "ScoreEntryResponse": {
+        "type": "object",
+        "description": "Response object representing a score entry with rank",
+        "properties": {
+          "leaderboardId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Internal ID of the score entry",
+            "example": 101
+          },
+          "playerAlias": {
+            "type": "string",
+            "description": "The player's display name",
+            "example": "PlayerOne"
+          },
+          "scoreValue": {
+            "type": "number",
+            "format": "double",
+            "description": "The score value",
+            "example": 1500.5
+          },
+          "rank": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The rank of the player in the leaderboard",
+            "example": 1
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the score was submitted",
+            "example": "2023-10-01T12:00:00Z"
+          },
+          "metadata": {
+            "type": "string",
+            "description": "Optional metadata associated with the score",
+            "example": "Level 5 - Warrior"
+          }
+        }
+      },
+      "ClientKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gameKeyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "keyHash": {
+            "type": "string"
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DashboardOverview": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "gameKeys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameKeyOverview"
+            }
+          }
+        }
+      },
+      "GameKeyOverview": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "DELETED"
+            ]
+          },
+          "currentCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "todaysPeakCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeModules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LEADERBOARDS",
+                "PLAYER_STORE",
+                "MATCHMAKING",
+                "TURN_RELAY"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "tiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "FREE",
+                "INDIE",
+                "STUDIO",
+                "PRO",
+                "SCALE",
+                "ENTERPRISE"
+              ]
+            }
+          },
+          "tierLimits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "autoUpgrade": {
+            "type": "boolean"
+          },
+          "burstExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CcuHourlyPeak": {
+        "type": "object",
+        "properties": {
+          "gameKeyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hourTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "peakCcu": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "BillingOverview": {
+        "type": "object",
+        "properties": {
+          "autoUpgrade": {
+            "type": "boolean"
+          },
+          "burstActive": {
+            "type": "boolean"
+          },
+          "burstExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "burstUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "FREE",
+                "INDIE",
+                "STUDIO",
+                "PRO",
+                "SCALE",
+                "ENTERPRISE"
+              ]
+            }
+          },
+          "tierLimits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "TopScoreResponse": {
+        "type": "object",
+        "description": "Minimal response object for top scores",
+        "properties": {
+          "n": {
+            "type": "string",
+            "description": "Player name",
+            "example": "Player1"
+          },
+          "s": {
+            "type": "number",
+            "format": "double",
+            "description": "Score value",
+            "example": 9500
+          }
+        }
+      },
+      "TopScoresListResponse": {
+        "type": "object",
+        "description": "Response object containing a list of top scores",
+        "example": {
+          "scores": [
+            {
+              "n": "Player1",
+              "s": 9500
+            },
+            {
+              "n": "Player2",
+              "s": 8200
+            }
+          ]
+        },
+        "properties": {
+          "scores": {
+            "type": "array",
+            "description": "List of top scores with minimal data",
+            "items": {
+              "$ref": "#/components/schemas/TopScoreResponse"
+            }
+          }
+        }
+      },
+      "PlayerScoreWithoutMetadataResponse": {
+        "type": "object",
+        "description": "Response object for player score with surrounding scores without metadata",
+        "example": {
+          "startRank": 1,
+          "scores": [
+            {
+              "n": "Player1",
+              "s": 9500
+            },
+            {
+              "n": "Player2",
+              "s": 8200
+            }
+          ]
+        },
+        "properties": {
+          "startRank": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The rank of the first score in the list",
+            "example": 1
+          },
+          "scores": {
+            "type": "array",
+            "description": "List of scores without metadata",
+            "items": {
+              "$ref": "#/components/schemas/TopScoreResponse"
+            }
+          }
+        }
+      },
+      "CombinedLeaderboardResponse": {
+        "type": "object",
+        "description": "Combined response containing top scores and player score with surrounding ranks",
+        "example": {
+          "topScores": [
+            {
+              "n": "Player1",
+              "s": 9500
+            }
+          ],
+          "playerScore": {
+            "startRank": 1,
+            "scores": [
+              {
+                "n": "Player1",
+                "s": 9500,
+                "m": "Sword-Level5"
+              },
+              {
+                "n": "Player2",
+                "s": 8200,
+                "m": null
+              }
+            ]
+          }
+        },
+        "properties": {
+          "topScores": {
+            "type": "array",
+            "description": "List of top scores without metadata",
+            "items": {
+              "$ref": "#/components/schemas/TopScoreResponse"
+            }
+          },
+          "playerScore": {
+            "$ref": "#/components/schemas/PlayerScoreResponse",
+            "description": "Player score with surrounding scores"
+          }
+        }
+      },
+      "PlayerScoreResponse": {
+        "type": "object",
+        "description": "Response object for player score with surrounding scores",
+        "example": {
+          "startRank": 1,
+          "scores": [
+            {
+              "n": "Player1",
+              "s": 9500,
+              "m": "Sword-Level5"
+            },
+            {
+              "n": "Player2",
+              "s": 8200,
+              "m": null
+            }
+          ]
+        },
+        "properties": {
+          "startRank": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The rank of the first score in the list",
+            "example": 1
+          },
+          "scores": {
+            "type": "array",
+            "description": "List of scores with metadata",
+            "items": {
+              "$ref": "#/components/schemas/TopScoreWithMetadataResponse"
+            }
+          }
+        }
+      },
+      "TopScoreWithMetadataResponse": {
+        "type": "object",
+        "description": "Score response with metadata",
+        "properties": {
+          "n": {
+            "type": "string",
+            "description": "Player name",
+            "example": "Player1"
+          },
+          "s": {
+            "type": "number",
+            "format": "double",
+            "description": "Score value",
+            "example": 9500
+          },
+          "m": {
+            "type": "string",
+            "description": "Metadata",
+            "example": "Sword-Level5"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "name": "bearerAuth",
+        "scheme": "bearer",
+        "bearerFormat": "SDK Client Key"
+      }
+    }
+  }
+}
