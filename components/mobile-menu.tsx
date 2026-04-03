@@ -41,7 +41,7 @@ export function MobileMenu({ ariaLabel, currentPath, ctaHref = '/#waitlist', cta
     <>
       <button
         type="button"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 text-text"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 bg-[rgba(13,17,23,0.92)] text-text shadow-[0_10px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm"
         aria-label={ariaLabel}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((value) => !value)}

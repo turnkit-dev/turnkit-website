@@ -40,7 +40,15 @@ export default function DocsLayout({ children }: Readonly<{ children: React.Reac
           </Link>
         </div>
         <div className="md:hidden">
-          <MobileMenu ariaLabel="Open docs navigation" />
+          <div className="flex items-center gap-2">
+            <Link
+              href="/#waitlist"
+              className="inline-flex h-10 items-center rounded-[3px] bg-accent px-3 text-[12px] font-medium text-white transition hover:bg-[#3AADF5]"
+            >
+              Sign Up
+            </Link>
+            <MobileMenu ariaLabel="Open docs navigation" ctaHref="/#waitlist" ctaLabel="Sign Up" />
+          </div>
         </div>
       </nav>
       <div className="pt-[60px]">{children}</div>
