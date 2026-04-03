@@ -41,7 +41,7 @@ export function MobileMenu({ ariaLabel, currentPath, ctaHref = '/#waitlist', cta
     <>
       <button
         type="button"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 bg-[rgba(13,17,23,0.92)] text-text shadow-[0_10px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm"
+        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[3px] border border-border2 bg-[#0d1117] text-text shadow-[0_10px_24px_rgba(0,0,0,0.35)]"
         aria-label={ariaLabel}
         aria-expanded={isOpen}
         onClick={() => setIsOpen((value) => !value)}
@@ -50,8 +50,8 @@ export function MobileMenu({ ariaLabel, currentPath, ctaHref = '/#waitlist', cta
           <path d="M4 7H20M4 12H20M4 17H20" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
       </button>
-      <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-50 bg-[rgba(8,12,16,0.96)] transition`}>
-        <div className="min-h-full overflow-y-auto p-6 pt-5">
+      <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-[80] bg-[#080c10] transition`}>
+        <div className="min-h-full overflow-y-auto bg-[#080c10] p-6 pt-5">
           <div className="mb-8 flex items-center justify-between gap-4">
             <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Navigation</div>
             <button
