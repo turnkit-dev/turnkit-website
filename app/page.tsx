@@ -50,14 +50,14 @@ export default function HomePage() {
           </a>
         </div>
         <div className="sm:hidden">
-          <div className="flex items-center gap-2">
+          <div className="ml-2 flex shrink-0 items-center gap-2">
             <Link
               href="/#waitlist"
               className="inline-flex h-10 shrink-0 items-center rounded-[3px] bg-accent px-2.5 text-[11px] font-medium text-white transition hover:bg-[#3AADF5]"
             >
               Sign Up
             </Link>
-            <MobileMenu ariaLabel="Open navigation menu" ctaHref="/#waitlist" ctaLabel="Sign Up" />
+            <MobileMenu ariaLabel="Open navigation menu" ctaHref="/#waitlist" ctaLabel="Sign Up" showDocsSection={false} />
           </div>
         </div>
       </nav>

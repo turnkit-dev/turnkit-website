@@ -12,9 +12,17 @@ export interface MobileMenuProps {
   ctaHref?: string;
   ctaLabel?: string;
   docsTitle?: ReactNode;
+  showDocsSection?: boolean;
 }
 
-export function MobileMenu({ ariaLabel, currentPath, ctaHref = '/#waitlist', ctaLabel = 'Get Early Access', docsTitle }: MobileMenuProps) {
+export function MobileMenu({
+  ariaLabel,
+  currentPath,
+  ctaHref = '/#waitlist',
+  ctaLabel = 'Get Early Access',
+  docsTitle,
+  showDocsSection = true,
+}: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const activePath = currentPath ?? pathname;
@@ -98,43 +106,47 @@ export function MobileMenu({ ariaLabel, currentPath, ctaHref = '/#waitlist', cta
             </Link>
           </div>
 
-          <div className="my-8 h-px bg-border" />
+          {showDocsSection ? (
+            <>
+              <div className="my-8 h-px bg-border" />
 
-          <div>
-            <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{docsTitle ?? 'Docs'}</div>
-            <div className="space-y-8">
-              {docsNavSections.map((section) => (
-                <div key={section.title}>
-                  <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{section.title}</div>
-                  <div className="space-y-1">
-                    {section.links.map((link) => {
-                      const active = link.href === activePath;
-                      const className = active
-                        ? 'block rounded-[3px] border border-[rgba(88,166,255,0.4)] bg-[rgba(88,166,255,0.15)] px-3 py-3 text-[15px] text-[#58A6FF]'
-                        : 'block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2';
+              <div>
+                <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{docsTitle ?? 'Docs'}</div>
+                <div className="space-y-8">
+                  {docsNavSections.map((section) => (
+                    <div key={section.title}>
+                      <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{section.title}</div>
+                      <div className="space-y-1">
+                        {section.links.map((link) => {
+                          const active = link.href === activePath;
+                          const className = active
+                            ? 'block rounded-[3px] border border-[rgba(88,166,255,0.4)] bg-[rgba(88,166,255,0.15)] px-3 py-3 text-[15px] text-[#58A6FF]'
+                            : 'block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2';
 
-                      return link.external ? (
-                        <a
-                          key={link.href}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={className}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {link.label}
-                        </a>
-                      ) : (
-                        <Link key={link.href} href={link.href} className={className} onClick={() => setIsOpen(false)}>
-                          {link.label}
-                        </Link>
-                      );
-                    })}
-                  </div>
+                          return link.external ? (
+                            <a
+                              key={link.href}
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={className}
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {link.label}
+                            </a>
+                          ) : (
+                            <Link key={link.href} href={link.href} className={className} onClick={() => setIsOpen(false)}>
+                              {link.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </>
