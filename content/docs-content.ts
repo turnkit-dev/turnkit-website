@@ -93,6 +93,23 @@ export const relayPageMeta: DocsPageMeta = {
   ],
 };
 
+export const leaderboardsPageMeta: DocsPageMeta = {
+  title: 'Leaderboards',
+  description:
+    'Submit scores, query ranks, and configure seasonal or all-time leaderboards with validation, metadata, and authoritative integrations.',
+  path: '/docs/leaderboards',
+  eyebrow: 'Features',
+  breadcrumbLabel: 'Leaderboards',
+  toc: [
+    { href: '#create-leaderboard', label: 'Create Leaderboard Type You Need' },
+    { href: '#score-submission', label: 'Score Submission' },
+    { href: '#queries', label: 'Queries' },
+    { href: '#extras', label: 'Extras' },
+    { href: '#quick-usage', label: 'Quick Usage' },
+    { href: '#full-api', label: 'Full API' },
+  ],
+};
+
 export const apiPageMeta: DocsPageMeta = {
   title: 'REST API',
   description: 'REST API reference for TurnKit server endpoints generated from the OpenAPI specification.',
