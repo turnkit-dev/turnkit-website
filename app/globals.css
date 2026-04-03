@@ -49,22 +49,22 @@ body {
 }
 
 .scalar-theme-turnkit {
-  --scalar-background-1: #0a0f14;
-  --scalar-background-2: #1a1f26;
-  --scalar-background-3: #1a1f26;
-  --scalar-color-1: #ffffff;
-  --scalar-color-2: #a1a1aa;
-  --scalar-color-3: #7b8794;
-  --scalar-color-accent: #00d4ff;
-  --scalar-link-color: #00d4ff;
-  --scalar-link-color-hover: #00d4ff;
-  --scalar-border-color: #334155;
-  --scalar-color-blue: #00d4ff;
-  --scalar-color-green: #22c55e;
+  --scalar-background-1: #080c10;
+  --scalar-background-2: #0d1117;
+  --scalar-background-3: #111820;
+  --scalar-color-1: #c9d3dd;
+  --scalar-color-2: #7d8fa0;
+  --scalar-color-3: #3a4b5c;
+  --scalar-color-accent: #2f9ceb;
+  --scalar-link-color: #2f9ceb;
+  --scalar-link-color-hover: #2f9ceb;
+  --scalar-border-color: #243040;
+  --scalar-color-blue: #2f9ceb;
+  --scalar-color-green: #3dd68c;
   --scalar-shadow-1: none;
   --scalar-shadow-2: none;
-  background: #0a0f14;
-  color: #a1a1aa;
+  background: #080c10;
+  color: #7d8fa0;
 }
 
 .scalar-theme-turnkit .t-doc__sidebar,
@@ -89,19 +89,19 @@ body {
 .scalar-theme-turnkit .tag[data-method="get"],
 .scalar-theme-turnkit .http-verb.get,
 .scalar-theme-turnkit .method.get {
-  background: #00d4ff !important;
-  color: #0a0f14 !important;
+  background: #2f9ceb !important;
+  color: #080c10 !important;
 }
 
 .scalar-theme-turnkit .tag[data-method="post"],
 .scalar-theme-turnkit .http-verb.post,
 .scalar-theme-turnkit .method.post {
-  background: #22c55e !important;
-  color: #0a0f14 !important;
+  background: #3dd68c !important;
+  color: #080c10 !important;
 }
 
 .scalar-theme-turnkit [aria-current="true"],
 .scalar-theme-turnkit .active-page,
 .scalar-theme-turnkit .active {
-  color: #ffffff !important;
+  color: #c9d3dd !important;
 }

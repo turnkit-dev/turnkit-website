@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
-      "description": "Generated server url"
+      "url": "api.turnkit.dev",
+      "description": "Server url"
     }
   ],
   "security": [
