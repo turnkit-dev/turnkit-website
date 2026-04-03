@@ -1,7 +1,7 @@
+import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { DM_Mono, Syne } from 'next/font/google';
-import './globals.css';
 
 const syne = Syne({
   variable: '--font-syne',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'TurnKit - Turn-Based Multiplayer Backend for Unity & Godot',
     description:
-      'TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines.',
+      'TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines. Free to start.',
     url: 'https://turnkit.dev',
     images: ['/assets/og-card.png'],
     type: 'website',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'TurnKit - Turn-Based Multiplayer Backend for Unity & Godot',
     description:
-      'TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines.',
+      'TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines. Free to start.',
     images: ['/assets/og-card.png'],
   },
   icons: {
@@ -48,14 +48,14 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${syne.variable} ${dmMono.variable} bg-bg font-mono text-[15px] leading-[1.7] text-text antialiased`}
-      >
+      <body className={`${syne.variable} ${dmMono.variable} bg-bg font-mono text-[15px] leading-relaxed text-text antialiased`}>
         <div className="pointer-events-none fixed inset-0 z-0 bg-grid48 bg-[length:48px_48px] opacity-30" />
-        <div className="relative z-10">{children}</div>
+        <main className="relative z-10 min-h-screen">
+          {children}
+        </main>
         <Script
           id="turnkit-schema"
           type="application/ld+json"

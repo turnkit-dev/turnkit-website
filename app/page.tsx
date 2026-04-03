@@ -40,7 +40,7 @@ export default function HomePage() {
               >
                 {link.label}
               </Link>
-            ),
+            )
           )}
           <a
             href="#waitlist"
@@ -89,26 +89,31 @@ export default function HomePage() {
       </nav>
 
       <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)] pt-[60px]">
-        <section className="relative py-[100px] pb-20">
-          <div className="pointer-events-none absolute left-1/2 top-[-100px] h-[400px] w-[600px] -translate-x-1/2 bg-heroGlow" />
+        <section className="relative py-12 pb-4">
+          {/* Hero Glow Utility from CSS */}
+          <div className="pointer-events-none absolute left-1/2 top-[-100px] h-[400px] w-[600px] -translate-x-1/2 bg-hero-glow" />
+          
           <div className="mb-7 inline-flex items-center gap-2 rounded-[2px] border border-[rgba(61,214,140,0.2)] bg-[rgba(61,214,140,0.1)] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.08em] text-green">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green" />
             {landingContent.heroTag}
           </div>
-          <div className="translate-y-5 animate-fadeUp opacity-0 [animation-delay:0.05s] [animation-fill-mode:forwards]">
+          
+          <div className="animate-fade-up opacity-0 [animation-delay:0.1s]">
             <h1 className="mb-5 font-display text-[clamp(32px,5vw,52px)] font-extrabold leading-[1.1] tracking-[-0.03em] text-text">
               {landingContent.heroTitle[0]}
               <br />
               {landingContent.heroTitle[1]}
             </h1>
           </div>
-          <div className="translate-y-5 animate-fadeUp opacity-0 [animation-delay:0.15s] [animation-fill-mode:forwards]">
+          
+          <div className="animate-fade-up opacity-0 [animation-delay:0.2s]">
             <p className="mb-10 max-w-[520px] text-base leading-[1.6] text-muted">
               <strong className="font-medium text-text">{landingContent.heroHighlight}</strong>{' '}
               {landingContent.heroSubtitle}
             </p>
           </div>
-          <div className="translate-y-5 animate-fadeUp opacity-0 [animation-delay:0.25s] [animation-fill-mode:forwards] flex flex-wrap items-center gap-3">
+          
+          <div className="flex flex-wrap items-center gap-3 animate-fade-up opacity-0 [animation-delay:0.3s]">
             <a
               href="#waitlist"
               className="inline-flex items-center gap-2 rounded-[3px] bg-accent px-[22px] py-[11px] text-[13px] font-medium text-white transition hover:-translate-y-px hover:bg-[#3AADF5]"
@@ -124,7 +129,8 @@ export default function HomePage() {
               Join Discord
             </a>
           </div>
-          <div className="mt-16 translate-y-5 animate-fadeUp opacity-0 [animation-delay:0.35s] [animation-fill-mode:forwards]">
+          
+          <div className="mt-16 animate-fade-up opacity-0 [animation-delay:0.4s]">
             <div className="flex items-center gap-4">
               <div className="max-w-[calc(100vw-80px)] overflow-hidden text-ellipsis whitespace-nowrap rounded-[3px] border border-border2 bg-surface2 px-5 py-2.5 text-[13px] text-text">
                 Game Client
@@ -136,7 +142,7 @@ export default function HomePage() {
               <div className="max-w-[calc(100vw-80px)] overflow-hidden text-ellipsis whitespace-nowrap rounded-[3px] border border-accent2 bg-[rgba(47,156,235,0.07)] px-5 py-2.5 text-[13px] text-accent">
                 TurnKit Relay
               </div>
-              <span className="hidden text-xs italic text-muted sm:inline">validates turn · hides hands · enforces rules</span>
+              <span className="hidden text-xs italic text-muted sm:inline">validates turn | hides hands | enforces rules</span>
             </div>
             <div className="py-1 pl-5 before:block before:h-7 before:w-px before:bg-[linear-gradient(to_bottom,#243040,#1A6FAA)] before:content-['']" />
             <div className="flex items-center gap-4">
@@ -150,7 +156,7 @@ export default function HomePage() {
       </div>
 
       <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)]">
-        <section className="py-16">
+        <section className="py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Overview</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">What is TurnKit?</h2>
           <div className="mt-6 grid gap-8 text-[14px] leading-[1.8] text-muted sm:grid-cols-2">
@@ -175,7 +181,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Turn Relay</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
             Built for the hard parts of
@@ -224,7 +230,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Pricing</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Free to start.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
@@ -253,7 +259,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-20">
+        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Modules</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Use only what you need.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
@@ -279,7 +285,7 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section id="waitlist" className="border-t border-border py-20">
+        <section id="waitlist" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="rounded border border-border2 bg-surface p-[clamp(36px,5vw,56px)]">
             <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Early Access</div>
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Follow the build.</h2>
