@@ -58,8 +58,8 @@ export function MobileMenu({
           <path d="M4 7H20M4 12H20M4 17H20" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
       </button>
-      <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-[80] bg-[#080c10] transition`}>
-        <div className="fixed inset-0 overflow-y-auto bg-[#080c10] p-6 pt-5">
+      <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-[80] overflow-y-auto bg-[#080c10] transition`}>
+        <div className="min-h-full p-6 pt-5">
           <div className="mb-8 flex items-center justify-between gap-4">
             <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Navigation</div>
             <button
