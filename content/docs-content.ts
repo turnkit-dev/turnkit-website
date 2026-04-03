@@ -53,6 +53,18 @@ export const docsNavSections: DocsNavSection[] = [
   },
 ];
 
+export const docsIndexPageMeta: DocsPageMeta = {
+  title: 'Documentation',
+  description: 'TurnKit docs for quickstarts, Relay, leaderboards, and API reference.',
+  path: '/docs',
+  eyebrow: 'Docs',
+  breadcrumbLabel: 'Overview',
+  toc: [
+    { href: '#start-here', label: 'Start Here' },
+    { href: '#guides', label: 'Guides' },
+  ],
+};
+
 export const websocketPageMeta: DocsPageMeta = {
   title: 'WebSocket Protocol',
   description:

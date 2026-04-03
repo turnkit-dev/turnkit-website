@@ -8,9 +8,14 @@ export interface DocsShellProps {
 
 export function DocsShell({ meta, children }: DocsShellProps) {
   return (
-    <div className="mx-auto flex max-w-[1400px] px-0">
-      <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-[260px] shrink-0 overflow-y-auto border-r border-border bg-bg px-6 py-8 md:block">
-        <DocsSidebar currentPath={meta.path} />
+    <div className="mx-auto flex w-full max-w-[1400px] px-0">
+      <aside className="hidden w-[260px] shrink-0 md:block">
+        <div
+          className="fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8"
+          style={{ left: 'max(0px, calc((100vw - 1400px) / 2))' }}
+        >
+          <DocsSidebar currentPath={meta.path} />
+        </div>
       </aside>
       <main className="min-w-0 flex-1 px-5 py-8 md:max-w-[900px] md:px-[clamp(24px,5vw,64px)] md:py-12">
         <div className="mb-8 flex items-center gap-2 text-[13px] text-muted">
@@ -26,18 +31,23 @@ export function DocsShell({ meta, children }: DocsShellProps) {
         </h1>
         {children}
       </main>
-      <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-[220px] shrink-0 overflow-y-auto border-l border-border px-6 py-12 xl:block">
-        <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
-        <div className="flex flex-col gap-2">
-          {meta.toc.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="border-l-2 border-transparent pl-3 text-xs text-muted transition hover:text-text"
-            >
-              {item.label}
-            </a>
-          ))}
+      <aside className="hidden w-[220px] shrink-0 xl:block">
+        <div
+          className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
+          style={{ right: 'max(0px, calc((100vw - 1400px) / 2))' }}
+        >
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
+          <div className="flex flex-col gap-2">
+            {meta.toc.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="border-l-2 border-transparent pl-3 text-xs text-muted transition hover:text-text"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
         </div>
       </aside>
     </div>
@@ -49,7 +59,7 @@ interface DocsSidebarProps {
   mobile?: boolean;
 }
 
-function DocsSidebar({ currentPath, mobile = false }: DocsSidebarProps) {
+export function DocsSidebar({ currentPath, mobile = false }: DocsSidebarProps) {
   return (
     <div>
       {docsNavSections.map((section) => (

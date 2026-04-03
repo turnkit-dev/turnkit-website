@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { docsNavSections } from '@/content/docs-content';
+import { DocsShell } from '@/components/docs-shell';
+import { docsIndexPageMeta, docsNavSections } from '@/content/docs-content';
 
 export const metadata: Metadata = {
   title: 'Docs - TurnKit',
@@ -16,32 +17,56 @@ export default function DocsIndexPage() {
     .filter((link) => !link.external && (link.href === '/docs/relay' || link.href === '/docs/quickstart/unity' || link.href === '/docs/websocket'));
 
   return (
-    <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)] pb-20 pt-[120px]">
-      <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Docs</div>
-      <h1 className="mb-4 font-display text-[clamp(32px,5vw,52px)] font-extrabold leading-[1.1] tracking-[-0.03em] text-text">
-        TurnKit documentation.
-      </h1>
-      <p className="mb-10 max-w-[560px] text-base text-muted">
-        Start with the Unity quickstart or the current WebSocket protocol reference.
-      </p>
-      <div className="grid gap-4 md:grid-cols-2">
-        {primaryLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="rounded border border-border bg-surface p-6 transition hover:bg-surface2"
-          >
-            <div className="mb-2 font-display text-xl font-semibold text-text">{link.label}</div>
-            <div className="text-[13px] text-muted">
-              {link.href === '/docs/relay'
-                ? 'See how TurnKit Relay handles authoritative validation, private state filtering, and signed results.'
-                : link.href === '/docs/quickstart/unity'
-                  ? 'Install the Unity package, generate keys, and launch the sample scene.'
-                  : 'Read the relay handshake, message types, reconnect flow, and error handling.'}
+    <DocsShell meta={docsIndexPageMeta}>
+      <section id="start-here" className="mb-12">
+        <p className="mb-10 max-w-[560px] text-base text-muted">
+          Start with the Unity quickstart or the current WebSocket protocol reference.
+        </p>
+        <div className="grid gap-4 md:grid-cols-2">
+          {primaryLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded border border-border bg-surface p-6 transition hover:bg-surface2"
+            >
+              <div className="mb-2 font-display text-xl font-semibold text-text">{link.label}</div>
+              <div className="text-[13px] text-muted">
+                {link.href === '/docs/relay'
+                  ? 'See how TurnKit Relay handles authoritative validation, private state filtering, and signed results.'
+                  : link.href === '/docs/quickstart/unity'
+                    ? 'Install the Unity package, generate keys, and launch the sample scene.'
+                    : 'Read the relay handshake, message types, reconnect flow, and error handling.'}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section id="guides" className="grid gap-4 md:grid-cols-2">
+        {docsNavSections.map((section) => (
+          <div key={section.title} className="rounded border border-border bg-surface p-6">
+            <h2 className="mb-4 font-display text-xl font-semibold text-text">{section.title}</h2>
+            <div className="space-y-3">
+              {section.links.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-[14px] text-muted transition hover:text-text"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link key={link.href} href={link.href} className="block text-[14px] text-muted transition hover:text-text">
+                    {link.label}
+                  </Link>
+                ),
+              )}
             </div>
-          </Link>
+          </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </DocsShell>
   );
 }

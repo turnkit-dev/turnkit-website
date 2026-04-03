@@ -4,11 +4,22 @@ import { PricingGrid } from '@/components/pricing-grid';
 import { WaitlistForm } from '@/components/waitlist-form';
 import { landingContent } from '@/content/site-content';
 
+const homeSections = [
+  { href: '#top', label: 'Top' },
+  { href: '#overview', label: 'Overview' },
+  { href: '#relay', label: 'Turn Relay' },
+  { href: '#pricing', label: 'Pricing' },
+  { href: '#modules', label: 'Modules' },
+  { href: '#waitlist', label: 'Early Access' },
+];
+
 export default function HomePage() {
   return (
     <MarketingShell>
-      <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)] pt-[60px]">
-        <section className="relative py-12 pb-4">
+      <div className="mx-auto flex w-full max-w-[1180px] px-0 pt-[60px]">
+        <main className="min-w-0 flex-1 px-[clamp(24px,5vw,48px)]">
+        <div className="mx-auto max-w-[960px]">
+        <section id="top" className="relative py-12 pb-4">
           <div className="pointer-events-none absolute left-1/2 top-[-100px] h-[400px] w-[600px] -translate-x-1/2 bg-hero-glow" />
           
           <div className="mb-7 inline-flex items-center gap-2 rounded-[2px] border border-[rgba(61,214,140,0.2)] bg-[rgba(61,214,140,0.1)] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.08em] text-green">
@@ -73,8 +84,8 @@ export default function HomePage() {
         </section>
       </div>
 
-      <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)]">
-        <section className="py-[clamp(32px,5vw,48px)]">
+      <div className="mx-auto max-w-[960px]">
+        <section id="overview" className="py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Overview</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">What is TurnKit?</h2>
           <div className="mt-6 grid gap-8 text-[14px] leading-[1.8] text-muted sm:grid-cols-2">
@@ -99,7 +110,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
+        <section id="relay" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Turn Relay</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
             Built for the hard parts of
@@ -148,7 +159,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
+        <section id="pricing" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Pricing</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Free to start.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
@@ -161,7 +172,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="border-t border-border py-[clamp(32px,5vw,48px)]">
+        <section id="modules" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Modules</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Use only what you need.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
@@ -195,6 +206,23 @@ export default function HomePage() {
             <WaitlistForm />
           </div>
         </section>
+      </div>
+      </main>
+      <aside className="hidden w-[220px] shrink-0 xl:block">
+        <div
+          className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
+          style={{ right: 'max(0px, calc((100vw - 1180px) / 2))' }}
+        >
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
+          <div className="flex flex-col gap-2">
+            {homeSections.map((section) => (
+              <a key={section.href} href={section.href} className="border-l-2 border-transparent pl-3 text-xs text-muted transition hover:text-text">
+                {section.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </aside>
       </div>
     </MarketingShell>
   );
