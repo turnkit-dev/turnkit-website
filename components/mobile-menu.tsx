@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { docsNavSections } from '@/content/docs-content';
 import { landingContent } from '@/content/site-content';
 
@@ -24,13 +25,20 @@ export function MobileMenu({
   showDocsSection = true,
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const activePath = currentPath ?? pathname;
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
     document.body.classList.toggle('overflow-hidden', isOpen);
+    document.documentElement.classList.toggle('overflow-hidden', isOpen);
     return () => {
       document.body.classList.remove('overflow-hidden');
+      document.documentElement.classList.remove('overflow-hidden');
     };
   }, [isOpen]);
 
@@ -58,97 +66,104 @@ export function MobileMenu({
           <path d="M4 7H20M4 12H20M4 17H20" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
       </button>
-      <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-[80] overflow-y-auto bg-[#080c10] transition`}>
-        <div className="min-h-full p-6 pt-5">
-          <div className="mb-8 flex items-center justify-between gap-4">
-            <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Navigation</div>
-            <button
-              type="button"
-              aria-label="Close menu"
-              className="inline-flex items-center rounded-[3px] border border-border2 px-3 py-2 text-[12px] text-text"
-              onClick={() => setIsOpen(false)}
-            >
-              Close
-            </button>
-          </div>
+      {isMounted
+        ? createPortal(
+            <div className={`${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} fixed inset-0 z-[80] bg-[#080c10] transition`}>
+              <div className="fixed inset-0 overflow-y-auto">
+                <div className="min-h-full bg-[#080c10] p-6 pt-5">
+                  <div className="mb-8 flex items-center justify-between gap-4">
+                    <div className="text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Navigation</div>
+                    <button
+                      type="button"
+                      aria-label="Close menu"
+                      className="inline-flex items-center rounded-[3px] border border-border2 px-3 py-2 text-[12px] text-text"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
 
-          <div className="space-y-1">
-            <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Menu</div>
-            {landingContent.navLinks.map((link) =>
-              link.external ? (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ),
-            )}
-            <Link
-              href={ctaHref}
-              className="mt-3 block rounded-[3px] bg-accent px-3 py-3 text-[15px] font-medium text-white transition hover:bg-[#3AADF5]"
-              onClick={() => setIsOpen(false)}
-            >
-              {ctaLabel}
-            </Link>
-          </div>
+                  <div className="space-y-1">
+                    <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Menu</div>
+                    {landingContent.navLinks.map((link) =>
+                      link.external ? (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className="block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      ),
+                    )}
+                    <Link
+                      href={ctaHref}
+                      className="mt-3 block rounded-[3px] bg-accent px-3 py-3 text-[15px] font-medium text-white transition hover:bg-[#3AADF5]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {ctaLabel}
+                    </Link>
+                  </div>
 
-          {showDocsSection ? (
-            <>
-              <div className="my-8 h-px bg-border" />
+                  {showDocsSection ? (
+                    <>
+                      <div className="my-8 h-px bg-border" />
 
-              <div>
-                <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{docsTitle ?? 'Docs'}</div>
-                <div className="space-y-8">
-                  {docsNavSections.map((section) => (
-                    <div key={section.title}>
-                      <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{section.title}</div>
-                      <div className="space-y-1">
-                        {section.links.map((link) => {
-                          const active = link.href === activePath;
-                          const className = active
-                            ? 'block rounded-[3px] border border-[rgba(88,166,255,0.4)] bg-[rgba(88,166,255,0.15)] px-3 py-3 text-[15px] text-[#58A6FF]'
-                            : 'block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2';
+                      <div>
+                        <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{docsTitle ?? 'Docs'}</div>
+                        <div className="space-y-8">
+                          {docsNavSections.map((section) => (
+                            <div key={section.title}>
+                              <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">{section.title}</div>
+                              <div className="space-y-1">
+                                {section.links.map((link) => {
+                                  const active = link.href === activePath;
+                                  const className = active
+                                    ? 'block rounded-[3px] border border-[rgba(88,166,255,0.4)] bg-[rgba(88,166,255,0.15)] px-3 py-3 text-[15px] text-[#58A6FF]'
+                                    : 'block rounded-[3px] px-3 py-3 text-[15px] text-text transition hover:bg-surface2';
 
-                          return link.external ? (
-                            <a
-                              key={link.href}
-                              href={link.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={className}
-                              onClick={() => setIsOpen(false)}
-                            >
-                              {link.label}
-                            </a>
-                          ) : (
-                            <Link key={link.href} href={link.href} className={className} onClick={() => setIsOpen(false)}>
-                              {link.label}
-                            </Link>
-                          );
-                        })}
+                                  return link.external ? (
+                                    <a
+                                      key={link.href}
+                                      href={link.href}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={className}
+                                      onClick={() => setIsOpen(false)}
+                                    >
+                                      {link.label}
+                                    </a>
+                                  ) : (
+                                    <Link key={link.href} href={link.href} className={className} onClick={() => setIsOpen(false)}>
+                                      {link.label}
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    </>
+                  ) : null}
                 </div>
               </div>
-            </>
-          ) : null}
-        </div>
-      </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
