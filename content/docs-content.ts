@@ -77,6 +77,22 @@ export const websocketPageMeta: DocsPageMeta = {
   ],
 };
 
+export const relayPageMeta: DocsPageMeta = {
+  title: 'TurnKit Relay',
+  description:
+    'Overview of TurnKit Relay, the authoritative multiplayer server for fair turn validation, filtered private state, and signed match results.',
+  path: '/docs/relay',
+  eyebrow: 'TurnKit Relay',
+  breadcrumbLabel: 'Relay',
+  toc: [
+    { href: '#intro', label: 'Intro' },
+    { href: '#how-it-works', label: 'How It Works' },
+    { href: '#key-features', label: 'Key Features' },
+    { href: '#private-data', label: 'Hand Hiding' },
+    { href: '#flexibility', label: 'Flexibility' },
+  ],
+};
+
 export const apiPageMeta: DocsPageMeta = {
   title: 'REST API',
   description: 'REST API reference for TurnKit server endpoints generated from the OpenAPI specification.',

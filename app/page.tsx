@@ -1,68 +1,14 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { MobileMenu } from '@/components/mobile-menu';
+import { MarketingShell } from '@/components/marketing-shell';
+import { PricingGrid } from '@/components/pricing-grid';
 import { WaitlistForm } from '@/components/waitlist-form';
 import { landingContent } from '@/content/site-content';
 
 export default function HomePage() {
   return (
-    <>
-      <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] px-3 sm:px-[clamp(16px,4vw,64px)] backdrop-blur-xl">
-        <Link href="/" className="flex min-w-0 shrink items-center gap-1.5 font-display text-[16px] font-extrabold tracking-[-0.02em] text-text sm:gap-2.5 sm:text-[18px]">
-          <Image
-            src="/assets/logo.png"
-            alt="TurnKit turn-based multiplayer backend logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 drop-shadow-[0_0_6px_rgba(61,214,140,0.4)]"
-          />
-          <span className="hidden sm:inline">
-            Turn<span className="text-accent">Kit</span>
-          </span>
-        </Link>
-        <div className="ml-auto hidden items-center gap-4 sm:flex">
-          {landingContent.navLinks.map((link) =>
-            link.external ? (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[13px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-[13px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
-              >
-                {link.label}
-              </Link>
-            )
-          )}
-          <a
-            href="#waitlist"
-            className="inline-flex items-center gap-2 rounded-[3px] bg-accent px-[18px] py-2 text-xs font-medium text-white transition hover:bg-[#3AADF5]"
-          >
-            Get Early Access
-          </a>
-        </div>
-        <div className="ml-2 flex shrink-0 items-center gap-1.5 sm:hidden">
-            <Link
-              href="/#waitlist"
-              className="inline-flex h-10 shrink-0 items-center rounded-[3px] bg-accent px-2 text-[11px] font-medium text-white transition hover:bg-[#3AADF5]"
-            >
-              Sign Up
-            </Link>
-            <MobileMenu ariaLabel="Open navigation menu" ctaHref="/#waitlist" ctaLabel="Sign Up" showDocsSection={false} />
-        </div>
-      </nav>
-
+    <MarketingShell>
       <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)] pt-[60px]">
         <section className="relative py-12 pb-4">
-          {/* Hero Glow Utility from CSS */}
           <div className="pointer-events-none absolute left-1/2 top-[-100px] h-[400px] w-[600px] -translate-x-1/2 bg-hero-glow" />
           
           <div className="mb-7 inline-flex items-center gap-2 rounded-[2px] border border-[rgba(61,214,140,0.2)] bg-[rgba(61,214,140,0.1)] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.08em] text-green">
@@ -206,26 +152,10 @@ export default function HomePage() {
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Pricing</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Free to start.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
-            Concurrent players across all active matches. No credit card required to get started.
+            No credit card needed to start. First 20 concurrent players are free across Relay and Leaderboards.
           </p>
-          <div className="grid gap-px overflow-hidden rounded border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-            {landingContent.pricingTiers.map((tier) => (
-              <div
-                key={tier.tier}
-                className={`p-7 transition hover:bg-surface2 ${
-                  tier.featured ? 'border-t-2 border-accent bg-[rgba(47,156,235,0.05)]' : 'bg-surface'
-                }`}
-              >
-                <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-muted">{tier.tier}</div>
-                <div className={`mb-1 font-display text-2xl font-bold tracking-[-0.02em] ${tier.free ? 'text-green' : 'text-text'}`}>
-                  {tier.price}
-                  {tier.suffix ? <span className="font-mono text-[13px] font-normal text-muted">{tier.suffix}</span> : null}
-                </div>
-                <div className="text-xs text-faint">{tier.ccu}</div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-5 rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[13px] leading-[1.6] text-muted">
+          <PricingGrid tiers={landingContent.pricing.relay} showFullPricingLink />
+          <div className="mt-5 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
             <strong className="font-medium text-text">Burst protection included.</strong> If your game spikes past its limit, TurnKit
             automatically grants 24 hours of unlimited capacity once per month.
           </div>
@@ -266,27 +196,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-
-      <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)]">
-        <footer className="border-t border-border py-8">
-          <div className="flex flex-col gap-4 text-[13px] text-faint sm:flex-row sm:items-center sm:justify-between">
-            <div>TurnKit.dev - built by an indie developer, for indie developers.</div>
-            <div className="flex gap-5">
-              {landingContent.footerLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[13px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
+    </MarketingShell>
   );
 }

@@ -4,7 +4,7 @@ import { docsNavSections } from '@/content/docs-content';
 
 export const metadata: Metadata = {
   title: 'Docs - TurnKit',
-  description: 'TurnKit documentation for Unity quickstart and WebSocket protocol integration.',
+  description: 'TurnKit documentation for Relay, Unity quickstart, and WebSocket protocol integration.',
   alternates: {
     canonical: '/docs',
   },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function DocsIndexPage() {
   const primaryLinks = docsNavSections
     .flatMap((section) => section.links)
-    .filter((link) => !link.external && (link.href === '/docs/quickstart/unity' || link.href === '/docs/websocket'));
+    .filter((link) => !link.external && (link.href === '/docs/relay' || link.href === '/docs/quickstart/unity' || link.href === '/docs/websocket'));
 
   return (
     <div className="mx-auto max-w-[960px] px-[clamp(24px,5vw,48px)] pb-20 pt-[120px]">
@@ -33,9 +33,11 @@ export default function DocsIndexPage() {
           >
             <div className="mb-2 font-display text-xl font-semibold text-text">{link.label}</div>
             <div className="text-[13px] text-muted">
-              {link.href === '/docs/quickstart/unity'
-                ? 'Install the Unity package, generate keys, and launch the sample scene.'
-                : 'Read the relay handshake, message types, reconnect flow, and error handling.'}
+              {link.href === '/docs/relay'
+                ? 'See how TurnKit Relay handles authoritative validation, private state filtering, and signed results.'
+                : link.href === '/docs/quickstart/unity'
+                  ? 'Install the Unity package, generate keys, and launch the sample scene.'
+                  : 'Read the relay handshake, message types, reconnect flow, and error handling.'}
             </div>
           </Link>
         ))}

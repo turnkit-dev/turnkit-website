@@ -27,6 +27,11 @@ export interface PricingTier {
   free?: boolean;
 }
 
+export interface PricingCatalog {
+  relay: PricingTier[];
+  leaderboards: PricingTier[];
+}
+
 export interface ModuleRow {
   name: string;
   description: string;
@@ -42,7 +47,7 @@ export interface LandingContent {
   engineTags: string[];
   features: Feature[];
   configRows: ConfigRow[];
-  pricingTiers: PricingTier[];
+  pricing: PricingCatalog;
   moduleRows: ModuleRow[];
   footerLinks: NavLink[];
 }
@@ -110,14 +115,24 @@ export const landingContent: LandingContent = {
       ],
     },
   ],
-  pricingTiers: [
-    { tier: 'Dev', price: '$0', ccu: '20 concurrent players', free: true },
-    { tier: 'Indie', price: '$4.99', suffix: '/mo', ccu: '40 concurrent players', featured: true },
-    { tier: 'Studio', price: '$9.99', suffix: '/mo', ccu: '80 concurrent players' },
-    { tier: 'Pro', price: '$19.99', suffix: '/mo', ccu: '160 concurrent players' },
-    { tier: 'Scale', price: '$39.99', suffix: '/mo', ccu: '320 concurrent players' },
-    { tier: 'Enterprise', price: '$79.99', suffix: '/mo', ccu: '640 concurrent players' },
-  ],
+  pricing: {
+    relay: [
+      { tier: 'Dev', price: '$0', ccu: '20 concurrent players', free: true, featured: true },
+      { tier: 'Indie', price: '$4.99', suffix: '/mo', ccu: '40 concurrent players' },
+      { tier: 'Studio', price: '$9.99', suffix: '/mo', ccu: '80 concurrent players' },
+      { tier: 'Pro', price: '$19.99', suffix: '/mo', ccu: '160 concurrent players' },
+      { tier: 'Scale', price: '$39.99', suffix: '/mo', ccu: '320 concurrent players' },
+      { tier: 'Enterprise', price: '$79.99', suffix: '/mo', ccu: '640 concurrent players' },
+    ],
+    leaderboards: [
+      { tier: 'Dev', price: '$0', ccu: '20 concurrent players', free: true, featured: true },
+      { tier: 'Indie', price: '$1.99', suffix: '/mo', ccu: '40 concurrent players' },
+      { tier: 'Studio', price: '$3.99', suffix: '/mo', ccu: '80 concurrent players' },
+      { tier: 'Pro', price: '$7.99', suffix: '/mo', ccu: '160 concurrent players' },
+      { tier: 'Scale', price: '$15.99', suffix: '/mo', ccu: '320 concurrent players' },
+      { tier: 'Enterprise', price: '$31.99', suffix: '/mo', ccu: '640 concurrent players' },
+    ],
+  },
   moduleRows: [
     {
       name: 'TurnRelay',
