@@ -50,41 +50,7 @@ export default function HomePage() {
           </a>
         </div>
         <div className="sm:hidden">
-          <MobileMenu
-            ariaLabel="Open navigation menu"
-            buttonClassName="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 text-text"
-            panelClassName="absolute right-4 top-[68px] min-w-[180px] rounded border border-border2 bg-[rgba(13,17,23,0.98)] p-2 shadow-[0_18px_40px_rgba(0,0,0,0.35)] transition"
-          >
-            <div className="space-y-1">
-              {landingContent.navLinks.map((link) =>
-                link.external ? (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-[3px] px-3 py-2.5 text-[13px] text-[#7fc4ff] transition hover:bg-surface2 hover:text-[#b2ddff]"
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block rounded-[3px] px-3 py-2.5 text-[13px] text-[#7fc4ff] transition hover:bg-surface2 hover:text-[#b2ddff]"
-                  >
-                    {link.label}
-                  </Link>
-                ),
-              )}
-              <a
-                href="#waitlist"
-                className="block rounded-[3px] bg-accent px-3 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
-              >
-                Get Early Access
-              </a>
-            </div>
-          </MobileMenu>
+          <MobileMenu ariaLabel="Open navigation menu" />
         </div>
       </nav>
 

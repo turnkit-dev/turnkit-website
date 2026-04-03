@@ -40,31 +40,7 @@ export default function DocsLayout({ children }: Readonly<{ children: React.Reac
           </Link>
         </div>
         <div className="md:hidden">
-          <MobileMenu
-            ariaLabel="Open docs navigation"
-            buttonClassName="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 text-text"
-            panelClassName="absolute right-4 top-[68px] min-w-[200px] rounded border border-border2 bg-[rgba(13,17,23,0.98)] p-2 shadow-[0_18px_40px_rgba(0,0,0,0.35)] transition"
-          >
-            <div className="space-y-1">
-              <Link href="/docs" className="block rounded-[3px] px-3 py-2.5 text-[13px] text-text transition hover:bg-surface2">
-                Docs
-              </Link>
-              <Link href="/docs/websocket" className="block rounded-[3px] px-3 py-2.5 text-[13px] text-muted transition hover:bg-surface2 hover:text-text">
-                API Reference
-              </Link>
-              <a
-                href="https://discord.gg/SqMVU5xex3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-[3px] px-3 py-2.5 text-[13px] text-muted transition hover:bg-surface2 hover:text-text"
-              >
-                Discord
-              </a>
-              <Link href="/#waitlist" className="block rounded-[3px] bg-accent px-3 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]">
-                Sign Up
-              </Link>
-            </div>
-          </MobileMenu>
+          <MobileMenu ariaLabel="Open docs navigation" />
         </div>
       </nav>
       <div className="pt-[60px]">{children}</div>

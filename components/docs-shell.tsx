@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { MobileMenu } from '@/components/mobile-menu';
 import { docsNavSections, type DocsPageMeta } from '@/content/docs-content';
 
 export interface DocsShellProps {
@@ -41,16 +40,6 @@ export function DocsShell({ meta, children }: DocsShellProps) {
           ))}
         </div>
       </aside>
-      <div className="fixed right-4 top-[76px] z-50 md:hidden">
-        <MobileMenu
-          ariaLabel="Open docs menu"
-          buttonClassName="inline-flex h-10 w-10 items-center justify-center rounded-[3px] border border-border2 bg-surface text-text"
-          overlayClassName="fixed inset-0 z-40 bg-[rgba(8,12,16,0.8)] backdrop-blur-sm transition"
-          panelClassName="fixed left-0 top-[60px] z-50 h-[calc(100vh-60px)] w-[280px] overflow-y-auto border-r border-[#30363D] bg-[#161B22] p-6 shadow-[2px_0_20px_rgba(0,0,0,0.7)] transition"
-        >
-          <DocsSidebar currentPath={meta.path} mobile />
-        </MobileMenu>
-      </div>
     </div>
   );
 }
