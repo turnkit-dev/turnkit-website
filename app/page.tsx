@@ -7,8 +7,8 @@ import { landingContent } from '@/content/site-content';
 export default function HomePage() {
   return (
     <>
-      <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] px-4 sm:px-[clamp(16px,4vw,64px)] backdrop-blur-xl">
-        <Link href="/" className="flex min-w-0 shrink items-center gap-2 font-display text-[16px] font-extrabold tracking-[-0.02em] text-text sm:shrink-0 sm:gap-2.5 sm:text-[18px]">
+      <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] pl-4 pr-3 sm:px-[clamp(16px,4vw,64px)] backdrop-blur-xl">
+        <Link href="/" className="flex max-w-[calc(100%-108px)] min-w-0 shrink items-center gap-2 font-display text-[16px] font-extrabold tracking-[-0.02em] text-text sm:max-w-none sm:shrink-0 sm:gap-2.5 sm:text-[18px]">
           <Image
             src="/assets/logo.png"
             alt="TurnKit turn-based multiplayer backend logo"
@@ -49,8 +49,8 @@ export default function HomePage() {
             Get Early Access
           </a>
         </div>
-        <div className="sm:hidden">
-          <div className="ml-2 flex shrink-0 items-center gap-2">
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 sm:hidden">
+          <div className="flex items-center gap-2">
             <Link
               href="/#waitlist"
               className="inline-flex h-10 shrink-0 items-center rounded-[3px] bg-accent px-2.5 text-[11px] font-medium text-white transition hover:bg-[#3AADF5]"
