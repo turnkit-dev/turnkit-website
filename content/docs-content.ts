@@ -34,6 +34,7 @@ export const docsNavSections: DocsNavSection[] = [
     links: [
       { href: '/docs/relay', label: 'Turn Relay' },
       { href: '/docs/leaderboards', label: 'Leaderboards' },
+      { href: '/docs/player-authentication-modes', label: 'Player Authentication Modes' },
     ],
   },
   {
@@ -119,6 +120,21 @@ export const leaderboardsPageMeta: DocsPageMeta = {
     { href: '#extras', label: 'Extras' },
     { href: '#quick-usage', label: 'Quick Usage' },
     { href: '#full-api', label: 'Full API' },
+  ],
+};
+
+export const playerAuthenticationModesPageMeta: DocsPageMeta = {
+  title: 'Player Authentication Modes',
+  description:
+    'Choose between OPEN, TURNKIT_AUTH, and SIGNED player authentication for TurnKit based on speed, simplicity, or backend control.',
+  path: '/docs/player-authentication-modes',
+  eyebrow: 'Features',
+  breadcrumbLabel: 'Player Authentication Modes',
+  toc: [
+    { href: '#quick-comparison', label: 'Quick Comparison' },
+    { href: '#open-mode', label: 'OPEN Mode' },
+    { href: '#turnkit-auth-mode', label: 'TURNKIT_AUTH Mode' },
+    { href: '#signed-mode', label: 'SIGNED Mode' },
   ],
 };
 

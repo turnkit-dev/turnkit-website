@@ -8,6 +8,9 @@ const pricingSections = [
   { href: '#relay', label: 'Relay' },
   { href: '#leaderboards', label: 'Leaderboards' },
   { href: '#details', label: 'Details' },
+  { href: '#burst-protection', label: 'Burst Protection' },
+  { href: '#upgrading', label: 'Upgrading' },
+  { href: '#auto-upgrade', label: 'Auto-upgrade' },
 ];
 
 export default function PricingPage() {
@@ -60,14 +63,40 @@ export default function PricingPage() {
 
           <section id="details" className="border-t border-border py-[clamp(32px,5vw,48px)]">
             <div className="grid gap-5">
-              <div className="rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
-                <strong className="font-medium text-text">Burst protection included.</strong> If your game spikes past its limit, TurnKit
-                automatically grants 24 hours of unlimited capacity once per month.
-              </div>
               <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
                 <strong className="font-medium text-text">Concurrent Users (CCU)</strong> = Any player who performed an action in the past
                 30 minutes.
               </div>
+            </div>
+          </section>
+
+          <section id="burst-protection" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <h3 className="mb-3 font-display text-[18px] font-semibold tracking-[-0.02em] text-text">Burst Protection</h3>
+            <div className="rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+              All paid plans include burst protection. If you exceed your CCU limit, TurnKit automatically gives you{' '}
+              <strong className="font-medium text-text">24 hours of unlimited capacity</strong> once per month.
+            </div>
+          </section>
+
+          <section id="upgrading" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <h3 className="mb-4 font-display text-[18px] font-semibold tracking-[-0.02em] text-text">Upgrading</h3>
+            <div className="grid gap-5">
+              <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
+                You can upgrade anytime, even during burst protection.
+              </div>
+              <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
+                If you stay on your current plan after burst protection ends, players{' '}
+                <strong className="font-medium text-text">above the CCU limit</strong> will not be able to create new matches, while
+                players under the limit continue normally.
+              </div>
+            </div>
+          </section>
+
+          <section id="auto-upgrade" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <h3 className="mb-4 font-display text-[18px] font-semibold tracking-[-0.02em] text-text">Auto-upgrade</h3>
+            <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
+              <strong className="font-medium text-text">Auto-upgrade</strong> (enable in dashboard) will automatically move you to the
+              next tier when burst ends.
             </div>
           </section>
         </main>
