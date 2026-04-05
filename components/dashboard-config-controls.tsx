@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useActionState, useMemo, useState } from 'react';
 import {
   createLeaderboardAction,
@@ -54,12 +55,16 @@ export function AuthSecurityForm({
             <input type="radio" name="mode" value="OPEN" checked={selectedMode === 'OPEN'} onChange={() => setSelectedMode('OPEN')} className="mt-0.5" />
             <div>
               <div className="text-[13px] text-text">OPEN</div>
+              <div className="mt-1 text-[12px] text-muted">No authentication required. Anyone can join using only the client key. It is default starting mode for faster prototyping.</div>
               <div className="mt-1 text-[12px] text-amber">Not recommended for production.</div>
             </div>
           </label>
           <label className="flex gap-3 rounded border border-border2 bg-bg px-4 py-3">
             <input type="radio" name="mode" value="SIGNED" checked={selectedMode === 'SIGNED'} onChange={() => setSelectedMode('SIGNED')} className="mt-0.5" />
-            <div className="text-[13px] text-text">SIGNED</div>
+            <div>
+              <div className="text-[13px] text-text">SIGNED</div>
+              <div className="mt-1 text-[12px] text-muted">Your backend signs the player ID using a secret key. TurnKit only verifies the signature. Best if you already have your own auth system.</div>
+            </div>
           </label>
           <label className="flex gap-3 rounded border border-border2 bg-bg px-4 py-3">
             <input
@@ -70,7 +75,10 @@ export function AuthSecurityForm({
               onChange={() => setSelectedMode('TURNKIT_AUTH')}
               className="mt-0.5"
             />
-            <div className="text-[13px] text-text">TURNKIT_AUTH</div>
+            <div>
+              <div className="text-[13px] text-text">TURNKIT_AUTH</div>
+              <div className="mt-1 text-[12px] text-muted">TurnKit handles login via email + OTP using your SMTP settings. Best if you want TurnKit to manage player authentication.</div>
+            </div>
           </label>
         </div>
 
@@ -113,7 +121,13 @@ export function AuthSecurityForm({
           </>
         )}
 
-        <div className="flex justify-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[13px] text-muted">
+            More details in{' '}
+            <Link href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
+              Player Authentication Modes Docs
+            </Link>
+          </p>
           <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Saving...">
             Save Changes
           </PendingButton>
