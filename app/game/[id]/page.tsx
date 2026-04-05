@@ -20,7 +20,7 @@ import { formatRelativeTime, getGameDashboard, listGames } from '@/lib/dashboard
 
 const sections = [
   { href: '#client-keys', label: 'Client Keys' },
-  { href: '#auth-security', label: 'Auth & Security' },
+  { href: '#auth-security', label: 'Player Authentication Mode' },
   { href: '#leaderboards', label: 'Leaderboards' },
   { href: '#relay-configs', label: 'Relay Configs' },
   { href: '#usage-billing', label: 'Usage & Billing' },
@@ -138,7 +138,7 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
         </div>
       </SectionCard>
 
-      <SectionCard id="auth-security" title="Auth & Security">
+      <SectionCard id="auth-security" title="Player Authentication Mode">
         <AuthSecurityForm
           gameId={game.id}
           mode={game.auth.mode}
