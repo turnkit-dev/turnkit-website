@@ -97,9 +97,9 @@ export default function PlayerAuthenticationModesPage() {
         <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-[1.7] text-muted">
           <li>Set mode to TURNKIT_AUTH in the dashboard.</li>
           <li>
-            Configure your SMTP settings. A quick option is setting up {' '}
-            <Link href="/docs/guides/resend-smtp" className="text-accent transition hover:text-text">
-              Resend as your email provider
+            Configure your SMTP settings. A quick option is setting up{' '}
+            <Link href="/docs/guides/turnkit-auth-brevo" className="text-accent transition hover:text-text">
+              Brevo as your email provider
             </Link>
             .
           </li>
