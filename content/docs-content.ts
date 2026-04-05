@@ -38,6 +38,10 @@ export const docsNavSections: DocsNavSection[] = [
     ],
   },
   {
+    title: 'Guides',
+    links: [{ href: '/docs/guides/turnkit-auth-brevo', label: 'TurnKit Auth with Brevo' }],
+  },
+  {
     title: 'API Reference',
     links: [
       { href: '/docs/api', label: 'REST API' },
@@ -160,5 +164,20 @@ export const unityQuickstartPageMeta: DocsPageMeta = {
   toc: [
     { href: '#get-started-window', label: 'Get Started Window' },
     { href: '#generated-resources', label: 'Generated Resources' },
+  ],
+};
+
+export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
+  title: 'TurnKit Auth with Brevo',
+  description:
+    'Configure Brevo SMTP for TurnKit Auth so players can sign in with email OTP without running your own auth backend.',
+  path: '/docs/guides/turnkit-auth-brevo',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'TurnKit Auth with Brevo',
+  toc: [
+    { href: '#create-brevo-account', label: 'Create Brevo Account' },
+    { href: '#copy-smtp-credentials', label: 'Copy SMTP Credentials' },
+    { href: '#configure-turnkit-auth', label: 'Configure TurnKit Auth' },
+    { href: '#sender-note', label: 'Sender Note' },
   ],
 };
