@@ -147,9 +147,9 @@ export async function updateAuthSettingsAction(_previousState: DashboardActionSt
 export async function rotateSignedSecretAction(_previousState: DashboardActionState, formData: FormData) {
   try {
     const gameId = readGameId(formData);
-    await rotateSignedSecret(gameId);
+    const result = await rotateSignedSecret(gameId);
     refreshGamePaths(gameId);
-    return successState('Signed secret updated.');
+    return successState('Signed secret updated.', { signedSecret: result.secret ?? '' });
   } catch (error) {
     return errorState(error, 'Failed to update signed secret.', `/game/${readGameId(formData)}`);
   }

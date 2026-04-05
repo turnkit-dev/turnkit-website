@@ -381,7 +381,7 @@ export async function backendFetch(path: string, init?: RequestInit) {
     return null;
   }
 
-  return response.json();
+  return readJson(response);
 }
 
 type RequestCookiesLike = {

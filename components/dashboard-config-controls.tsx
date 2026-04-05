@@ -12,7 +12,7 @@ import {
   updateBillingAutoUpgradeAction,
   updateRelayConfigAction,
 } from '@/app/actions/dashboard';
-import { Field, Modal, PendingButton, SectionButton, TextArea, useDashboardActionFeedback } from '@/components/dashboard-ui';
+import { CopyButton, Field, Modal, PendingButton, SectionButton, TextArea, useDashboardActionFeedback } from '@/components/dashboard-ui';
 import { initialDashboardActionState } from '@/lib/dashboard-action-state';
 import type { AuthMode, LeaderboardRecord, RelayConfigRecord, SmtpSettings } from '@/lib/dashboard';
 
@@ -31,12 +31,19 @@ export function AuthSecurityForm({
 }) {
   const [selectedMode, setSelectedMode] = useState<AuthMode>(mode);
   const [showSecret, setShowSecret] = useState(false);
+  const [revealOpen, setRevealOpen] = useState(false);
+  const [revealedSecret, setRevealedSecret] = useState('');
   const [settingsState, settingsAction] = useActionState(updateAuthSettingsAction, initialDashboardActionState);
   const [secretState, secretAction] = useActionState(rotateSignedSecretAction, initialDashboardActionState);
   const maskedSecret = useMemo(() => (hasSecret ? 'stored on server' : 'not generated yet'), [hasSecret]);
 
   useDashboardActionFeedback(settingsState);
-  useDashboardActionFeedback(secretState);
+  useDashboardActionFeedback(secretState, {
+    onSuccess(result) {
+      setRevealedSecret(result.signedSecret ?? '');
+      setRevealOpen(Boolean(result.signedSecret));
+    },
+  });
 
   return (
     <div className="space-y-5">
@@ -112,6 +119,20 @@ export function AuthSecurityForm({
           </PendingButton>
         </div>
       </form>
+      <Modal
+        open={revealOpen}
+        onClose={() => setRevealOpen(false)}
+        title="Signed Secret Ready"
+        description="This signed secret is shown only once. Copy it now before closing this dialog."
+      >
+        <div className="space-y-5">
+          <div className="rounded border border-border2 bg-bg px-4 py-3 font-mono text-[13px] text-text break-all">{revealedSecret}</div>
+          <div className="flex justify-end gap-3">
+            <CopyButton value={revealedSecret} />
+            <SectionButton onClick={() => setRevealOpen(false)}>Close</SectionButton>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

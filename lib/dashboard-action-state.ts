@@ -3,6 +3,7 @@ export type DashboardActionState = {
   message: string;
   timestamp: number;
   fullKey?: string;
+  signedSecret?: string;
   reauthPath?: string;
 };
 
