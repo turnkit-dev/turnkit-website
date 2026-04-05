@@ -30,10 +30,15 @@ export const docsNavSections: DocsNavSection[] = [
     ],
   },
   {
-    title: 'Features',
+    title: 'Modules',
     links: [
       { href: '/docs/relay', label: 'Turn Relay' },
       { href: '/docs/leaderboards', label: 'Leaderboards' },
+    ],
+  },
+  {
+    title: 'Features',
+    links: [
       { href: '/docs/player-authentication-modes', label: 'Player Authentication Modes' },
     ],
   },
