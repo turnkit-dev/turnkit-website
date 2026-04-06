@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DocsShell } from '@/components/docs-shell';
+import { InlineCode } from '@/components/code-block';
 import { relayPageMeta } from '@/content/docs-content';
 
 export const metadata: Metadata = {
@@ -93,11 +94,13 @@ export default function RelayDocsPage() {
         <InfoCard title="Turn Enforcement">
           <ul className="list-disc space-y-2 pl-5 text-[13px] leading-[1.6] text-muted">
             <li>
-              <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Round Robin</code> enforces strict turn order so
+              <InlineCode code="Round Robin" />
+              {' '}enforces strict turn order so
               players cannot act out of turn.
             </li>
             <li>
-              <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Free Mode</code> removes enforced order for
+              <InlineCode code="Free Mode" />
+              {' '}removes enforced order for
               simultaneous or flexible gameplay.
             </li>
           </ul>
@@ -105,11 +108,13 @@ export default function RelayDocsPage() {
         <InfoCard title="Player Voting">
           <ul className="list-disc space-y-2 pl-5 text-[13px] leading-[1.6] text-muted">
             <li>
-              <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Sync</code> waits for votes before the game
+              <InlineCode code="Sync" />
+              {' '}waits for votes before the game
               continues.
             </li>
             <li>
-              <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Async</code> collects votes in the background while
+              <InlineCode code="Async" />
+              {' '}collects votes in the background while
               play continues.
             </li>
             <li>On vote failure, Relay can end the match or skip the turn based on your configuration.</li>
@@ -117,14 +122,15 @@ export default function RelayDocsPage() {
         </InfoCard>
         <InfoCard title="Custom JSON Actions">
           <p className="text-[13px] leading-[1.6] text-muted">
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Relay.SendJson(json)</code> forwards your JSON payload
+            <InlineCode code="Relay.SendJson(json)" language="csharp" />
+            {' '}forwards your JSON payload
             to the other players so clients can exchange game-specific data without Relay knowing your full ruleset.
           </p>
         </InfoCard>
         <InfoCard title="List Operations">
           <p className="text-[13px] leading-[1.6] text-muted">
             Supported operations include spawn, move between lists, remove, shuffle, and targeted selection by top, bottom, random,
-            item ID, or <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">slug</code>.
+            item ID, or <InlineCode code="slug" />.
           </p>
         </InfoCard>
       </div>
@@ -132,9 +138,9 @@ export default function RelayDocsPage() {
       <SectionTitle id="private-data">Hand Hiding &amp; Visibility</SectionTitle>
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
         Relay manages hidden hands and private zones through server-owned lists. Each list declares its <span className="text-text">owner</span>{' '}
-        (<code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">ownerPlayerIds</code>) and{' '}
+        (<InlineCode code="ownerPlayerIds" />) and{' '}
         <span className="text-text">visible audience</span>{' '}
-        (<code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">visibleToPlayerIds</code>).
+        (<InlineCode code="visibleToPlayerIds" />).
       </p>
       <div className="mb-8 grid gap-4 md:grid-cols-2">
         <InfoCard title="Ownership Rules">

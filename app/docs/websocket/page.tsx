@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { websocketPageMeta } from '@/content/docs-content';
 
@@ -26,24 +27,23 @@ export default function WebsocketDocsPage() {
     <DocsShell meta={websocketPageMeta}>
       <p className="mb-10 text-base leading-[1.6] text-muted">
         Authoritative turn relay for active matches. This page reflects the current server implementation in{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">com.turnkit.platform.relay</code>.
+        <InlineCode code="com.turnkit.platform.relay" className="break-all" />.
       </p>
 
       <div className="mb-8 grid gap-4 md:grid-cols-3">
         <InfoCard title="Endpoint">
-          <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">wss://api.turnkit.dev/v1/client/relay/ws</code>
+          <InlineCode code="wss://api.turnkit.dev/v1/client/relay/ws" className="break-all" />
         </InfoCard>
         <InfoCard title="Auth">
           <p className="text-[13px] text-muted">
-            <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Authorization: Bearer &lt;relayToken&gt;</code>
+            <InlineCode code="Authorization: Bearer <relayToken>" className="break-all" />
             <br />
-            <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">?token=&lt;relayToken&gt;</code>
+            <InlineCode code="?token=<relayToken>" className="break-all" />
           </p>
         </InfoCard>
         <InfoCard title="Format">
           <p className="text-[13px] text-muted">
-            Text frames with JSON. Every message uses a top-level{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">type</code>.
+            Text frames with JSON. Every message uses a top-level <InlineCode code="type" />.
           </p>
         </InfoCard>
       </div>
@@ -51,23 +51,21 @@ export default function WebsocketDocsPage() {
       <SectionTitle id="handshake">Handshake</SectionTitle>
       <ul className="mb-5 list-disc space-y-2 pl-6 text-muted">
         <li>
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">POST /v1/client/relay/queue</code>{' '}
-          returns <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">relayToken</code> alongside{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">sessionId</code> and{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">slot</code>.
+          <InlineCode code="POST /v1/client/relay/queue" /> returns <InlineCode code="relayToken" /> alongside <InlineCode code="sessionId" /> and{' '}
+          <InlineCode code="slot" />.
         </li>
         <li>
-          Use that <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">relayToken</code> when opening{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">/v1/client/relay/ws</code>.
+          Use that <InlineCode code="relayToken" /> when opening <InlineCode code="/v1/client/relay/ws" />.
         </li>
         <li>
-          Authenticate with either{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Authorization: Bearer &lt;relayToken&gt;</code>{' '}
-          or <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">?token=&lt;relayToken&gt;</code>.
+          Authenticate with either <InlineCode code="Authorization: Bearer <relayToken>" /> or <InlineCode code="?token=<relayToken>" />.
         </li>
       </ul>
 
-      <CodeBlock>{`const ws = new WebSocket(
+      <CodeBlock
+        className="mb-6"
+        language="javascript"
+        code={`const ws = new WebSocket(
   "wss://api.turnkit.dev/v1/client/relay/ws",
   [],
   {
@@ -75,30 +73,32 @@ export default function WebsocketDocsPage() {
       Authorization: \`Bearer \${relayToken}\`
     }
   }
-)`}</CodeBlock>
+)`}
+      />
 
-      <CodeBlock>{`const ws = new WebSocket(
+      <CodeBlock
+        className="mb-6"
+        language="javascript"
+        code={`const ws = new WebSocket(
   \`wss://api.turnkit.dev/v1/client/relay/ws?token=\${encodeURIComponent(relayToken)}\`
-)`}</CodeBlock>
+)`}
+      />
 
       <Notice>
         <strong className="text-amber">Note:</strong> Browser WebSocket APIs do not allow custom headers. In browsers, use{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">?token=&lt;relayToken&gt;</code>.
+        <InlineCode code="?token=<relayToken>" />.
       </Notice>
 
       <SectionTitle id="lifecycle">Session Lifecycle</SectionTitle>
       <div className="mb-8 grid gap-4 md:grid-cols-2">
         <InfoCard title="Connect Phase">
           <p className="text-[13px] text-muted">
-            Sessions start in <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">CONNECTING</code>. All players
-            must connect within 30 seconds or the match ends with{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">CONNECT_TIMEOUT</code>.
+            Sessions start in <InlineCode code="CONNECTING" />. All players must connect within 30 seconds or the match ends with <InlineCode code="CONNECT_TIMEOUT" />.
           </p>
         </InfoCard>
         <InfoCard title="Active Phase">
           <p className="text-[13px] text-muted">
-            When all players are present, each receives{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">MATCH_STARTED</code>. If turn enforcement is
+            When all players are present, each receives <InlineCode code="MATCH_STARTED" />. If turn enforcement is
             round robin, the current player timer starts immediately.
           </p>
         </InfoCard>
@@ -109,8 +109,7 @@ export default function WebsocketDocsPage() {
         </InfoCard>
         <InfoCard title="Reconnect">
           <p className="text-[13px] text-muted">
-            Disconnected players enter a grace period defined by match config{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">waitReconnectSeconds</code>.
+            Disconnected players enter a grace period defined by match config <InlineCode code="waitReconnectSeconds" />.
           </p>
         </InfoCard>
       </div>
@@ -132,7 +131,10 @@ export default function WebsocketDocsPage() {
       />
 
       <SubTitle id="move-shape">MOVE Shape</SubTitle>
-      <CodeBlock>{`{
+      <CodeBlock
+        className="mb-6"
+        language="json"
+        code={`{
   "type": "MOVE",
   "json": {
     "cardId": "c_17",
@@ -150,7 +152,8 @@ export default function WebsocketDocsPage() {
       "ignoreOwnership": false
     }
   ]
-}`}</CodeBlock>
+}`}
+      />
 
       <SubTitle id="action-variants">Action Variants</SubTitle>
       <Table
@@ -165,21 +168,21 @@ export default function WebsocketDocsPage() {
 
       <SubTitle id="selector-variants">Selector Variants</SubTitle>
       <p className="mb-5 text-text">
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TOP</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">BOTTOM</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">RANDOM</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">ALL</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">BY_ITEM_IDS</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">BY_SLUGS</code>
+        <InlineCode code="TOP" />, <InlineCode code="BOTTOM" />, <InlineCode code="RANDOM" />, <InlineCode code="ALL" />, <InlineCode code="BY_ITEM_IDS" />,{' '}
+        <InlineCode code="BY_SLUGS" />
       </p>
-      <CodeBlock>{`{
+      <CodeBlock
+        className="mb-6"
+        language="json"
+        code={`{
   "action": "REMOVE",
   "selector": "BY_SLUGS",
   "slugs": ["poison", "bleed"],
   "fromList": "status",
   "repeat": 1,
   "ignoreOwnership": true
-}`}</CodeBlock>
+}`}
+      />
 
       <SectionTitle id="server-to-client">Server to Client</SectionTitle>
       <Table
@@ -200,7 +203,10 @@ export default function WebsocketDocsPage() {
       />
 
       <SubTitle id="match-started">MATCH_STARTED</SubTitle>
-      <CodeBlock>{`{
+      <CodeBlock
+        className="mb-6"
+        language="json"
+        code={`{
   "type": "MATCH_STARTED",
   "sessionId": "6c151663-94a8-4f85-a7a4-a6c58d0f8fa1",
   "players": [
@@ -223,10 +229,14 @@ export default function WebsocketDocsPage() {
   },
   "randomSeed": 918221,
   "serverMoveNumber": 0
-}`}</CodeBlock>
+}`}
+      />
 
       <SubTitle id="move-made">MOVE_MADE</SubTitle>
-      <CodeBlock>{`{
+      <CodeBlock
+        className="mb-6"
+        language="json"
+        code={`{
   "type": "MOVE_MADE",
   "actingPlayerId": "p1",
   "moveNumber": 4,
@@ -244,29 +254,26 @@ export default function WebsocketDocsPage() {
       "actingPlayerSlot": "0"
     }
   ]
-}`}</CodeBlock>
+}`}
+      />
 
       <SectionTitle id="reconnect">Reconnect Behavior</SectionTitle>
       <ul className="mb-5 list-disc space-y-2 pl-6 text-muted">
         <li>
-          If the client sends <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">RECONNECT</code> with{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">lastMoveNumber</code> equal to the server move number,
-          the server only returns <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">SYNC_COMPLETE</code>.
+          If the client sends <InlineCode code="RECONNECT" /> with <InlineCode code="lastMoveNumber" /> equal to the server move number, the
+          server only returns <InlineCode code="SYNC_COMPLETE" />.
         </li>
         <li>
-          If the client is behind but still within the last 10 moves, the server replays missed{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">MOVE_MADE</code> messages.
+          If the client is behind but still within the last 10 moves, the server replays missed <InlineCode code="MOVE_MADE" /> messages.
         </li>
         <li>
-          If the client is further behind, the server sends a fresh{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">MATCH_STARTED</code> snapshot instead.
+          If the client is further behind, the server sends a fresh <InlineCode code="MATCH_STARTED" /> snapshot instead.
         </li>
         <li>
-          After reconnect sync, the player enters a 2 second sync window. Moves from that player during that window are rejected with{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">SYNC_WINDOW</code>.
+          After reconnect sync, the player enters a 2 second sync window. Moves from that player during that window are rejected with <InlineCode code="SYNC_WINDOW" />.
         </li>
       </ul>
-      <CodeBlock>{`{ "type": "RECONNECT", "lastMoveNumber": 12 }`}</CodeBlock>
+      <CodeBlock className="mb-6" language="json" code={`{ "type": "RECONNECT", "lastMoveNumber": 12 }`} />
 
       <SectionTitle id="error-codes">Error Codes</SectionTitle>
       <Table
@@ -285,35 +292,28 @@ export default function WebsocketDocsPage() {
 
       <SectionTitle id="terminal-reasons">Terminal Reasons</SectionTitle>
       <p className="mb-5 text-text">
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">END_GAME</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">VOTE_FAIL</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TIMEOUT</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">ALL_DISCONNECTED</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">CONNECT_TIMEOUT</code>,{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">ONE_PLAYER_LEFT</code>
+        <InlineCode code="END_GAME" />, <InlineCode code="VOTE_FAIL" />, <InlineCode code="TIMEOUT" />, <InlineCode code="ALL_DISCONNECTED" />,{' '}
+        <InlineCode code="CONNECT_TIMEOUT" />, <InlineCode code="ONE_PLAYER_LEFT" />
       </p>
       <p className="mb-5 text-[14px] text-muted">
-        The current session package emits all of these reasons, with{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">ALL_DISCONNECTED</code> reserved in the protocol enum for
+        The current session package emits all of these reasons, with <InlineCode code="ALL_DISCONNECTED" /> reserved in the protocol enum for
         relay-level terminal handling.
       </p>
 
       <SectionTitle id="client-guidance">Client Guidance</SectionTitle>
       <ul className="list-disc space-y-2 pl-6 text-muted">
         <li>
-          Send <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">PING</code> on an interval shorter than 15 seconds.
+          Send <InlineCode code="PING" /> on an interval shorter than 15 seconds.
         </li>
         <li>
-          Treat <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">serverMoveNumber</code> as the authoritative cursor
+          Treat <InlineCode code="serverMoveNumber" /> as the authoritative cursor
           for reconnects.
         </li>
         <li>
-          Do not assume hidden lists contain real slugs. Invisible items arrive with empty{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">slug</code> values in snapshots.
+          Do not assume hidden lists contain real slugs. Invisible items arrive with empty <InlineCode code="slug" /> values in snapshots.
         </li>
         <li>
-          Expect the socket to close after{' '}
-          <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">GAME_ENDED</code> and after stale socket rejection.
+          Expect the socket to close after <InlineCode code="GAME_ENDED" /> and after stale socket rejection.
         </li>
       </ul>
     </DocsShell>
@@ -347,14 +347,6 @@ function SubTitle({ id, children }: { id: string; children: React.ReactNode }) {
     <h3 id={id} className="mb-4 mt-8 scroll-mt-20 font-display text-[18px] font-semibold text-text">
       {children}
     </h3>
-  );
-}
-
-function CodeBlock({ children }: { children: string }) {
-  return (
-    <pre className="mb-6 overflow-x-auto rounded-[6px] border border-border bg-surface p-5 text-[13px] leading-[1.6] text-[#eef5fb]">
-      <code>{children}</code>
-    </pre>
   );
 }
 

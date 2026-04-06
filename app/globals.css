@@ -48,6 +48,141 @@ body {
   overflow-x: hidden;
 }
 
+.docs-code-block {
+  padding: 0;
+}
+
+.docs-code-block .hljs {
+  display: block;
+  overflow-x: auto;
+  margin: 0;
+  padding: 1.25rem;
+  background: #0d1117;
+  color: #a9b7c6;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.docs-code-block .hljs-comment,
+.docs-code-block .hljs-quote {
+  color: #7f848e;
+}
+
+.docs-code-block .hljs-keyword,
+.docs-code-block .hljs-selector-tag,
+.docs-code-block .hljs-deletion {
+  color: #cc7832;
+}
+
+.docs-code-block .hljs-literal,
+.docs-code-block .hljs-number,
+.docs-code-block .hljs-symbol,
+.docs-code-block .hljs-bullet {
+  color: #6897bb;
+}
+
+.docs-code-block .hljs-string,
+.docs-code-block .hljs-attribute,
+.docs-code-block .hljs-addition {
+  color: #6a8759;
+}
+
+.docs-code-block .hljs-title,
+.docs-code-block .hljs-section,
+.docs-code-block .hljs-type,
+.docs-code-block .hljs-title.class_,
+.docs-code-block .hljs-class .hljs-title {
+  color: #ffc66d;
+}
+
+.docs-code-block .hljs-variable,
+.docs-code-block .hljs-template-variable,
+.docs-code-block .hljs-link {
+  color: #9876aa;
+}
+
+.docs-code-block .hljs-built_in,
+.docs-code-block .hljs-property,
+.docs-code-block .hljs-params {
+  color: #a9b7c6;
+}
+
+.docs-code-block .hljs-meta {
+  color: #bbb529;
+}
+
+.docs-code-block .hljs-emphasis {
+  font-style: italic;
+}
+
+.docs-code-block .hljs-strong {
+  font-weight: 700;
+}
+
+.docs-inline-code {
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid #1c2733;
+  background: #111820;
+  padding: 0.12rem 0.38rem;
+  color: #a9b7c6;
+  font-size: 13px;
+  line-height: 1.35;
+  vertical-align: baseline;
+}
+
+.docs-inline-code .hljs-comment,
+.docs-inline-code .hljs-quote {
+  color: #7f848e;
+}
+
+.docs-inline-code .hljs-keyword,
+.docs-inline-code .hljs-selector-tag,
+.docs-inline-code .hljs-deletion {
+  color: #cc7832;
+}
+
+.docs-inline-code .hljs-literal,
+.docs-inline-code .hljs-number,
+.docs-inline-code .hljs-symbol,
+.docs-inline-code .hljs-bullet {
+  color: #6897bb;
+}
+
+.docs-inline-code .hljs-string,
+.docs-inline-code .hljs-attribute,
+.docs-inline-code .hljs-addition {
+  color: #6a8759;
+}
+
+.docs-inline-code .hljs-title,
+.docs-inline-code .hljs-section,
+.docs-inline-code .hljs-type,
+.docs-inline-code .hljs-title.class_,
+.docs-inline-code .hljs-class .hljs-title {
+  color: #ffc66d;
+}
+
+.docs-inline-code .hljs-variable,
+.docs-inline-code .hljs-template-variable,
+.docs-inline-code .hljs-link {
+  color: #9876aa;
+}
+
+.docs-inline-code .hljs-built_in,
+.docs-inline-code .hljs-property,
+.docs-inline-code .hljs-params {
+  color: #a9b7c6;
+}
+
+.docs-inline-code .hljs-meta {
+  color: #bbb529;
+}
+
+.docs-api-call {
+  color: #56a8f5;
+}
+
 .scalar-theme-turnkit {
   --scalar-background-1: #080c10;
   --scalar-background-2: #0d1117;
