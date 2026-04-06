@@ -15,7 +15,7 @@ import {
 import { DeleteClientKeyButton, DeleteGameButton, NewClientKeyModal } from '@/components/dashboard-game-controls';
 import { GameDashboardShell } from '@/components/dashboard-shell';
 import { CopyButton } from '@/components/dashboard-ui';
-import { BackendAuthError } from '@/lib/backend-auth';
+import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
 import { formatRelativeTime, getGameDashboard, listGames } from '@/lib/dashboard';
 
 const sections = [
@@ -85,7 +85,7 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const [game, games] = await Promise.all([getGameDashboard(id), listGames()]).catch((error) => {
     if (error instanceof BackendAuthError) {
-      redirect(`/signin?callbackUrl=${encodeURIComponent(`/game/${id}`)}`);
+      redirect(buildSignInPath(`/game/${id}`));
     }
     throw error;
   });

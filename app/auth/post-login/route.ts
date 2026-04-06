@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import {
   applyBackendSession,
+  buildSignInPath,
   clearBackendSession,
   exchangeDeveloperSession,
   getRequestedCallbackPath,
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
   const token = await getToken({ req: request, secret: authOptions.secret });
 
   if (!token || (token.provider !== 'google' && token.provider !== 'github') || typeof token.providerProof !== 'string') {
-    return NextResponse.redirect(new URL(callbackPath ? `/signin?callbackUrl=${encodeURIComponent(callbackPath)}` : '/signin', request.url));
+    return NextResponse.redirect(new URL(buildSignInPath(callbackPath, { reauth: true }), request.url));
   }
 
   try {
@@ -25,15 +26,7 @@ export async function GET(request: NextRequest) {
     applyBackendSession(response, session);
     return response;
   } catch (error) {
-    const details = error instanceof Error ? error.message : 'Exchange failed';
-    const response = NextResponse.redirect(
-      new URL(
-        callbackPath
-          ? `/signin?callbackUrl=${encodeURIComponent(callbackPath)}&error=exchange&details=${encodeURIComponent(details)}`
-          : `/signin?error=exchange&details=${encodeURIComponent(details)}`,
-        request.url,
-      ),
-    );
+    const response = NextResponse.redirect(new URL(buildSignInPath(callbackPath, { reauth: true }), request.url));
     clearBackendSession(response);
     return response;
   }

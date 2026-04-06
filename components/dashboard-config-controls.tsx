@@ -105,8 +105,8 @@ export function AuthSecurityForm({
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="SMTP Host" name="host" defaultValue={smtp.host} />
             <Field label="Port" name="port" defaultValue={smtp.port} />
-            <Field label="Username" name="username" defaultValue={smtp.username} />
-            <Field label="Password" name="password" type="password" defaultValue={smtp.password} />
+            <Field label="Username" name="username" defaultValue={smtp.username} autoComplete="username" />
+            <Field label="Password" name="password" type="password" defaultValue={smtp.password} autoComplete="current-password" />
             <Field label="From" name="fromEmail" defaultValue={smtp.fromEmail} />
             <Field label="Name" name="fromName" defaultValue={smtp.fromName} />
           </div>

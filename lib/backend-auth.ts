@@ -236,6 +236,19 @@ export function getRequestedCallbackPath(rawValue: string | null | undefined) {
   return rawValue;
 }
 
+export function buildSignInPath(callbackPath?: string | null, options?: { reauth?: boolean }) {
+  const safeCallbackPath = getRequestedCallbackPath(callbackPath);
+  const params = new URLSearchParams();
+  if (safeCallbackPath) {
+    params.set('callbackUrl', safeCallbackPath);
+  }
+  if (options?.reauth) {
+    params.set('reauth', '1');
+  }
+  const query = params.toString();
+  return query ? `/signin?${query}` : '/signin';
+}
+
 export function resolvePostLoginPath(bootstrap: unknown) {
   if (!bootstrap || typeof bootstrap !== 'object') {
     return '/games';
@@ -345,13 +358,7 @@ async function fetchWithBackendToken(path: string, accessToken: string, init?: R
 }
 
 export async function backendFetch(path: string, init?: RequestInit) {
-  const accessToken = await getServerBackendAccessToken().catch(async (error) => {
-    if (error instanceof BackendAuthError && error.code === 'AUTH_TOKEN_MISSING') {
-      const refreshedSession = await refreshServerBackendSession();
-      return refreshedSession.jwt;
-    }
-    throw error;
-  });
+  const accessToken = await getServerBackendAccessToken();
   let response = await fetchWithBackendToken(path, accessToken, init);
 
   if (response.status === 401) {
@@ -362,6 +369,10 @@ export async function backendFetch(path: string, init?: RequestInit) {
       throw new BackendAuthError('AUTH_UNAUTHORIZED', 'Your dashboard session expired. Sign in again.');
     });
     response = await fetchWithBackendToken(path, refreshedSession.jwt, init);
+    if (response.status === 401) {
+      await clearServerBackendSession();
+      throw new BackendAuthError('AUTH_UNAUTHORIZED', 'Your dashboard session expired. Sign in again.');
+    }
   }
 
   if (response.status === 404) {

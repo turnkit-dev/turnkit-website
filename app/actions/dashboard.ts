@@ -21,7 +21,7 @@ import {
   type SetupMode,
 } from '@/lib/dashboard';
 import { initialDashboardActionState, type DashboardActionState } from '@/lib/dashboard-action-state';
-import { BackendAuthError } from '@/lib/backend-auth';
+import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
 
 function readString(formData: FormData, key: string) {
   return String(formData.get(key) ?? '');
@@ -54,10 +54,6 @@ function successState(message: string, extra?: Partial<DashboardActionState>): D
   };
 }
 
-function buildReauthPath(callbackPath: string) {
-  return `/signin?callbackUrl=${encodeURIComponent(callbackPath)}`;
-}
-
 function errorState(error: unknown, fallback: string, callbackPath?: string): DashboardActionState {
   if (error instanceof BackendAuthError) {
     return {
@@ -65,7 +61,7 @@ function errorState(error: unknown, fallback: string, callbackPath?: string): Da
       status: 'error',
       message: error.message,
       timestamp: Date.now(),
-      reauthPath: callbackPath ? buildReauthPath(callbackPath) : undefined,
+      reauthPath: callbackPath ? buildSignInPath(callbackPath) : undefined,
     };
   }
 

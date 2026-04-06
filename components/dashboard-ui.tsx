@@ -190,6 +190,7 @@ export function Field({
   type = 'text',
   required,
   placeholder,
+  autoComplete,
 }: {
   label: string;
   name: string;
@@ -197,6 +198,7 @@ export function Field({
   type?: string;
   required?: boolean;
   placeholder?: string;
+  autoComplete?: string;
 }) {
   return (
     <label className="block">
@@ -207,6 +209,7 @@ export function Field({
         defaultValue={defaultValue}
         required={required}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         className="w-full rounded-[3px] border border-border2 bg-bg px-3 py-2.5 text-[14px] text-text outline-none transition placeholder:text-faint focus:border-accent"
       />
     </label>

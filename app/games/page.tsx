@@ -4,14 +4,14 @@ import { redirect } from 'next/navigation';
 import { NewGameModal, DeleteGameButton } from '@/components/dashboard-game-controls';
 import { CopyButton } from '@/components/dashboard-ui';
 import { DashboardPageFrame } from '@/components/dashboard-shell';
-import { BackendAuthError } from '@/lib/backend-auth';
+import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
 import { formatRelativeTime, listGames } from '@/lib/dashboard';
 
 export default async function GamesPage() {
   noStore();
   const games = await listGames().catch((error) => {
     if (error instanceof BackendAuthError) {
-      redirect('/signin?callbackUrl=%2Fgames');
+      redirect(buildSignInPath('/games'));
     }
     throw error;
   });
