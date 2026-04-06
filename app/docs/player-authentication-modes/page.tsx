@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { playerAuthenticationModesPageMeta } from '@/content/docs-content';
 
@@ -104,13 +105,10 @@ export default function PlayerAuthenticationModesPage() {
             .
           </li>
           <li>
-            Client calls <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">/v1/client/auth/otp/request</code> and{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">/v1/client/auth/otp/verify</code>.
+            Client calls <InlineCode code="/v1/client/auth/otp/request" /> and <InlineCode code="/v1/client/auth/otp/verify" />.
           </li>
           <li>
-            Use the returned player JWT in{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Authorization: Bearer &lt;player-jwt&gt;</code>{' '}
-            for normal client calls.
+            Use the returned player JWT in <InlineCode code="Authorization: Bearer <player-jwt>" /> for normal client calls.
           </li>
         </ol>
       </div>
@@ -124,36 +122,29 @@ export default function PlayerAuthenticationModesPage() {
           <li>Store secret key only on your backend.</li>
           <li>
             Backend computes HMAC-SHA256 over{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">playerId + &quot;\n&quot; + timestamp + &quot;\n&quot; + nonce</code>{' '}
-            and returns{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">playerId</code>,{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">timestamp</code>,{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">nonce</code>, and{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">signature</code> to the client.
+            <InlineCode code={'playerId + "\\n" + timestamp + "\\n" + nonce'} /> and returns <InlineCode code="playerId" />,{' '}
+            <InlineCode code="timestamp" />, <InlineCode code="nonce" />, and <InlineCode code="signature" /> to the client.
           </li>
           <li>
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">timestamp</code> is Unix epoch seconds encoded as a
+            <InlineCode code="timestamp" /> is Unix epoch seconds encoded as a
             string.
           </li>
           <li>
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">nonce</code> must be a random URL-safe string, not a
-            time-based value. The server currently requires{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">[A-Za-z0-9_-]{"{16,128}"}</code>.
+            <InlineCode code="nonce" /> must be a random URL-safe string, not a time-based value. The server currently requires{' '}
+            <InlineCode code="[A-Za-z0-9_-]{16,128}" />.
           </li>
           <li>
-            Client calls <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">POST /v1/client/auth/signed/exchange</code>{' '}
+            Client calls <InlineCode code="POST /v1/client/auth/signed/exchange" />{' '}
             with that payload. TurnKit verifies signature, replay protection, and freshness before issuing a player JWT.
           </li>
           <li>
-            Use that player JWT in{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Authorization: Bearer &lt;player-jwt&gt;</code>{' '}
-            for normal client calls.
+            Use that player JWT in <InlineCode code="Authorization: Bearer <player-jwt>" /> for normal client calls.
           </li>
         </ol>
       </div>
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
         <strong className="text-text">OPEN</strong> is the only mode that still sends{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">X-Player-Id</code> directly on client requests.
+        <InlineCode code="X-Player-Id" /> directly on client requests.
       </p>
       <p className="max-w-[760px] text-base leading-[1.7] text-muted">All modes work with MatchWithAnyone().</p>
     </DocsShell>

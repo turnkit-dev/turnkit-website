@@ -63,7 +63,7 @@ export function PricingGrid({
       {showFullPricingLink ? (
         <div className="mt-5 rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[13px] leading-[1.6] text-muted">
           <strong className="font-medium text-text">Leaderboards</strong> uses the same simple structure: First 20 CCU free, then
-          $1.99/mo for 40 CCU, and up.{' '}
+          $0.99/mo for 40 CCU, and up.{' '}
           <Link href="/pricing" className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]">
             See full pricing
           </Link>

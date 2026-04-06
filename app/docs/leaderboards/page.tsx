@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { leaderboardsPageMeta } from '@/content/docs-content';
 
@@ -57,8 +58,8 @@ export default function LeaderboardsDocsPage() {
         for authoritative scoring.
       </div>
       <p className="mb-8 max-w-[760px] text-base leading-[1.7] text-muted">
-        The optional <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">leaderboard</code> parameter defaults to{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">global</code> (premade Leaderboard). For REST endpoints, see{' '}
+        The optional <InlineCode code="leaderboard" /> parameter defaults to{' '}
+        <InlineCode code="global" /> (premade Leaderboard). For REST endpoints, see{' '}
         <Link href="/docs/api#tag/dev--leaderboards" className="text-accent transition hover:text-text">
           the leaderboard API reference
         </Link>
@@ -99,6 +100,8 @@ export default function LeaderboardsDocsPage() {
 
       <SectionTitle id="quick-usage">Quick Usage</SectionTitle>
       <CodeBlock
+        className="mb-8"
+        language="csharp"
         code={`// Submit a score (uses TurnKitConfig.PlayerId by default)
 await Leaderboard.SubmitScore(15420, "{\\"level\\":\\"forest\\"}");
 
@@ -112,6 +115,8 @@ var myRank = await Leaderboard.GetMyRank(surrounding: 5);
 var combined = await Leaderboard.GetCombined(topLimit: 50, surrounding: 5);`}
       />
       <CodeBlock
+        className="mb-8"
+        language="csharp"
         code={`// Example shape from GetCombined()
 combined.top[0].playerId;
 combined.top[0].score;
@@ -122,6 +127,8 @@ combined.player?.surrounding;`}
 
       <SectionTitle id="full-api">Full API</SectionTitle>
       <CodeBlock
+        className="mb-8"
+        language="csharp"
         code={`/// <summary>
 /// Submits a score. Player identity from TurnKitConfig.PlayerId (or pass explicitly).
 /// </summary>
@@ -161,9 +168,9 @@ public static Task<CombinedScores> GetCombined(
     string leaderboard = null);`}
       />
       <p className="max-w-[760px] text-base leading-[1.7] text-muted">
-        Tip: Use <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">GetCombined()</code> for the main leaderboard
+        Tip: Use <InlineCode code="GetCombined()" language="csharp" /> for the main leaderboard
         UI. It reduces requests and improves performance, and all methods use the account&apos;s default{' '}
-        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">global</code> leaderboard when none is passed.
+        <InlineCode code="global" /> leaderboard when none is passed.
       </p>
     </DocsShell>
   );
@@ -183,13 +190,5 @@ function SectionTitle({ id, children }: { id: string; children: React.ReactNode 
     <h2 id={id} className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">
       {children}
     </h2>
-  );
-}
-
-function CodeBlock({ code }: { code: string }) {
-  return (
-    <pre className="mb-8 overflow-x-auto rounded-[6px] border border-border bg-surface p-5 text-[13px] leading-[1.7] text-[#eef5fb]">
-      <code>{code}</code>
-    </pre>
   );
 }

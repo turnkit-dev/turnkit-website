@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { ScalarApiReference } from '@/components/scalar-api-reference';
 import { apiPageMeta } from '@/content/docs-content';
@@ -35,7 +36,7 @@ export default function ApiDocsPage() {
         </p>
         <div className="grid gap-4 md:grid-cols-3">
           <InfoCard title="Base URL">
-            <code className="break-all rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">{apiBaseUrl}</code>
+            <InlineCode code={apiBaseUrl} className="break-all" />
           </InfoCard>
           <InfoCard title="Auth">
             <p className="text-[13px] text-muted">

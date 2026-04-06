@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { turnkitAuthBrevoPageMeta } from '@/content/docs-content';
 
@@ -84,27 +85,39 @@ export default function TurnkitAuthBrevoPage() {
         </Link>{' '}
         and switch it to <strong className="text-text">TURNKIT_AUTH</strong>.
       </p>
+      <div className="mb-6 rounded-[6px] border border-border bg-surface p-5">
+        <h3 className="mb-3 text-sm font-semibold text-text">Client flow</h3>
+        <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-[1.7] text-muted">
+          <li>Fill the SMTP fields below and press SAVE.</li>
+          <li>
+            Client calls <InlineCode code="/v1/client/auth/otp/request" /> and <InlineCode code="/v1/client/auth/otp/verify" />.
+          </li>
+          <li>
+            Use the returned player JWT in <InlineCode code="Authorization: Bearer <player-jwt>" /> for normal client calls.
+          </li>
+        </ol>
+      </div>
       <div className="mb-6 overflow-x-auto rounded-[6px] border border-border bg-surface">
-        <table className="min-w-full border-collapse text-left">
+        <table className="w-full border-collapse text-[13px]">
           <thead>
-            <tr className="border-b border-border bg-surface2">
-              <th className="px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-faint">Field</th>
-              <th className="px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.08em] text-faint">Value</th>
+            <tr>
+              <th className="border-b border-border bg-surface2 px-4 py-3 text-left font-medium text-text">Field</th>
+              <th className="border-b border-border bg-surface2 px-4 py-3 text-left font-medium text-text">Value</th>
             </tr>
           </thead>
           <tbody>
             {smtpRows.map((row) => (
-              <tr key={row.field} className="border-b border-border last:border-b-0">
-                <td className="px-4 py-4 text-[13px] font-semibold text-text">{row.field}</td>
-                <td className="px-4 py-4 text-[13px] leading-[1.6] text-muted">{row.value}</td>
+              <tr key={row.field}>
+                <td className="border-b border-border px-4 py-3 align-top font-medium text-text">{row.field}</td>
+                <td className="border-b border-border px-4 py-3 align-top text-muted">{row.value}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div className="mb-10 rounded-[6px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
-        After filling the fields, press <strong className="text-text">SAVE</strong>. After OTP verification, clients should send the
-        returned player JWT in <strong className="text-text">Authorization: Bearer &lt;player-jwt&gt;</strong>.
+        TurnKit sends the OTP email through these SMTP credentials. After verification succeeds, the client uses the returned player JWT
+        for authenticated client API calls.
       </div>
 
       <SectionTitle id="sender-note">Sender Note</SectionTitle>

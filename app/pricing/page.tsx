@@ -46,7 +46,6 @@ export default function PricingPage() {
             <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Relay</div>
             <PricingGrid
               tiers={landingContent.pricing.relay}
-              title="Authoritative relay capacity"
               description="Server-side turn validation, hidden player data, and signed match results on a simple concurrent-user ladder."
             />
           </section>
@@ -56,8 +55,7 @@ export default function PricingPage() {
             <PricingGrid
               tiers={landingContent.pricing.leaderboards}
               variant="leaderboards"
-              title="Ranking capacity"
-              description="Same slot names, same CCU thresholds, lower monthly pricing for games that only need scoring and rankings."
+              description="Create different kinds of leaderboards and get scores. Submit easily in client, or disable it and submit on result from TurnKit Relay."
             />
           </section>
 

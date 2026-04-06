@@ -54,7 +54,8 @@ export interface LandingContent {
 
 export const landingContent: LandingContent = {
   navLinks: [
-    { href: '/docs/websocket', label: 'Docs' },
+    { href: '/examples', label: 'Examples' },
+    { href: '/docs/quickstart/unity', label: 'Docs' },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
   ],
   heroTag: 'In Development',
@@ -126,11 +127,11 @@ export const landingContent: LandingContent = {
     ],
     leaderboards: [
       { tier: 'Dev', price: '$0', ccu: '20 concurrent players', free: true, featured: true },
-      { tier: 'Indie', price: '$1.99', suffix: '/mo', ccu: '40 concurrent players' },
-      { tier: 'Studio', price: '$3.99', suffix: '/mo', ccu: '80 concurrent players' },
-      { tier: 'Pro', price: '$7.99', suffix: '/mo', ccu: '160 concurrent players' },
-      { tier: 'Scale', price: '$15.99', suffix: '/mo', ccu: '320 concurrent players' },
-      { tier: 'Enterprise', price: '$31.99', suffix: '/mo', ccu: '640 concurrent players' },
+      { tier: 'Indie', price: '$0.99', suffix: '/mo', ccu: '40 concurrent players' },
+      { tier: 'Studio', price: '$1.99', suffix: '/mo', ccu: '80 concurrent players' },
+      { tier: 'Pro', price: '$3.99', suffix: '/mo', ccu: '160 concurrent players' },
+      { tier: 'Scale', price: '$7.99', suffix: '/mo', ccu: '320 concurrent players' },
+      { tier: 'Enterprise', price: '$15.99', suffix: '/mo', ccu: '640 concurrent players' },
     ],
   },
   moduleRows: [

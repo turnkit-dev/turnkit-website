@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { unityQuickstartPageMeta } from '@/content/docs-content';
 
@@ -37,14 +38,14 @@ export default function UnityQuickstartPage() {
         </a>{' '}
         and import it into your Unity project.
       </p>
-      <p className="mb-10 text-text">2. Fill project name and continue to login. After login everything is generated and linked.</p>
+      <p className="mb-10 text-text">2. In the editor pop up fill project name and continue to login. After login everything is generated and linked.</p>
 
       <h2 id="get-started-window" className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">
         Get Started Window
       </h2>
       <p className="mb-5 text-text">
-        3. Use <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">Clone Project &amp; Open New Editor</code>, or
-        for more control use the Unity menu at <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TurnKit/ParrelSync</code>.
+        3. Use <InlineCode code="Clone Project & Open New Editor" />, or
+        for more control use the Unity menu at <InlineCode code="TurnKit/ParrelSync" />.
       </p>
       <p className="mb-5 text-text">4. Run the sample scene in two Unity editors.</p>
 
@@ -75,7 +76,7 @@ export default function UnityQuickstartPage() {
               {description.includes('TurnKitConfig.asset') ? (
                 <>
                   Unity stores the runtime config in{' '}
-                  <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[13px] text-[#eef5fb]">TurnKitConfig.asset</code>.
+                  <InlineCode code="TurnKitConfig.asset" language="csharp" />.
                 </>
               ) : (
                 description
