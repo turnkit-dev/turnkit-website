@@ -17,8 +17,10 @@ import {
   updateBillingAutoUpgrade,
   updateRelayConfig,
   type AuthMode,
-  type RelayConfigStatus,
+  type FailAction,
   type SetupMode,
+  type TurnEnforcement,
+  type VotingMode,
 } from '@/lib/dashboard';
 import { initialDashboardActionState, type DashboardActionState } from '@/lib/dashboard-action-state';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
@@ -37,6 +39,55 @@ function readRequiredString(formData: FormData, key: string) {
 
 function readGameId(formData: FormData) {
   return readRequiredString(formData, 'gameId');
+}
+
+function readBoolean(formData: FormData, key: string) {
+  return formData.get(key) === 'true' || formData.get(key) === 'on';
+}
+
+function readInt(formData: FormData, key: string) {
+  const value = Number(readRequiredString(formData, key));
+  if (!Number.isFinite(value)) {
+    throw new Error(`${key} must be a number`);
+  }
+  return Math.trunc(value);
+}
+
+function readRelayLists(formData: FormData) {
+  const raw = readString(formData, 'lists');
+  if (!raw) {
+    return [];
+  }
+  const parsed = JSON.parse(raw) as Array<{
+    name?: string;
+    tag?: string;
+    ownerSlots?: number[];
+    visibleToSlots?: number[];
+  }>;
+  return parsed.map((list) => ({
+    name: String(list.name ?? ''),
+    tag: String(list.tag ?? ''),
+    ownerSlots: Array.isArray(list.ownerSlots) ? list.ownerSlots.map((slot) => Number(slot)) : [],
+    visibleToSlots: Array.isArray(list.visibleToSlots) ? list.visibleToSlots.map((slot) => Number(slot)) : [],
+  }));
+}
+
+function readRelayConfigInput(formData: FormData) {
+  return {
+    slug: readRequiredString(formData, 'slug'),
+    maxPlayers: readInt(formData, 'maxPlayers'),
+    turnEnforcement: readRequiredString(formData, 'turnEnforcement') as TurnEnforcement,
+    ignoreAllOwnership: readBoolean(formData, 'ignoreAllOwnership'),
+    votingEnabled: readBoolean(formData, 'votingEnabled'),
+    votingMode: readRequiredString(formData, 'votingMode') as VotingMode,
+    votesRequired: readInt(formData, 'votesRequired'),
+    votesToFail: readInt(formData, 'votesToFail'),
+    failAction: readRequiredString(formData, 'failAction') as FailAction,
+    matchTimeoutMinutes: readInt(formData, 'matchTimeoutMinutes'),
+    turnTimeoutSeconds: readInt(formData, 'turnTimeoutSeconds'),
+    waitReconnectSeconds: readInt(formData, 'waitReconnectSeconds'),
+    lists: readRelayLists(formData),
+  };
 }
 
 function refreshGamePaths(gameId: string) {
@@ -191,9 +242,7 @@ export async function deleteLeaderboardAction(_previousState: DashboardActionSta
 export async function createRelayConfigAction(_previousState: DashboardActionState, formData: FormData) {
   try {
     const gameId = readGameId(formData);
-    const name = readRequiredString(formData, 'name');
-    const status = (readString(formData, 'status') === 'inactive' ? 'inactive' : 'active') as RelayConfigStatus;
-    await createRelayConfig(gameId, name, status);
+    await createRelayConfig(gameId, readRelayConfigInput(formData));
     refreshGamePaths(gameId);
     return successState('Relay config created.');
   } catch (error) {
@@ -205,9 +254,7 @@ export async function updateRelayConfigAction(_previousState: DashboardActionSta
   try {
     const gameId = readGameId(formData);
     const relayConfigSlug = readRequiredString(formData, 'relayConfigSlug');
-    const name = readRequiredString(formData, 'name');
-    const status = (readString(formData, 'status') === 'inactive' ? 'inactive' : 'active') as RelayConfigStatus;
-    await updateRelayConfig(gameId, relayConfigSlug, name, status);
+    await updateRelayConfig(gameId, relayConfigSlug, readRelayConfigInput(formData));
     refreshGamePaths(gameId);
     return successState('Relay config saved.');
   } catch (error) {

@@ -27,7 +27,7 @@ export function NewGameModal() {
               <label className="flex items-start gap-3 rounded border border-border2 bg-bg px-3 py-3">
                 <input type="radio" name="setupMode" value="quick" checked={setupMode === 'quick'} onChange={() => setSetupMode('quick')} className="mt-0.5" />
                 <div>
-                  <div className="text-[13px] text-text">Quick Setup (Unity defaults)</div>
+                  <div className="text-[13px] text-text">Quick Setup</div>
                   <div className="mt-1 text-[12px] text-muted">Creates a default key, OPEN auth, a main leaderboard, and one active relay config.</div>
                 </div>
               </label>

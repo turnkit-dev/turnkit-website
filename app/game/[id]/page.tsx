@@ -16,7 +16,7 @@ import { DeleteClientKeyButton, DeleteGameButton, NewClientKeyModal } from '@/co
 import { GameDashboardShell } from '@/components/dashboard-shell';
 import { CopyButton } from '@/components/dashboard-ui';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
-import { formatRelativeTime, getGameDashboard, listGames } from '@/lib/dashboard';
+import { formatRelativeTime, getGameDashboard, listGames, MissingGameKeyError } from '@/lib/dashboard';
 
 const sections = [
   { href: '#client-keys', label: 'Client Keys' },
@@ -113,6 +113,9 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
     if (error instanceof BackendAuthError) {
       redirect(buildSignInPath(`/game/${id}`));
     }
+    if (error instanceof MissingGameKeyError) {
+      redirect('/games');
+    }
     throw error;
   });
 
@@ -202,14 +205,20 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
       </SectionCard>
 
       <SectionCard id="relay-configs" title="Relay Configs">
-        <DashboardTable headers={['Slug', 'Status', 'Actions']} emptyMessage="No relay configs yet.">
+        <DashboardTable headers={['Slug', 'Max Players', 'Turn Enforcement', 'Lists', 'Actions']} emptyMessage="No relay configs yet.">
           {game.relayConfigs.map((relayConfig) => (
             <tr key={relayConfig.id}>
               <DashboardCell>
                 <span className="text-text">{relayConfig.slug}</span>
               </DashboardCell>
               <DashboardCell>
-                <span className={relayConfig.status === 'active' ? 'text-green' : 'text-muted'}>{relayConfig.status === 'active' ? 'Active' : 'Inactive'}</span>
+                <span className="text-text">{relayConfig.maxPlayers}</span>
+              </DashboardCell>
+              <DashboardCell>
+                <span className="text-muted">{relayConfig.turnEnforcement}</span>
+              </DashboardCell>
+              <DashboardCell>
+                <span className="text-muted">{relayConfig.lists.length}</span>
               </DashboardCell>
               <DashboardCell>
                 <div className="flex flex-wrap items-center gap-2">

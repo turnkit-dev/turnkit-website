@@ -2,7 +2,40 @@ import { backendFetch } from '@/lib/backend-auth';
 
 export type SetupMode = 'quick' | 'manual';
 export type AuthMode = 'OPEN' | 'SIGNED' | 'TURNKIT_AUTH';
-export type RelayConfigStatus = 'active' | 'inactive';
+export type TurnEnforcement = 'ROUND_ROBIN' | 'FREE';
+export type VotingMode = 'SYNC' | 'ASYNC';
+export type FailAction = 'SKIP_TURN' | 'END_GAME';
+
+export interface RelayListConfigRecord {
+  id?: string;
+  name: string;
+  tag: string;
+  ownerSlots: number[];
+  visibleToSlots: number[];
+}
+
+export interface RelayConfigInput {
+  slug: string;
+  maxPlayers: number;
+  turnEnforcement: TurnEnforcement;
+  ignoreAllOwnership: boolean;
+  votingEnabled: boolean;
+  votingMode: VotingMode;
+  votesRequired: number;
+  votesToFail: number;
+  failAction: FailAction;
+  matchTimeoutMinutes: number;
+  turnTimeoutSeconds: number;
+  waitReconnectSeconds: number;
+  lists: RelayListConfigRecord[];
+}
+
+export class MissingGameKeyError extends Error {
+  constructor(message = 'Game key not found') {
+    super(message);
+    this.name = 'MissingGameKeyError';
+  }
+}
 
 export interface GameListItem {
   id: string;
@@ -47,13 +80,20 @@ export interface LeaderboardRecord {
 export interface RelayConfigRecord {
   id: string;
   slug: string;
-  status: RelayConfigStatus;
   maxPlayers: number;
-  turnEnforcement: string;
+  turnEnforcement: TurnEnforcement;
+  ignoreAllOwnership: boolean;
   votingEnabled: boolean;
-  votingMode: string;
+  votingMode: VotingMode;
+  votesRequired: number;
+  votesToFail: number;
+  failAction: FailAction;
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
+  waitReconnectSeconds: number;
+  lists: RelayListConfigRecord[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface UsageBillingSnapshot {
@@ -136,16 +176,6 @@ interface ApiDashboardResponse {
     scoreStrategy: string;
     resetFrequency: string;
   }>;
-  relayConfigs: Array<{
-    id: string;
-    slug: string;
-    maxPlayers: number;
-    turnEnforcement: string;
-    votingEnabled: boolean;
-    votingMode: string;
-    matchTimeoutMinutes: number;
-    turnTimeoutSeconds: number;
-  }>;
   usage: {
     currentCcu: number;
     todaysPeakCcu: number;
@@ -163,6 +193,33 @@ interface ApiDashboardResponse {
   modules: {
     activeModules: string[];
   };
+}
+
+interface ApiRelayListResponse {
+  id?: string;
+  name: string;
+  tag: string;
+  ownerSlots: number[];
+  visibleToSlots: number[];
+}
+
+interface ApiRelayConfigResponse {
+  id: string;
+  slug: string;
+  maxPlayers: number;
+  turnEnforcement: TurnEnforcement;
+  ignoreAllOwnership: boolean;
+  votingEnabled: boolean;
+  votingMode: VotingMode;
+  votesRequired: number;
+  votesToFail: number;
+  failAction: FailAction;
+  matchTimeoutMinutes: number;
+  turnTimeoutSeconds: number;
+  waitReconnectSeconds: number;
+  lists: ApiRelayListResponse[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ApiClientKeyResponse {
@@ -184,7 +241,34 @@ function getCurrentPlanCcu(tierLimits: Record<string, number> | undefined) {
   return Math.max(0, ...Object.values(tierLimits ?? {}).filter((value) => Number.isFinite(value)));
 }
 
-function mapDashboardResponse(response: ApiDashboardResponse): GameDashboard {
+function mapRelayConfig(item: ApiRelayConfigResponse): RelayConfigRecord {
+  return {
+    id: item.id,
+    slug: item.slug,
+    maxPlayers: item.maxPlayers,
+    turnEnforcement: item.turnEnforcement,
+    ignoreAllOwnership: item.ignoreAllOwnership,
+    votingEnabled: item.votingEnabled,
+    votingMode: item.votingMode,
+    votesRequired: item.votesRequired,
+    votesToFail: item.votesToFail,
+    failAction: item.failAction,
+    matchTimeoutMinutes: item.matchTimeoutMinutes,
+    turnTimeoutSeconds: item.turnTimeoutSeconds,
+    waitReconnectSeconds: item.waitReconnectSeconds,
+    lists: item.lists.map((list) => ({
+      id: list.id,
+      name: list.name,
+      tag: list.tag,
+      ownerSlots: list.ownerSlots ?? [],
+      visibleToSlots: list.visibleToSlots ?? [],
+    })),
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  };
+}
+
+function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiRelayConfigResponse[]): GameDashboard {
   const tierLimits = response.billing.tierLimits ?? {};
 
   return {
@@ -223,17 +307,7 @@ function mapDashboardResponse(response: ApiDashboardResponse): GameDashboard {
       resetFrequency: item.resetFrequency,
       topScores: [],
     })),
-    relayConfigs: response.relayConfigs.map((item) => ({
-      id: item.id,
-      slug: item.slug,
-      status: 'active',
-      maxPlayers: item.maxPlayers,
-      turnEnforcement: item.turnEnforcement,
-      votingEnabled: item.votingEnabled,
-      votingMode: item.votingMode,
-      matchTimeoutMinutes: item.matchTimeoutMinutes,
-      turnTimeoutSeconds: item.turnTimeoutSeconds,
-    })),
+    relayConfigs: relayConfigs.map(mapRelayConfig),
     usageBilling: {
       currentCcu: response.usage.currentCcu,
       todaysPeakCcu: response.usage.todaysPeakCcu,
@@ -271,6 +345,58 @@ function normalizeSlug(value: string) {
     .replace(/[^a-z0-9-_]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+function parseApiErrorMessage(message: string) {
+  try {
+    const parsed = JSON.parse(message) as { detail?: string; message?: string; title?: string };
+    return parsed.detail || parsed.message || parsed.title || message;
+  } catch {
+    return message;
+  }
+}
+
+function isMissingGameKeyError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  const message = parseApiErrorMessage(error.message).toLowerCase();
+  return message.includes('game key not found');
+}
+
+function sanitizeRelayLists(lists: RelayListConfigRecord[], maxPlayers: number) {
+  return lists.map((list) => ({
+    name: list.name.trim(),
+    tag: list.tag.trim(),
+    ownerSlots: [...new Set((list.ownerSlots ?? []).filter((slot) => Number.isInteger(slot) && slot >= 1 && slot <= maxPlayers))].sort((a, b) => a - b),
+    visibleToSlots: [...new Set((list.visibleToSlots ?? []).filter((slot) => Number.isInteger(slot) && slot >= 1 && slot <= maxPlayers))].sort((a, b) => a - b),
+  }));
+}
+
+function normalizeRelayConfigInput(input: RelayConfigInput) {
+  const normalizedSlug = normalizeSlug(input.slug);
+  if (!normalizedSlug) {
+    throw new Error('Relay config slug is required');
+  }
+
+  const maxPlayers = Math.min(8, Math.max(2, Math.trunc(input.maxPlayers)));
+  const votingCap = Math.min(3, maxPlayers);
+
+  return {
+    slug: normalizedSlug,
+    maxPlayers,
+    turnEnforcement: input.turnEnforcement,
+    ignoreAllOwnership: input.ignoreAllOwnership,
+    votingEnabled: input.votingEnabled,
+    votingMode: input.votingMode,
+    votesRequired: Math.min(votingCap, Math.max(1, Math.trunc(input.votesRequired))),
+    votesToFail: Math.min(votingCap, Math.max(1, Math.trunc(input.votesToFail))),
+    failAction: input.failAction,
+    matchTimeoutMinutes: Math.max(1, Math.trunc(input.matchTimeoutMinutes)),
+    turnTimeoutSeconds: Math.max(1, Math.trunc(input.turnTimeoutSeconds)),
+    waitReconnectSeconds: Math.max(1, Math.trunc(input.waitReconnectSeconds)),
+    lists: sanitizeRelayLists(input.lists ?? [], maxPlayers),
+  } satisfies RelayConfigInput;
 }
 
 export function formatRelativeTime(value: string) {
@@ -312,11 +438,19 @@ export async function listGames(): Promise<GameListItem[]> {
 }
 
 export async function getGameDashboard(gameId: string): Promise<GameDashboard | null> {
-  const response = (await apiFetch(`/v1/dev/game-keys/${gameId}/dashboard`)) as ApiDashboardResponse | null;
-  if (!response) {
-    return null;
+  try {
+    const response = (await apiFetch(`/v1/dev/game-keys/${gameId}/dashboard`)) as ApiDashboardResponse | null;
+    if (!response) {
+      return null;
+    }
+    const relayConfigs = ((await apiFetch(`/v1/dev/relay-configs?gameKeyId=${encodeURIComponent(gameId)}`)) as ApiRelayConfigResponse[] | null) ?? [];
+    return mapDashboardResponse(response, relayConfigs);
+  } catch (error) {
+    if (isMissingGameKeyError(error)) {
+      throw new MissingGameKeyError(parseApiErrorMessage((error as Error).message));
+    }
+    throw error;
   }
-  return mapDashboardResponse(response);
 }
 
 export async function createGame(name: string, setupMode: SetupMode) {
@@ -331,8 +465,8 @@ export async function createGame(name: string, setupMode: SetupMode) {
 
   if (setupMode === 'quick') {
     await createClientKey(game.id, 'Default');
-    await createLeaderboard(game.id, 'main', '');
-    await createRelayConfig(game.id, 'main-relay', 'active');
+    await createLeaderboard(game.id, 'global', '');
+    // await createRelayConfig(game.id, 'main-relay', 'active');
   }
 
   return {
@@ -427,63 +561,24 @@ export async function deleteLeaderboard(gameId: string, leaderboardSlug: string)
   });
 }
 
-export async function createRelayConfig(gameId: string, slug: string, _status: RelayConfigStatus) {
-  const normalizedSlug = normalizeSlug(slug);
-  if (!normalizedSlug) {
-    throw new Error('Relay config slug is required');
-  }
-
+export async function createRelayConfig(gameId: string, input: RelayConfigInput) {
+  const payload = normalizeRelayConfigInput(input);
   await apiFetch(`/v1/dev/relay-configs?gameKeyId=${encodeURIComponent(gameId)}`, {
     method: 'POST',
-    body: JSON.stringify({
-      slug: normalizedSlug,
-      maxPlayers: 4,
-      turnEnforcement: 'ROUND_ROBIN',
-      ignoreAllOwnership: false,
-      votingEnabled: true,
-      votingMode: 'SYNC',
-      votesRequired: 2,
-      failAction: 'SKIP_TURN',
-      matchTimeoutMinutes: 20,
-      turnTimeoutSeconds: 60,
-      disconnectGraceSeconds: 30,
-      hiddenFields: [],
-      privateStateKeys: [],
-      perPlayerHiddenPaths: {},
-    }),
+    body: JSON.stringify(payload),
   });
 }
 
-export async function updateRelayConfig(gameId: string, relayConfigSlug: string, nextSlug: string, _status: RelayConfigStatus) {
-  const dashboard = await getGameDashboard(gameId);
-  const current = dashboard?.relayConfigs.find((item) => item.slug === relayConfigSlug);
+export async function updateRelayConfig(gameId: string, relayConfigSlug: string, input: RelayConfigInput) {
+  const current = (await apiFetch(`/v1/dev/relay-configs/${relayConfigSlug}?gameKeyId=${encodeURIComponent(gameId)}`)) as ApiRelayConfigResponse | null;
   if (!current) {
     throw new Error('Relay config not found');
   }
 
-  const normalizedSlug = normalizeSlug(nextSlug);
-  if (!normalizedSlug) {
-    throw new Error('Relay config slug is required');
-  }
-
+  const payload = normalizeRelayConfigInput(input);
   await apiFetch(`/v1/dev/relay-configs/${relayConfigSlug}?gameKeyId=${encodeURIComponent(gameId)}`, {
     method: 'PUT',
-    body: JSON.stringify({
-      slug: normalizedSlug,
-      maxPlayers: current.maxPlayers,
-      turnEnforcement: current.turnEnforcement,
-      votingEnabled: current.votingEnabled,
-      votingMode: current.votingMode,
-      votesRequired: 2,
-      failAction: 'SKIP_TURN',
-      matchTimeoutMinutes: current.matchTimeoutMinutes,
-      turnTimeoutSeconds: current.turnTimeoutSeconds,
-      disconnectGraceSeconds: 30,
-      hiddenFields: [],
-      privateStateKeys: [],
-      perPlayerHiddenPaths: {},
-      ignoreAllOwnership: false,
-    }),
+    body: JSON.stringify(payload),
   });
 }
 
