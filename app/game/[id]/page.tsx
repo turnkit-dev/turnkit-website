@@ -26,6 +26,8 @@ const sections = [
   { href: '#usage-billing', label: 'Usage & Billing' },
 ];
 
+const hiddenBillingModules = new Set(['PLAYER_STORE', 'MATCHMAKING']);
+
 function formatModuleName(value: string) {
   return value
     .toLowerCase()
@@ -117,6 +119,8 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
   if (!game) {
     notFound();
   }
+
+  const visibleModules = game.activeModules.filter((module) => !hiddenBillingModules.has(module));
 
   return (
     <GameDashboardShell games={games.map((item) => ({ id: item.id, name: item.name }))} currentGameId={game.id} sections={sections}>
@@ -250,9 +254,9 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
           </div>
           <div className="rounded border border-border2 bg-bg px-4 py-4 md:col-span-2 xl:col-span-1">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Active Modules</div>
-            {game.activeModules.length > 0 ? (
+            {visibleModules.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-2">
-                {game.activeModules.map((module) => (
+                {visibleModules.map((module) => (
                   <span key={module} className="rounded-full border border-border bg-surface px-3 py-1 text-[12px] text-text">
                     {formatModuleName(module)}
                   </span>
