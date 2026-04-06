@@ -15,6 +15,26 @@ const ipRateLimit = new Ratelimit({
   prefix: 'turnkit_ip',
 });
 
+const successMessage = "You're on the list! Check your email for confirmation.";
+
+function sendJson(res, status, body) {
+  return res.status(status).json(body);
+}
+
+async function readJson(response) {
+  const text = await response.text();
+
+  if (!text) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
 export default async function handler(req, res) {
   // -----------------------------
   // CORS (optional but safe)
@@ -35,23 +55,23 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
+    return sendJson(res, 200, { success: true, message: 'OK' });
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return sendJson(res, 405, { success: false, error: 'Method not allowed' });
   }
 
   // -----------------------------
   // Content-Type check
   // -----------------------------
   if (!req.headers['content-type']?.includes('application/json')) {
-    return res.status(415).json({ error: 'Content-Type must be application/json' });
+    return sendJson(res, 415, { success: false, error: 'Content-Type must be application/json' });
   }
 
   if (!process.env.RESEND_API_KEY) {
     console.error('[ERROR] Missing RESEND_API_KEY');
-    return res.status(500).json({ error: 'Service unavailable' });
+    return sendJson(res, 500, { success: false, error: 'Service unavailable' });
   }
 
   // -----------------------------
@@ -63,32 +83,28 @@ export default async function handler(req, res) {
     '';
 
   const ip = rawIp.split(',')[0].trim() || '127.0.0.1';
+  const body = typeof req.body === 'object' && req.body !== null ? req.body : {};
+  const email = typeof body.email === 'string' ? body.email : '';
+  const honeypot = typeof body.honeypot === 'string' ? body.honeypot : '';
 
-  // -----------------------------
-  // Body validation
-  // -----------------------------
-  const { email, honeypot } = req.body;
-
-  // Honeypot (bot trap)
   if (honeypot) {
-    console.log('[SECURITY] Honeypot triggered');
-    return res.status(200).json({ success: true });
+    return sendJson(res, 200, { success: true, message: successMessage });
   }
 
-  if (!email || typeof email !== 'string') {
-    return res.status(400).json({ error: 'Email is required' });
+  if (!email) {
+    return sendJson(res, 400, { success: false, error: 'Email is required' });
   }
 
   const trimmedEmail = email.trim().toLowerCase();
 
   if (trimmedEmail.length < 3 || trimmedEmail.length > 254) {
-    return res.status(400).json({ error: 'Invalid email address' });
+    return sendJson(res, 400, { success: false, error: 'Invalid email address' });
   }
 
   // Simpler, practical regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(trimmedEmail)) {
-    return res.status(400).json({ error: 'Invalid email address' });
+    return sendJson(res, 400, { success: false, error: 'Invalid email address' });
   }
 
   // Basic disposable blocking (lightweight)
@@ -101,7 +117,7 @@ export default async function handler(req, res) {
 
   const domain = trimmedEmail.split('@')[1];
   if (disposableDomains.includes(domain)) {
-    return res.status(400).json({ error: 'Disposable email not allowed' });
+    return sendJson(res, 400, { success: false, error: 'Disposable email not allowed' });
   }
 
   // -----------------------------
@@ -116,7 +132,8 @@ export default async function handler(req, res) {
 
       res.setHeader('Retry-After', retryAfter.toString());
 
-      return res.status(429).json({
+      return sendJson(res, 429, {
+        success: false,
         error: 'Too many submissions for this email. Try again later.',
         retryAfter,
       });
@@ -130,7 +147,8 @@ export default async function handler(req, res) {
 
       res.setHeader('Retry-After', retryAfter.toString());
 
-      return res.status(429).json({
+      return sendJson(res, 429, {
+        success: false,
         error: 'Too many requests from your network. Try again later.',
         retryAfter,
       });
@@ -165,32 +183,31 @@ export default async function handler(req, res) {
       signal: controller.signal,
     });
 
-    clearTimeout(timeout);
-
-    const data = await response.json();
+    const data = await readJson(response);
 
     if (response.ok) {
-      console.log(`[SUCCESS] ${trimmedEmail.substring(0, 3)}***`);
-      return res.status(200).json({ success: true });
+      return sendJson(res, 200, { success: true, message: successMessage });
     }
 
-    // Avoid leaking existence
-    if (response.status === 400 && data.message?.includes('already exists')) {
-      return res.status(200).json({ success: true });
+    if (response.status === 400 && typeof data.message === 'string' && data.message.includes('already exists')) {
+      return sendJson(res, 200, { success: true, message: successMessage });
     }
 
     if (response.status === 401) {
       console.error('[ERROR] Resend auth failed');
-      return res.status(500).json({ error: 'Service configuration error' });
+      return sendJson(res, 500, { success: false, error: 'Service configuration error' });
     }
 
     console.error('[ERROR] Resend error:', data);
-    return res.status(500).json({ error: 'Unable to process request' });
+    return sendJson(res, 500, { success: false, error: 'Unable to process request' });
 
   } catch (err) {
-    console.error('[ERROR] Resend network error:', err.message);
-    return res.status(500).json({
+    console.error('[ERROR] Resend network error:', err instanceof Error ? err.message : err);
+    return sendJson(res, 500, {
+      success: false,
       error: 'Service temporarily unavailable. Try again later.',
     });
+  } finally {
+    clearTimeout(timeout);
   }
 }

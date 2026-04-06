@@ -1,7 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
-import { initialWaitlistState, submitWaitlistAction } from '@/app/actions/waitlist';
+import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
@@ -11,9 +10,15 @@ declare global {
   }
 }
 
+type WaitlistState = {
+  status: 'idle' | 'success' | 'error';
+  message: string;
+};
+
 export function WaitlistForm() {
-  const [state, action, pending] = useActionState(submitWaitlistAction, initialWaitlistState);
   const formRef = useRef<HTMLFormElement>(null);
+  const [state, setState] = useState<WaitlistState>({ status: 'idle', message: '' });
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     if (state.status === 'success') {
@@ -22,8 +27,64 @@ export function WaitlistForm() {
     }
   }, [state]);
 
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (pending) {
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get('email') ?? '');
+    const honeypot = String(formData.get('website') ?? '');
+
+    setPending(true);
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ email, honeypot }),
+      });
+
+      const raw = await response.text();
+      let data: { success?: boolean; error?: string; message?: string } = {};
+
+      if (raw) {
+        try {
+          data = JSON.parse(raw) as { success?: boolean; error?: string; message?: string };
+        } catch {
+          data = {};
+        }
+      }
+
+      if (response.ok && data.success) {
+        setState({
+          status: 'success',
+          message: data.message ?? "You're on the list! Check your email for confirmation.",
+        });
+        return;
+      }
+
+      setState({
+        status: 'error',
+        message: data.error ?? data.message ?? 'Something went wrong. Please try again or join our Discord.',
+      });
+    } catch {
+      setState({
+        status: 'error',
+        message: 'Network error. Please check your connection and try again.',
+      });
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
-    <form ref={formRef} action={action} className="space-y-3">
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
       <div className="flex flex-wrap gap-2.5">
         <input
           type="text"

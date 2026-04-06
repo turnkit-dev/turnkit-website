@@ -103,7 +103,8 @@ export default function TurnkitAuthBrevoPage() {
         </table>
       </div>
       <div className="mb-10 rounded-[6px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
-        After filling the fields, press <strong className="text-text">SAVE</strong>.
+        After filling the fields, press <strong className="text-text">SAVE</strong>. After OTP verification, clients should send the
+        returned player JWT in <strong className="text-text">Authorization: Bearer &lt;player-jwt&gt;</strong>.
       </div>
 
       <SectionTitle id="sender-note">Sender Note</SectionTitle>

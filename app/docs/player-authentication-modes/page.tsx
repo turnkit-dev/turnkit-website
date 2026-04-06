@@ -33,13 +33,13 @@ const comparisonRows = [
     mode: 'TURNKIT_AUTH',
     bestFor: 'Simple email login without building a backend',
     requirements: 'SMTP settings (host, port, username, password, from address)',
-    verification: 'Email + OTP',
+    verification: 'Email + OTP -> player JWT',
   },
   {
     mode: 'SIGNED',
     bestFor: 'Games with existing player authentication',
     requirements: 'Your own backend + secret key',
-    verification: 'HMAC signature (verified by TurnKit)',
+    verification: 'Signed exchange -> player JWT',
   },
 ];
 
@@ -108,8 +108,9 @@ export default function PlayerAuthenticationModesPage() {
             <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">/v1/client/auth/otp/verify</code>.
           </li>
           <li>
-            Use the returned JWT in the{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">X-Player-Token</code> header.
+            Use the returned player JWT in{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Authorization: Bearer &lt;player-jwt&gt;</code>{' '}
+            for normal client calls.
           </li>
         </ol>
       </div>
@@ -121,13 +122,39 @@ export default function PlayerAuthenticationModesPage() {
         <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-[1.7] text-muted">
           <li>Set mode to SIGNED in the dashboard.</li>
           <li>Store secret key only on your backend.</li>
-          <li>Backend computes HMAC-SHA256 of the playerId and returns signature to client.</li>
           <li>
-            Client sends <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">X-Player-Id</code> and{' '}
-            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">X-Player-Signature</code> in header.
+            Backend computes HMAC-SHA256 over{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">playerId + &quot;\n&quot; + timestamp + &quot;\n&quot; + nonce</code>{' '}
+            and returns{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">playerId</code>,{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">timestamp</code>,{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">nonce</code>, and{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">signature</code> to the client.
+          </li>
+          <li>
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">timestamp</code> is Unix epoch seconds encoded as a
+            string.
+          </li>
+          <li>
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">nonce</code> must be a random URL-safe string, not a
+            time-based value. The server currently requires{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">[A-Za-z0-9_-]{"{16,128}"}</code>.
+          </li>
+          <li>
+            Client calls <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">POST /v1/client/auth/signed/exchange</code>{' '}
+            with that payload. TurnKit verifies signature, replay protection, and freshness before issuing a player JWT.
+          </li>
+          <li>
+            Use that player JWT in{' '}
+            <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">Authorization: Bearer &lt;player-jwt&gt;</code>{' '}
+            for normal client calls.
           </li>
         </ol>
       </div>
+      <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
+        <strong className="text-text">OPEN</strong> is the only mode that still sends{' '}
+        <code className="rounded-[3px] bg-surface2 px-1.5 py-0.5 text-[#eef5fb]">X-Player-Id</code> directly on client requests.
+      </p>
       <p className="max-w-[760px] text-base leading-[1.7] text-muted">All modes work with MatchWithAnyone().</p>
     </DocsShell>
   );
