@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await exchangeDeveloperSession(token.provider, token.providerProof, request.headers.get('cookie') ?? undefined);
     const bootstrapTargetPath = resolvePostLoginPath(session.dashboardBootstrap);
-    const targetPath = callbackPath && callbackPath !== '/games' ? callbackPath : bootstrapTargetPath;
+    const targetPath = callbackPath ?? bootstrapTargetPath;
     const response = NextResponse.redirect(new URL(targetPath, request.url));
     applyBackendSession(response, session);
     return response;

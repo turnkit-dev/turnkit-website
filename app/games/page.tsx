@@ -16,10 +16,6 @@ export default async function GamesPage() {
     throw error;
   });
 
-  if (games.length === 1) {
-    redirect(`/game/${games[0].id}`);
-  }
-
   return (
     <DashboardPageFrame>
       <div className="mx-auto max-w-[960px] px-5 py-10 md:px-8">

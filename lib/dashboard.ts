@@ -43,6 +43,7 @@ export interface GameListItem {
   createdAt: string;
   status: string;
   autoUpgrade: boolean;
+  generatedClientKey?: string;
 }
 
 export interface ClientKeyRecord {
@@ -200,6 +201,7 @@ interface ApiRelayListResponse {
   name: string;
   tag: string;
   ownerSlots: number[];
+  visibleSlots?: number[];
   visibleToSlots: number[];
 }
 
@@ -218,8 +220,8 @@ interface ApiRelayConfigResponse {
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
   lists: ApiRelayListResponse[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ApiClientKeyResponse {
@@ -231,6 +233,16 @@ interface ApiClientKeyResponse {
 
 interface ApiSecretResponse {
   secret: string;
+}
+
+interface ApiProjectSetupResponse {
+  gameKey: {
+    id: string;
+    name: string;
+  };
+  relayConfigs: ApiRelayConfigResponse[];
+  wasCreated: boolean;
+  generatedClientKey?: string;
 }
 
 async function apiFetch(path: string, init?: RequestInit) {
@@ -261,10 +273,10 @@ function mapRelayConfig(item: ApiRelayConfigResponse): RelayConfigRecord {
       name: list.name,
       tag: list.tag,
       ownerSlots: list.ownerSlots ?? [],
-      visibleToSlots: list.visibleToSlots ?? [],
+      visibleToSlots: list.visibleToSlots ?? list.visibleSlots ?? [],
     })),
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
+    createdAt: item.createdAt ?? '',
+    updatedAt: item.updatedAt ?? '',
   };
 }
 
@@ -459,15 +471,27 @@ export async function createGame(name: string, setupMode: SetupMode) {
     throw new Error('Game name is required');
   }
 
+  if (setupMode === 'quick') {
+    const project = (await apiFetch('/v1/dev/project-setup', {
+      method: 'POST',
+      body: JSON.stringify({
+        projectName: normalizedName,
+      }),
+    })) as ApiProjectSetupResponse;
+
+    return {
+      id: project.gameKey.id,
+      name: project.gameKey.name,
+      createdAt: '',
+      status: project.wasCreated ? 'ACTIVE' : 'EXISTING',
+      autoUpgrade: false,
+      generatedClientKey: project.generatedClientKey ?? '',
+    };
+  }
+
   const game = (await apiFetch(`/v1/dev/game-keys?name=${encodeURIComponent(normalizedName)}`, {
     method: 'POST',
   })) as ApiGameKeyListItem;
-
-  if (setupMode === 'quick') {
-    await createClientKey(game.id, 'Default');
-    await createLeaderboard(game.id, 'global', '');
-    // await createRelayConfig(game.id, 'main-relay', 'active');
-  }
 
   return {
     id: game.id,

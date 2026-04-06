@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createClientKeyAction, createGameAction, deleteClientKeyAction, deleteGameAction } from '@/app/actions/dashboard';
 import { CopyButton, Field, Modal, PendingButton, SectionButton, useDashboardActionFeedback } from '@/components/dashboard-ui';
 import { initialDashboardActionState } from '@/lib/dashboard-action-state';
@@ -28,7 +29,7 @@ export function NewGameModal() {
                 <input type="radio" name="setupMode" value="quick" checked={setupMode === 'quick'} onChange={() => setSetupMode('quick')} className="mt-0.5" />
                 <div>
                   <div className="text-[13px] text-text">Quick Setup</div>
-                  <div className="mt-1 text-[12px] text-muted">Creates a default key, OPEN auth, a main leaderboard, and one active relay config.</div>
+                  <div className="mt-1 text-[12px] text-muted">Uses the backend project setup flow to create the standard default project configuration.</div>
                 </div>
               </label>
               <label className="flex items-start gap-3 rounded border border-border2 bg-bg px-3 py-3">
@@ -163,5 +164,52 @@ export function DeleteClientKeyButton({ gameId, clientKeyId }: { gameId: string;
         </form>
       </Modal>
     </>
+  );
+}
+
+export function GeneratedClientKeyPrompt({ fullKey }: { fullKey: string }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(Boolean(fullKey));
+
+  useEffect(() => {
+    if (!fullKey) {
+      return;
+    }
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('generatedClientKey')) {
+      url.searchParams.delete('generatedClientKey');
+      window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+  }, [fullKey]);
+
+  if (!fullKey) {
+    return null;
+  }
+
+  return (
+    <Modal
+      open={open}
+      onClose={() => {
+        setOpen(false);
+        router.refresh();
+      }}
+      title="Client Key Created"
+      description="This full client key is shown only once. Copy it now before closing this dialog."
+    >
+      <div className="space-y-5">
+        <div className="rounded border border-border2 bg-bg px-4 py-3 font-mono text-[13px] text-text break-all">{fullKey}</div>
+        <div className="flex justify-end gap-3">
+          <CopyButton value={fullKey} />
+          <SectionButton
+            onClick={() => {
+              setOpen(false);
+              router.refresh();
+            }}
+          >
+            Close
+          </SectionButton>
+        </div>
+      </div>
+    </Modal>
   );
 }

@@ -12,7 +12,7 @@ import {
   ResetLeaderboardButton,
   ViewLeaderboardButton,
 } from '@/components/dashboard-config-controls';
-import { DeleteClientKeyButton, DeleteGameButton, NewClientKeyModal } from '@/components/dashboard-game-controls';
+import { DeleteClientKeyButton, DeleteGameButton, GeneratedClientKeyPrompt, NewClientKeyModal } from '@/components/dashboard-game-controls';
 import { GameDashboardShell } from '@/components/dashboard-shell';
 import { CopyButton } from '@/components/dashboard-ui';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
@@ -106,9 +106,15 @@ function DashboardCell({ children, align = 'left' }: { children: React.ReactNode
   return <td className={`border-b border-border px-4 py-3 text-[13px] ${align === 'right' ? 'text-right' : 'text-left'}`}>{children}</td>;
 }
 
-export default async function GameDashboardPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function GameDashboardPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ generatedClientKey?: string }>;
+}) {
   noStore();
-  const { id } = await params;
+  const [{ id }, query] = await Promise.all([params, searchParams]);
   const [game, games] = await Promise.all([getGameDashboard(id), listGames()]).catch((error) => {
     if (error instanceof BackendAuthError) {
       redirect(buildSignInPath(`/game/${id}`));
@@ -127,6 +133,7 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
 
   return (
     <GameDashboardShell games={games.map((item) => ({ id: item.id, name: item.name }))} currentGameId={game.id} sections={sections}>
+      <GeneratedClientKeyPrompt fullKey={query.generatedClientKey ?? ''} />
       <div className="mb-8">
         <Link href="/games" className="inline-flex items-center text-[13px] text-muted transition hover:text-text">
           {'<-'} All Games

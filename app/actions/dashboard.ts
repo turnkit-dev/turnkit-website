@@ -138,7 +138,12 @@ export async function createGameAction(formData: FormData) {
   const setupMode = (readString(formData, 'setupMode') === 'manual' ? 'manual' : 'quick') as SetupMode;
   const game = await createGame(name, setupMode);
   refreshGamePaths(game.id);
-  redirect(`/game/${game.id}`);
+  const params = new URLSearchParams();
+  if (game.generatedClientKey) {
+    params.set('generatedClientKey', game.generatedClientKey);
+  }
+  const query = params.toString();
+  redirect(query ? `/game/${game.id}?${query}` : `/game/${game.id}`);
 }
 
 export async function deleteGameAction(formData: FormData) {
