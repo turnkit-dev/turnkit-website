@@ -5,12 +5,6 @@
     "description": "TurnKit game backend — multi-tenant leaderboard, matchmaking, relay and player store for indie games.",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "api.turnkit.dev",
-      "description": "Server url"
-    }
-  ],
   "security": [
     {
       "bearerAuth": []
@@ -31,7 +25,7 @@
     },
     {
       "name": "Player Auth",
-      "description": "TurnKit player authentication (TURNKIT_AUTH mode only)"
+      "description": "TurnKit player authentication for SIGNED and TURNKIT_AUTH modes"
     }
   ],
   "paths": {
@@ -680,6 +674,68 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/project-setup": {
+      "post": {
+        "tags": [
+          "Dev — Project Setup"
+        ],
+        "summary": "Get or create project setup",
+        "description": "Creates the same default project setup used by Unity, or returns the existing setup for the authenticated developer and project name",
+        "operationId": "getOrCreateProjectSetup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectSetupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectSetupResponse"
                 }
               }
             }
@@ -1497,6 +1553,179 @@
         }
       }
     },
+    "/v1/dev/auth/refresh": {
+      "post": {
+        "tags": [
+          "developer-auth-controller"
+        ],
+        "operationId": "refresh",
+        "parameters": [
+          {
+            "name": "turnkit_dev_refresh",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/auth/logout": {
+      "post": {
+        "tags": [
+          "developer-auth-controller"
+        ],
+        "operationId": "logout",
+        "parameters": [
+          {
+            "name": "turnkit_dev_refresh",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dev/auth/exchange": {
+      "post": {
+        "tags": [
+          "developer-auth-controller"
+        ],
+        "operationId": "exchange",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExchangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/client/relay/queue": {
       "post": {
         "tags": [
@@ -1624,6 +1853,77 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ScoreSubmitResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/signed/exchange": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Verify a signed player proof and receive a player JWT.",
+        "operationId": "exchangeSigned",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignedExchangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedExchangeResponse"
                 }
               }
             }
@@ -2067,6 +2367,69 @@
                   "items": {
                     "type": "string"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/dashboard": {
+      "get": {
+        "tags": [
+          "Dev — Game Keys"
+        ],
+        "summary": "Get combined dashboard data",
+        "description": "Retrieves the summary data needed to render the dashboard for a single game key",
+        "operationId": "getDashboard",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameDashboardResponse"
                 }
               }
             }
@@ -3138,6 +3501,130 @@
           }
         }
       },
+      "ProjectSetupRequest": {
+        "type": "object",
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "projectName"
+        ]
+      },
+      "GameKeyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ProjectSetupResponse": {
+        "type": "object",
+        "properties": {
+          "gameKey": {
+            "$ref": "#/components/schemas/GameKeyDto"
+          },
+          "relayConfigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelayConfigDto"
+            }
+          },
+          "wasCreated": {
+            "type": "boolean"
+          },
+          "generatedClientKey": {
+            "type": "string"
+          }
+        }
+      },
+      "RelayConfigDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnEnforcement": {
+            "type": "string"
+          },
+          "ignoreAllOwnership": {
+            "type": "boolean"
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string"
+          },
+          "votesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesToFail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failAction": {
+            "type": "string"
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "waitReconnectSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelayListConfigDto"
+            }
+          }
+        }
+      },
+      "RelayListConfigDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "ownerSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "visibleSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "GameKey": {
         "type": "object",
         "properties": {
@@ -3389,6 +3876,66 @@
           }
         }
       },
+      "RefreshResponse": {
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ExchangeRequest": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "idToken": {
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "developer": {
+            "$ref": "#/components/schemas/DeveloperSummary"
+          }
+        }
+      },
+      "DeveloperSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "Item": {
         "type": "object",
         "properties": {
@@ -3484,6 +4031,44 @@
           }
         }
       },
+      "SignedExchangeRequest": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nonce": {
+            "type": "string",
+            "minLength": 1
+          },
+          "signature": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "nonce",
+          "playerId",
+          "signature",
+          "timestamp"
+        ]
+      },
+      "SignedExchangeResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "playerId": {
+            "type": "string"
+          }
+        }
+      },
       "OtpVerifyRequestDto": {
         "type": "object",
         "properties": {
@@ -3572,6 +4157,281 @@
             "type": "string",
             "description": "Optional metadata associated with the score",
             "example": "Level 5 - Warrior"
+          }
+        }
+      },
+      "AuthSection": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "SIGNED",
+              "TURNKIT_AUTH"
+            ]
+          },
+          "hasSecret": {
+            "type": "boolean"
+          },
+          "smtpConfigured": {
+            "type": "boolean"
+          },
+          "smtp": {
+            "$ref": "#/components/schemas/SmtpConfigDto"
+          }
+        }
+      },
+      "BillingSection": {
+        "type": "object",
+        "properties": {
+          "autoUpgrade": {
+            "type": "boolean"
+          },
+          "burstActive": {
+            "type": "boolean"
+          },
+          "burstUsedThisMonth": {
+            "type": "boolean"
+          },
+          "burstExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "burstUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "FREE",
+                "INDIE",
+                "STUDIO",
+                "PRO",
+                "SCALE",
+                "ENTERPRISE"
+              ]
+            }
+          },
+          "tierLimits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "ClientKeySection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GameDashboardResponse": {
+        "type": "object",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSection"
+          },
+          "clientKeys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientKeySection"
+            }
+          },
+          "auth": {
+            "$ref": "#/components/schemas/AuthSection"
+          },
+          "leaderboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardSection"
+            }
+          },
+          "relayConfigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelayConfigSection"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageSection"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/BillingSection"
+          },
+          "modules": {
+            "$ref": "#/components/schemas/ModulesSection"
+          }
+        }
+      },
+      "GameSection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "DELETED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "autoUpgrade": {
+            "type": "boolean"
+          },
+          "playerIdMode": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "SIGNED",
+              "TURNKIT_AUTH"
+            ]
+          }
+        }
+      },
+      "LeaderboardSection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "string",
+            "description": "Determines if the leaderboard is sorted by highest score (DESC) or lowest time (ASC)",
+            "enum": [
+              "DESC",
+              "ASC"
+            ]
+          },
+          "scoreStrategy": {
+            "type": "string",
+            "description": "Strategy for handling score submissions",
+            "enum": [
+              "BEST_ONLY",
+              "MULTIPLE_ENTRIES",
+              "CUMULATIVE"
+            ]
+          },
+          "resetFrequency": {
+            "type": "string",
+            "description": "Frequency for automatic leaderboard resets",
+            "enum": [
+              "NONE",
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY"
+            ]
+          }
+        }
+      },
+      "ModulesSection": {
+        "type": "object",
+        "properties": {
+          "activeModules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LEADERBOARDS",
+                "PLAYER_STORE",
+                "MATCHMAKING",
+                "TURN_RELAY"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "RelayConfigSection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnEnforcement": {
+            "type": "string",
+            "enum": [
+              "ROUND_ROBIN",
+              "FREE"
+            ]
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string",
+            "enum": [
+              "SYNC",
+              "ASYNC"
+            ]
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UsageSection": {
+        "type": "object",
+        "properties": {
+          "currentCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thisMonthPeakCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "todaysPeakCcu": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3719,6 +4579,9 @@
             "type": "boolean"
           },
           "burstActive": {
+            "type": "boolean"
+          },
+          "burstUsedThisMonth": {
             "type": "boolean"
           },
           "burstExpiresAt": {
@@ -3928,7 +4791,7 @@
         "type": "http",
         "name": "bearerAuth",
         "scheme": "bearer",
-        "bearerFormat": "SDK Client Key"
+        "bearerFormat": "Client Key or Player JWT"
       }
     }
   }
