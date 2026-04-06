@@ -26,6 +26,30 @@ const sections = [
   { href: '#usage-billing', label: 'Usage & Billing' },
 ];
 
+function formatModuleName(value: string) {
+  return value
+    .toLowerCase()
+    .split('_')
+    .map((part) => part[0]?.toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function formatBurstExpiresAt(value: string) {
+  if (!value) {
+    return 'Not active';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return 'Not active';
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date);
+}
+
 function SectionCard({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} className="mb-8 scroll-mt-24 rounded border border-border bg-surface">
@@ -198,14 +222,45 @@ export default async function GameDashboardPage({ params }: { params: Promise<{ 
       </SectionCard>
 
       <SectionCard id="usage-billing" title="Usage & Billing">
-        <div className="mb-5 grid gap-4 md:grid-cols-2">
+        <div className="mb-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <div className="rounded border border-border2 bg-bg px-4 py-4">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Current CCU</div>
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Current Plan</div>
+            <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">{game.usageBilling.currentPlanCcu} CCU</div>
+          </div>
+          <div className="rounded border border-border2 bg-bg px-4 py-4">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">This Month Peak</div>
+            <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">{game.usageBilling.thisMonthPeakCcu}</div>
+          </div>
+          <div className="rounded border border-border2 bg-bg px-4 py-4">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Today Peak</div>
+            <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">{game.usageBilling.todaysPeakCcu}</div>
+          </div>
+          <div className="rounded border border-border2 bg-bg px-4 py-4">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Current Amount</div>
             <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">{game.usageBilling.currentCcu}</div>
           </div>
           <div className="rounded border border-border2 bg-bg px-4 py-4">
-            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Today's Peak</div>
-            <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">{game.usageBilling.todaysPeakCcu}</div>
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">
+              {game.usageBilling.burstActive ? 'Burst Expires At' : 'Burst Status'}
+            </div>
+            <div className="mt-2 font-display text-[28px] font-semibold tracking-[-0.02em] text-text">
+              {game.usageBilling.burstActive ? formatBurstExpiresAt(game.usageBilling.burstExpiresAt) : 'Inactive'}
+            </div>
+            <div className="mt-2 text-[12px] text-muted">Used this month: {game.usageBilling.burstUsedThisMonth ? 'Yes' : 'No'}</div>
+          </div>
+          <div className="rounded border border-border2 bg-bg px-4 py-4 md:col-span-2 xl:col-span-1">
+            <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Active Modules</div>
+            {game.activeModules.length > 0 ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {game.activeModules.map((module) => (
+                  <span key={module} className="rounded-full border border-border bg-surface px-3 py-1 text-[12px] text-text">
+                    {formatModuleName(module)}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-2 text-[14px] text-muted">No active modules.</div>
+            )}
           </div>
         </div>
         <BillingAutoUpgradeForm gameId={game.id} autoUpgrade={game.usageBilling.autoUpgrade} upgradeHref={game.usageBilling.upgradeHref} />

@@ -59,6 +59,14 @@ export interface RelayConfigRecord {
 export interface UsageBillingSnapshot {
   currentCcu: number;
   todaysPeakCcu: number;
+  thisMonthPeakCcu: number;
+  currentPlanCcu: number;
+  tiers: Record<string, string>;
+  tierLimits: Record<string, number>;
+  burstActive: boolean;
+  burstExpiresAt: string;
+  burstUsedAt: string;
+  burstUsedThisMonth: boolean;
   autoUpgrade: boolean;
   upgradeHref: string;
 }
@@ -141,9 +149,16 @@ interface ApiDashboardResponse {
   usage: {
     currentCcu: number;
     todaysPeakCcu: number;
+    thisMonthPeakCcu?: number;
   };
   billing: {
     autoUpgrade: boolean;
+    tiers?: Record<string, string>;
+    tierLimits?: Record<string, number>;
+    burstActive?: boolean;
+    burstExpiresAt?: string;
+    burstUsedAt?: string;
+    burstUsedThisMonth?: boolean;
   };
   modules: {
     activeModules: string[];
@@ -165,7 +180,13 @@ async function apiFetch(path: string, init?: RequestInit) {
   return backendFetch(path, init);
 }
 
+function getCurrentPlanCcu(tierLimits: Record<string, number> | undefined) {
+  return Math.max(0, ...Object.values(tierLimits ?? {}).filter((value) => Number.isFinite(value)));
+}
+
 function mapDashboardResponse(response: ApiDashboardResponse): GameDashboard {
+  const tierLimits = response.billing.tierLimits ?? {};
+
   return {
     id: response.game.id,
     name: response.game.name,
@@ -216,6 +237,14 @@ function mapDashboardResponse(response: ApiDashboardResponse): GameDashboard {
     usageBilling: {
       currentCcu: response.usage.currentCcu,
       todaysPeakCcu: response.usage.todaysPeakCcu,
+      thisMonthPeakCcu: response.usage.thisMonthPeakCcu ?? response.usage.todaysPeakCcu,
+      currentPlanCcu: getCurrentPlanCcu(tierLimits),
+      tiers: response.billing.tiers ?? {},
+      tierLimits,
+      burstActive: response.billing.burstActive ?? false,
+      burstExpiresAt: response.billing.burstExpiresAt ?? '',
+      burstUsedAt: response.billing.burstUsedAt ?? '',
+      burstUsedThisMonth: response.billing.burstUsedThisMonth ?? false,
       autoUpgrade: response.billing.autoUpgrade,
       upgradeHref: '#',
     },
