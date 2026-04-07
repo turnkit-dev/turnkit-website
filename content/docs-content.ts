@@ -172,6 +172,17 @@ export const unityQuickstartPageMeta: DocsPageMeta = {
   ],
 };
 
+export const restQuickstartPageMeta: DocsPageMeta = {
+  title: 'REST API Quickstart',
+  description: 'Create a game in the dashboard, generate your client key, and interface with the TurnKit REST and WebSocket APIs.',
+  path: '/docs/quickstart/rest-api',
+  eyebrow: 'Getting Started',
+  breadcrumbLabel: 'REST API Quickstart',
+  toc: [
+    { href: '#next-steps', label: 'Next Steps' },
+  ],
+};
+
 export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
   title: 'TurnKit Auth with Brevo',
   description:
