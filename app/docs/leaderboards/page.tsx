@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CodeBlock, InlineCode } from '@/components/code-block';
@@ -114,63 +115,61 @@ var myRank = await Leaderboard.GetMyRank(surrounding: 5);
 // Combined top + my context (recommended for main screen)
 var combined = await Leaderboard.GetCombined(topLimit: 50, surrounding: 5);`}
       />
-      <CodeBlock
-        className="mb-8"
-        language="csharp"
-        code={`// Example shape from GetCombined()
-combined.top[0].playerId;
-combined.top[0].score;
-combined.top[0].rank;
-combined.player?.rank;
-combined.player?.surrounding;`}
-      />
 
       <SectionTitle id="full-api">Full API</SectionTitle>
       <CodeBlock
         className="mb-8"
         language="csharp"
-        code={`/// <summary>
-/// Submits a score. Player identity from TurnKitConfig.PlayerId (or pass explicitly).
-/// </summary>
-public static Task<ScoreSubmitResponse> SubmitScore(
-    double score,
-    string metadata = null,
-    string leaderboard = null);
+        code={`// Generic internal helper for all leaderboard requests
+private async Task<T> Request<T>(string url, string method, string playerId, string json = null)
+{
+    using UnityWebRequest req = new UnityWebRequest(url, method);
+    if (json != null) req.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
+    req.downloadHandler = new DownloadHandlerBuffer();
+    
+    req.SetRequestHeader("Content-Type", "application/json");
+    req.SetRequestHeader("Authorization", "Bearer YOUR_CLIENT_KEY");
+    req.SetRequestHeader("X-Player-Id", playerId);
 
-/// <summary>
-/// Fetches top N scores.
-/// </summary>
-public static Task<TopScores> GetTopScores(
-    int limit = 10,
-    string leaderboard = null);
+    var op = req.SendWebRequest();
+    while (!op.isDone) await Task.Yield();
 
-/// <summary>
-/// Fetches current player's rank + surrounding entries.
-/// </summary>
-public static Task<PlayerScore> GetMyRank(
-    int surrounding = 5,
-    string leaderboard = null);
+    return req.result == UnityWebRequest.Result.Success 
+        ? JsonUtility.FromJson<T>(req.downloadHandler.text) 
+        : default;
+}
 
-/// <summary>
-/// Fetches any player's rank + surrounding entries.
-/// </summary>
-public static Task<PlayerScore> GetPlayerRank(
-    string playerId,
-    int surrounding = 5,
-    string leaderboard = null);
+public async Task<ScoreSubmitResponse> SubmitScore(string playerId, double score, string board = "global")
+{
+    string json = "{\\"scoreValue\\":" + score + "}";
+    return await Request<ScoreSubmitResponse>($"https://api.turnkit.dev/v1/leaderboards/{board}/scores", "POST", playerId, json);
+}
 
-/// <summary>
-/// Combined top scores + player context in one call.
-/// </summary>
-public static Task<CombinedScores> GetCombined(
-    int topLimit = 10,
-    int surrounding = 5,
-    string leaderboard = null);`}
+public async Task<TopScores> GetTopScores(string playerId, int limit, string board = "global")
+{
+    return await Request<TopScores>($"https://api.turnkit.dev/v1/leaderboards/{board}/top?limit={limit}", "GET", playerId);
+}
+
+public async Task<PlayerScore> GetMyRank(string playerId, int surrounding, string board = "global")
+{
+    return await Request<PlayerScore>($"https://api.turnkit.dev/v1/leaderboards/{board}/me?surrounding={surrounding}", "GET", playerId);
+}
+
+public async Task<CombinedScores> GetCombined(string playerId, int topLimit, int surrounding, string board = "global")
+{
+    string url = $"https://api.turnkit.dev/v1/leaderboards/{board}/combined?topLimit={topLimit}&surrounding={surrounding}";
+    return await Request<CombinedScores>(url, "GET", playerId);
+}
+
+[Serializable] public class ScoreSubmitResponse { public string id; public double scoreValue; public long rank; }
+[Serializable] public class TopScores { public List<LeaderboardEntry> scores; }
+[Serializable] public class PlayerScore { public long startRank; public List<LeaderboardEntry> scores; }
+[Serializable] public class CombinedScores { public List<LeaderboardEntry> topScores; public PlayerScore playerScore; }
+[Serializable] public class LeaderboardEntry { public string playerId; public double scoreValue; public long rank; public string metadata; }`}
       />
       <p className="max-w-[760px] text-base leading-[1.7] text-muted">
         Tip: Use <InlineCode code="GetCombined()" language="csharp" /> for the main leaderboard
-        UI. It reduces requests and improves performance, and all methods use the account&apos;s default{' '}
-        <InlineCode code="global" /> leaderboard when none is passed.
+        UI. It reduces requests and improves performance.
       </p>
     </DocsShell>
   );
