@@ -7,7 +7,8 @@ import { MarketingShell } from '@/components/marketing-shell';
 const sections = [
   { href: '#top', label: 'Top' },
   { href: '#quick', label: 'Quick Snippets' },
-  { href: '#code', label: 'Full Example' },
+  { href: '#code', label: 'Full Example: Turns, Voting, Json' },
+  { href: '#secondCode', label: 'Full Example: Hand Hiding, Ownership' },
 ];
 
 const quickSnippetCode = `// Find Match
@@ -102,6 +103,129 @@ namespace TurnKit.Example
     }
 }`;
 
+const rockPaperCode = `using System.Collections.Generic;
+using System.Linq;
+using TurnKit.Internal.ParrelSync;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace TurnKit.Example
+{
+    public class RockPaperScissorsControllerExample : MonoBehaviour
+    {
+        [SerializeField] private InputField playerIdText;
+        [SerializeField] private Text gameEndText;
+        [SerializeField] private Text statusText;
+        [SerializeField] private Text opponentText;
+
+        private RelayList myHand;
+        private RelayList opponentHand;
+        private RelayList revealedList;
+        private bool isSignPicked;
+        private readonly string[] validSigns = {"ROCK", "PAPER", "SCISSORS"};
+        private void Awake()
+        {
+#if UNITY_EDITOR
+            playerIdText.text = ClonesManager.IsClone() ? "player2" : "player1";
+#endif
+            Relay.OnMoveMade += OnMoveMade;
+            Relay.OnTurnChanged += OnTurnChanged;
+            Relay.OnVoteFailed += OnVoteFailed;
+            Relay.OnMatchStarted += (msg,initialLists) =>
+            {
+                myHand = Relay.GetMyLists(ExampleConfig.Tag.hand).First();
+                opponentHand = Relay.GetOpponentsLists(ExampleConfig.Tag.hand).First();
+                revealedList = Relay.GetMyLists(ExampleConfig.Tag.table).First();
+                statusText.text = "Game started";
+            };
+        }
+
+        public async void FindMatch()
+        {
+            isSignPicked = false;
+            opponentText.text = "";
+            gameEndText.text = "";
+            statusText.text = "Waiting for opponent, connect with another client";
+            await Relay.MatchWithAnyone(playerIdText.text, ExampleConfig.Slug);
+        }
+
+        public void SignChosen(string sign)
+        {
+            if (isSignPicked) return;
+            myHand.Spawn(sign);
+            Relay.EndMyTurn();
+        }
+
+        private void OnVoteFailed(VoteFailedMessage voteFailedMessage)
+        {
+            gameEndText.text = "Cheating detected game ended";
+            statusText.text = "Game ended";
+        }
+
+        private void OnMoveMade(MoveMadeMessage msg, IReadOnlyList<RelayList> arg2)
+        {
+            Relay.Vote(msg.moveNumber, IsMoveValid(msg));
+            if (msg.playerId != playerIdText.text) opponentText.text = "Opponent chosen sign";
+            else isSignPicked = true;
+            
+            if (revealedList.Count == 2) //signs are revealed
+            {
+                var mySign = revealedList.Items.First(x => x.CreatorSlot == Relay.MySlot).Slug;
+                var opponentSign = revealedList.Items.First(x => x.CreatorSlot != Relay.MySlot).Slug;
+                opponentText.text = $"Opponent chose {opponentSign}";
+                if (mySign == opponentSign)
+                {
+                    EndGame("A draw, close one! Press Find Match to replay it");
+                    return;
+                }
+                
+                bool iWin = (mySign == "ROCK" && opponentSign == "SCISSORS") ||
+                            (mySign == "PAPER" && opponentSign == "ROCK") ||
+                            (mySign == "SCISSORS" && opponentSign == "PAPER");
+                EndGame(iWin ? "You won ! Press Find Match to replay it" : "You lost! Press Press Find Match to replay it");
+            }
+        }
+
+        private bool IsMoveValid(MoveMadeMessage msg)
+        {
+            foreach (var change in msg.changes)
+            {
+                if (change.type == ChangeType.SPAWN) // player adding to not owned list is covered by server, it checks ownership
+                {
+                    if (change.toList.Items.Count > 1) return false; // tried to pick a second sign.
+                    if (!validSigns.Contains(change.toList.Items.First().Slug)) return false; // {act.slug} is not a valid sign
+                }
+
+                if (change.type == ChangeType.MOVE)
+                {
+                    if (change.items.Length != 1) return false; // 1 sign moved from each list
+                    if (myHand.Items.Count != 0 || opponentHand.Items.Count != 0) return false; // must be no items remaining
+                }
+            }
+            return true;
+        }
+        
+        private void OnTurnChanged(TurnChangedMessage message)
+        {
+            if (myHand.Items.Count == 1 && opponentHand.Items.Count == 1 && Relay.IsMyTurn) // both players picked their sign
+            {
+                Debug.Log("Both players ready. Executing Reveal...");
+                myHand.Move(SelectorType.ALL).To(revealedList);
+                opponentHand.Move(SelectorType.ALL).IgnoreOwnership().To(revealedList);
+                Relay.EndMyTurn();
+            }
+        }
+        
+        private void EndGame(string gameEndReason)
+        {
+            Relay.EndGame();
+            gameEndText.text = gameEndReason;
+            statusText.text = "Game ended";
+        }
+    }
+}
+`;
+
 export const metadata: Metadata = {
   title: 'Examples - TurnKit',
   description: 'See how TurnKit multiplayer code looks in practice with quick snippets and a full Unity TicTacToe example.',
@@ -182,16 +306,28 @@ export default function ExamplesPage() {
           </section>
 
           <section id="code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example</div>
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example: Turns, Voting, Json</div>
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
-              Unity TicTacToe controller.
+              Unity Tic Tac Toe game.
             </h2>
             <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
-              One script handles match start, per-turn validation, cheat detection, this specific game rules and win resolution. No separate authoritative
+              One script handles match start, sending json, per-turn validation, cheat detection, this specific game rules and win resolution. No separate authoritative
               game server code is required here.
             </p>
             <CodeBlock code={gameCode} language="csharp" />
           </section>
+
+          <section id="code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example: Hand Hiding, Ownership</div>
+            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
+              Unity Rock Paper Scissor game.
+            </h2>
+            <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
+              In addition to features covered in previous example here is manipulation of server lists, showcasing hand hiding, ownership of lists
+            </p>
+            <CodeBlock code={rockPaperCode} language="csharp" />
+          </section>
+
         </main>
         <aside className="hidden w-[220px] shrink-0 xl:block">
           <div
