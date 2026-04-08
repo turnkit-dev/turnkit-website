@@ -4,6 +4,8 @@ import { decodeJwt } from 'jose';
 
 export const backendAccessTokenCookieName = 'turnkit_access_token';
 export const backendAccessExpiryCookieName = 'turnkit_access_expires_at';
+export const csrfCookieName = 'XSRF-TOKEN';
+export const csrfHeaderName = 'X-XSRF-TOKEN';
 
 type ProviderName = 'google' | 'github';
 
@@ -67,15 +69,16 @@ function buildExchangeBody(provider: ProviderName, proof: string) {
   return { provider, accessToken: proof };
 }
 
-async function postBackendAuth(path: string, body?: unknown, cookieHeader?: string) {
+async function postBackendAuth(path: string, options?: { body?: unknown; cookieHeader?: string; csrfToken?: string }) {
   const response = await fetch(`${getApiBaseUrl()}${path}`, {
     method: 'POST',
     credentials: 'include',
     headers: {
-      ...(body ? { 'Content-Type': 'application/json' } : {}),
-      ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+      ...(options?.body ? { 'Content-Type': 'application/json' } : {}),
+      ...(options?.cookieHeader ? { Cookie: options.cookieHeader } : {}),
+      ...(options?.csrfToken ? { [csrfHeaderName]: options.csrfToken } : {}),
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: options?.body ? JSON.stringify(options.body) : undefined,
     cache: 'no-store',
   });
 
@@ -92,7 +95,7 @@ function getSetCookieHeader(response: Response) {
 }
 
 export async function exchangeDeveloperSession(provider: ProviderName, proof: string, cookieHeader?: string) {
-  const response = await postBackendAuth('/v1/dev/auth/exchange', buildExchangeBody(provider, proof), cookieHeader);
+  const response = await postBackendAuth('/v1/dev/auth/exchange', { body: buildExchangeBody(provider, proof), cookieHeader });
   const payload = (await readJson(response)) as Omit<BackendSessionResponse, 'setCookieHeader'> | null;
 
   if (!payload || typeof payload.jwt !== 'string' || payload.jwt.length === 0) {
@@ -107,7 +110,7 @@ export async function exchangeDeveloperSession(provider: ProviderName, proof: st
   } satisfies BackendSessionResponse;
 }
 
-export async function refreshDeveloperSession(cookieHeader?: string, dedupeKey?: string) {
+export async function refreshDeveloperSession(cookieHeader?: string, dedupeKey?: string, csrfToken?: string) {
   const refreshKey = dedupeKey ?? cookieHeader ?? '';
   const cached = refreshKey ? inflightRefreshes.get(refreshKey) : null;
 
@@ -115,7 +118,7 @@ export async function refreshDeveloperSession(cookieHeader?: string, dedupeKey?:
     return cached;
   }
 
-  const refreshPromise = postBackendAuth('/v1/dev/auth/refresh', undefined, cookieHeader)
+  const refreshPromise = postBackendAuth('/v1/dev/auth/refresh', { cookieHeader, csrfToken })
     .then(async (response) => {
       const payload = (await readJson(response)) as Pick<BackendSessionResponse, 'jwt'> | null;
 
@@ -144,9 +147,9 @@ export async function refreshDeveloperSession(cookieHeader?: string, dedupeKey?:
   return refreshPromise;
 }
 
-export async function logoutDeveloperSession(cookieHeader?: string) {
+export async function logoutDeveloperSession(cookieHeader?: string, csrfToken?: string) {
   try {
-    const response = await postBackendAuth('/v1/dev/auth/logout', undefined, cookieHeader);
+    const response = await postBackendAuth('/v1/dev/auth/logout', { cookieHeader, csrfToken });
     return {
       setCookieHeader: getSetCookieHeader(response),
     };
@@ -275,6 +278,10 @@ export function getBackendAuthCookies(requestCookies: Pick<RequestCookiesLike, '
   };
 }
 
+export function getCsrfToken(requestCookies: Pick<RequestCookiesLike, 'get'>) {
+  return requestCookies.get(csrfCookieName)?.value ?? null;
+}
+
 export function isBackendAccessTokenStale(expiresAt: number | null, thresholdMs = 15_000) {
   if (!expiresAt) {
     return true;
@@ -317,12 +324,13 @@ async function persistBackendSession(session: RefreshedBackendSession) {
 async function refreshServerBackendSession() {
   const cookieStore = await cookies();
   const cookieHeader = buildCookieHeader(cookieStore);
+  const csrfToken = cookieStore.get(csrfCookieName)?.value ?? null;
 
   if (!cookieHeader) {
     throw new BackendAuthError('AUTH_TOKEN_MISSING', 'Your dashboard session expired. Sign in again.');
   }
 
-  return refreshDeveloperSession(cookieHeader, cookieHeader)
+  return refreshDeveloperSession(cookieHeader, cookieHeader, csrfToken ?? undefined)
     .then(async (session) => {
       await persistBackendSession(session);
       return session;

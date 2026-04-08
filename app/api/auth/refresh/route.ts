@@ -1,9 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { applyBackendSession, refreshDeveloperSession } from '@/lib/backend-auth';
+import { applyBackendSession, csrfCookieName, refreshDeveloperSession } from '@/lib/backend-auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await refreshDeveloperSession(request.headers.get('cookie') ?? undefined);
+    const cookieHeader = request.headers.get('cookie') ?? undefined;
+    const csrfToken = request.cookies.get(csrfCookieName)?.value ?? undefined;
+    const session = await refreshDeveloperSession(cookieHeader, undefined, csrfToken);
     const response = NextResponse.json({ ok: true });
     applyBackendSession(response, session);
     return response;
