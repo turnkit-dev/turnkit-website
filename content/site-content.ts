@@ -127,17 +127,22 @@ export const landingContent: LandingContent = {
     ],
     leaderboards: [
       { tier: 'Dev', price: '$0', ccu: '20 concurrent players', free: true, featured: true },
-      { tier: 'Indie', price: '$0.99', suffix: '/mo', ccu: '40 concurrent players' },
-      { tier: 'Studio', price: '$1.99', suffix: '/mo', ccu: '80 concurrent players' },
-      { tier: 'Pro', price: '$3.99', suffix: '/mo', ccu: '160 concurrent players' },
-      { tier: 'Scale', price: '$7.99', suffix: '/mo', ccu: '320 concurrent players' },
-      { tier: 'Enterprise', price: '$15.99', suffix: '/mo', ccu: '640 concurrent players' },
+      { tier: 'Indie', price: '$1.99', suffix: '/mo', ccu: '40 concurrent players' },
+      { tier: 'Studio', price: '$3.99', suffix: '/mo', ccu: '80 concurrent players' },
+      { tier: 'Pro', price: '$7.99', suffix: '/mo', ccu: '160 concurrent players' },
+      { tier: 'Scale', price: '$15.99', suffix: '/mo', ccu: '320 concurrent players' },
+      { tier: 'Enterprise', price: '$31.99', suffix: '/mo', ccu: '640 concurrent players' },
     ],
   },
   moduleRows: [
     {
-      name: 'TurnRelay',
+      name: 'Relay',
       description: 'Turn enforcement, hand hiding, background player voting, signed results.',
+      badge: 'Coming Soon',
+    },
+    {
+      name: 'Leaderboards',
+      description: 'Global and seasonal rankings.',
       badge: 'Coming Soon',
     },
     {
@@ -149,12 +154,7 @@ export const landingContent: LandingContent = {
       name: 'PlayerStore',
       description: 'Inventory, currencies, stats, and in-game shop.',
       badge: 'Coming Soon',
-    },
-    {
-      name: 'Leaderboards',
-      description: 'Global and seasonal rankings.',
-      badge: 'Coming Soon',
-    },
+    }
   ],
   footerLinks: [
     { href: 'https://github.com/Brainzy', label: 'GitHub', external: true },
