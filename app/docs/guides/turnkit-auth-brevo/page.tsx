@@ -119,6 +119,12 @@ export default function TurnkitAuthBrevoPage() {
         TurnKit sends the OTP email through these SMTP credentials. After verification succeeds, the client uses the returned player JWT
         for authenticated client API calls.
       </div>
+      <div className="mb-10 rounded-[6px] border border-border bg-surface p-5 text-[14px] leading-[1.7] text-muted">
+        <strong className="text-text">Current API behavior:</strong> send OTP requests as JSON with{' '}
+        <InlineCode code="Content-Type: application/json" />. Default limits are 5 requests per 10 minutes for{' '}
+        <InlineCode code="/v1/client/auth/otp/request" /> and 10 requests per 10 minutes for{' '}
+        <InlineCode code="/v1/client/auth/otp/verify" />.
+      </div>
 
       <SectionTitle id="sender-note">Sender Note</SectionTitle>
       <div className="rounded-[6px] border border-[rgba(240,164,41,0.3)] bg-[rgba(240,164,41,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">

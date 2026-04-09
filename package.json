@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "sanitize:openapi": "node scripts/sanitize-openapi.mjs"
   },
   "dependencies": {
     "@scalar/api-reference-react": "^0.9.18",

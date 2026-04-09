@@ -31,8 +31,8 @@ export default function ApiDocsPage() {
     <DocsShell meta={apiPageMeta}>
       <div id="overview" className="mb-8 space-y-4">
         <p className="text-base leading-[1.6] text-muted">
-          Authoritative REST API reference for TurnKit server endpoints. The reference below is rendered from the local
-          OpenAPI document shipped with this site.
+          REST API reference for TurnKit server endpoints. The reference below is rendered from the bundled OpenAPI document shipped with
+          this site, so it should be refreshed whenever backend endpoint behavior changes.
         </p>
         <div className="grid gap-4 md:grid-cols-3">
           <InfoCard title="Base URL">
@@ -53,6 +53,12 @@ export default function ApiDocsPage() {
               Open OpenAPI document
             </a>
           </InfoCard>
+        </div>
+        <div className="rounded-[6px] border border-[rgba(240,164,41,0.3)] bg-[rgba(240,164,41,0.08)] px-5 py-4 text-[14px] leading-[1.6] text-text">
+          Browser-facing developer auth endpoints are stricter now. In browser flows,{' '}
+          <InlineCode code="/v1/dev/auth/refresh" /> and <InlineCode code="/v1/dev/auth/logout" /> require an allowed{' '}
+          <InlineCode code="Origin" />, the CSRF header <InlineCode code="X-XSRF-TOKEN" />, and request handling compatible with the
+          backend security config.
         </div>
       </div>
       <div id="reference" className="overflow-hidden rounded-[6px] border border-border bg-white">
