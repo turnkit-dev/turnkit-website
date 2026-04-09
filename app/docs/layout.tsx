@@ -1,8 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { MobileMenu } from '@/components/mobile-menu';
+import { PublicAccountMenu } from '@/components/public-account-menu';
+import { getAuthSession } from '@/lib/auth';
+import { getUserInitials } from '@/lib/user-initials';
 
-export default function DocsLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function DocsLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const session = await getAuthSession();
+  const user = session?.user;
+  const initials = getUserInitials(user?.name, user?.email);
+
   return (
     <>
       <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] px-3 sm:px-[clamp(16px,4vw,32px)] backdrop-blur-xl">
@@ -35,18 +42,31 @@ export default function DocsLayout({ children }: Readonly<{ children: React.Reac
           >
             Discord
           </a>
-          <Link href="/#waitlist" className="inline-flex items-center rounded-[3px] bg-accent px-4 py-2 text-xs font-medium text-white transition hover:bg-[#3AADF5]">
-            Sign Up
-          </Link>
+          {session ? (
+            <PublicAccountMenu initials={initials} name={user?.name} email={user?.email} />
+          ) : (
+            <Link href="/signin" className="inline-flex items-center rounded-[3px] bg-accent px-4 py-2 text-xs font-medium text-white transition hover:bg-[#3AADF5]">
+              Sign In
+            </Link>
+          )}
         </div>
         <div className="ml-2 flex shrink-0 items-center gap-1.5 md:hidden">
-            <Link
-              href="/#waitlist"
-              className="inline-flex h-10 shrink-0 items-center rounded-[3px] bg-accent px-2 text-[11px] font-medium text-white transition hover:bg-[#3AADF5]"
-            >
-              Sign Up
-            </Link>
-            <MobileMenu ariaLabel="Open docs navigation" ctaHref="/#waitlist" ctaLabel="Sign Up" />
+            {session ? (
+              <PublicAccountMenu initials={initials} name={user?.name} email={user?.email} />
+            ) : (
+              <Link
+                href="/signin"
+                className="inline-flex h-10 shrink-0 items-center rounded-[3px] bg-accent px-3 text-[11px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Sign In
+              </Link>
+            )}
+            <MobileMenu
+              ariaLabel="Open docs navigation"
+              ctaHref="/signin"
+              ctaLabel="Sign In"
+              account={session ? { name: user?.name, email: user?.email } : null}
+            />
         </div>
       </nav>
       <div className="pt-[60px]">{children}</div>

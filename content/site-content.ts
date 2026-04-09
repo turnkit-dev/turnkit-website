@@ -35,12 +35,11 @@ export interface PricingCatalog {
 export interface ModuleRow {
   name: string;
   description: string;
-  badge: string;
+  status: 'available' | 'coming_soon';
 }
 
 export interface LandingContent {
   navLinks: NavLink[];
-  heroTag: string;
   heroTitle: string[];
   heroSubtitle: string;
   heroHighlight: string;
@@ -58,7 +57,6 @@ export const landingContent: LandingContent = {
     { href: '/docs/quickstart/unity', label: 'Docs' },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
   ],
-  heroTag: 'In Development',
   heroTitle: ['Backend infrastructure for', 'turn-based multiplayer games.'],
   heroSubtitle:
     'Your game logic stays on the client, works with Unity, Godot, or any engine.',
@@ -138,26 +136,25 @@ export const landingContent: LandingContent = {
     {
       name: 'Relay',
       description: 'Turn enforcement, hand hiding, background player voting, signed results.',
-      badge: 'Coming Soon',
+      status: 'available',
     },
     {
       name: 'Leaderboards',
       description: 'Global and seasonal rankings.',
-      badge: 'Coming Soon',
+      status: 'available',
     },
     {
       name: 'Matchmaking',
       description: 'Queue players and validate inventory before a match starts.',
-      badge: 'Coming Soon',
+      status: 'coming_soon',
     },
     {
       name: 'PlayerStore',
       description: 'Inventory, currencies, stats, and in-game shop.',
-      badge: 'Coming Soon',
+      status: 'coming_soon',
     }
   ],
   footerLinks: [
-    { href: 'https://github.com/Brainzy', label: 'GitHub', external: true },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
   ],
 };

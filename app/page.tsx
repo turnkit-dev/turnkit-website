@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
-import { WaitlistForm } from '@/components/waitlist-form';
 import { landingContent } from '@/content/site-content';
 
 const homeSections = [
@@ -10,7 +9,6 @@ const homeSections = [
   { href: '#relay', label: 'Turn Relay' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#modules', label: 'Modules' },
-  { href: '#waitlist', label: 'Early Access' },
 ];
 
 export default function HomePage() {
@@ -21,12 +19,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-[960px]">
         <section id="top" className="relative py-12 pb-4">
           <div className="pointer-events-none absolute left-1/2 top-[-100px] h-[400px] w-[600px] -translate-x-1/2 bg-hero-glow" />
-          
-          <div className="mb-7 inline-flex items-center gap-2 rounded-[2px] border border-[rgba(61,214,140,0.2)] bg-[rgba(61,214,140,0.1)] px-3 py-[5px] text-[11px] font-medium uppercase tracking-[0.08em] text-green">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green" />
-            {landingContent.heroTag}
-          </div>
-          
+
           <div className="animate-fade-up opacity-0 [animation-delay:0.1s]">
             <h1 className="mb-5 font-display text-[clamp(32px,5vw,52px)] font-extrabold leading-[1.1] tracking-[-0.03em] text-text">
               {landingContent.heroTitle[0]}
@@ -43,12 +36,12 @@ export default function HomePage() {
           </div>
           
           <div className="flex flex-wrap items-center gap-3 animate-fade-up opacity-0 [animation-delay:0.3s]">
-            <a
-              href="#waitlist"
+            <Link
+              href="/signin"
               className="inline-flex items-center gap-2 rounded-[3px] bg-accent px-[22px] py-[11px] text-[13px] font-medium text-white transition hover:-translate-y-px hover:bg-[#3AADF5]"
             >
-              Get Early Access
-            </a>
+              Sign In
+            </Link>
             <a
               href="https://discord.gg/SqMVU5xex3"
               target="_blank"
@@ -176,7 +169,7 @@ export default function HomePage() {
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Modules</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Use only what you need.</h2>
           <p className="mb-12 max-w-[560px] text-[15px] text-muted">
-            Bring your own auth, database, or matchmaking or use TurnKit modules as they become available.
+            Start with Relay or Leaderboards today, then add more TurnKit modules as your game grows.
           </p>
           <div className="flex flex-col gap-px overflow-hidden rounded border border-border bg-border">
             {landingContent.moduleRows.map((moduleRow) => (
@@ -186,8 +179,14 @@ export default function HomePage() {
               >
                 <div className="font-display text-[15px] font-semibold tracking-[-0.01em] text-text">{moduleRow.name}</div>
                 <div className="hidden text-[13px] text-muted md:block">{moduleRow.description}</div>
-                <span className="w-fit rounded-[2px] border border-[rgba(240,164,41,0.2)] bg-[rgba(240,164,41,0.1)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.06em] text-amber">
-                  {moduleRow.badge}
+                <span
+                  className={`w-fit rounded-[2px] border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.06em] ${
+                    moduleRow.status === 'available'
+                      ? 'border-[rgba(61,214,140,0.25)] bg-[rgba(61,214,140,0.12)] text-green'
+                      : 'border-[rgba(240,164,41,0.2)] bg-[rgba(240,164,41,0.1)] text-amber'
+                  }`}
+                >
+                  {moduleRow.status === 'available' ? 'Available' : 'Coming Soon'}
                 </span>
               </div>
             ))}
@@ -196,15 +195,6 @@ export default function HomePage() {
             <strong className="font-medium text-text">Not locked in.</strong> Each module is optional. Use your own systems and connect
             via webhooks, or adopt TurnKit modules gradually as your game grows.
           </p>
-        </section>
-
-        <section id="waitlist" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-          <div className="rounded border border-border2 bg-surface p-[clamp(36px,5vw,56px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Early Access</div>
-            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Follow the build.</h2>
-            <p className="mb-8 text-[14px] text-muted">Get updates as TurnKit develops. No spam, just progress.</p>
-            <WaitlistForm />
-          </div>
         </section>
       </div>
       </main>

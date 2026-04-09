@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { performClientSignOut } from '@/lib/auth-client';
 
 function buildCallbackUrl(callbackPath?: string) {
   if (!callbackPath) {
@@ -47,8 +48,7 @@ export function SignOutButton() {
 
   async function handleSignOut() {
     setPending(true);
-    await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
-    await signOut({ callbackUrl: '/' });
+    await performClientSignOut();
   }
 
   return (

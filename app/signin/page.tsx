@@ -31,7 +31,7 @@ export default async function SignInPage({
         <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Developer Dashboard</div>
         <h1 className="font-display text-[34px] font-bold tracking-[-0.03em] text-text">Sign in</h1>
         <p className="mt-3 text-[14px] leading-[1.7] text-muted">
-          Use Google or GitHub. Provider proof is exchanged on the server and the dashboard stays behind auth.
+          Use Google or GitHub to create your account or sign in. Provider proof is exchanged on the server and the dashboard stays behind auth.
         </p>
         <div className="mt-6">
           <SignInButtons callbackPath={callbackPath} />

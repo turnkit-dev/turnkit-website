@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { SignOutButton } from '@/components/auth-buttons';
 import { DashboardToaster } from '@/components/dashboard-ui';
+import { PublicAccountMenu } from '@/components/public-account-menu';
 import { getAuthSession } from '@/lib/auth';
+import { getUserInitials } from '@/lib/user-initials';
 
 export interface DashboardShellSection {
   href: string;
@@ -16,6 +17,8 @@ export interface DashboardShellGameLink {
 
 export async function DashboardTopNav() {
   const session = await getAuthSession();
+  const user = session?.user;
+  const initials = getUserInitials(user?.name, user?.email);
 
   return (
     <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] px-3 sm:px-[clamp(16px,4vw,32px)] backdrop-blur-xl">
@@ -38,8 +41,7 @@ export async function DashboardTopNav() {
         <Link href="/docs" className="text-[13px] text-muted transition hover:text-text">
           Docs
         </Link>
-        {session?.user?.name ? <div className="hidden text-[12px] text-muted md:block">{session.user.name}</div> : null}
-        {session ? <SignOutButton /> : null}
+        {session ? <PublicAccountMenu initials={initials} name={user?.name} email={user?.email} /> : null}
       </div>
     </nav>
   );

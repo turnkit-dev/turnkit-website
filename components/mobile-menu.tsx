@@ -6,6 +6,12 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { docsNavSections } from '@/content/docs-content';
 import { landingContent } from '@/content/site-content';
+import { performClientSignOut } from '@/lib/auth-client';
+
+interface MobileMenuAccount {
+  name?: string | null;
+  email?: string | null;
+}
 
 export interface MobileMenuProps {
   ariaLabel: string;
@@ -14,18 +20,21 @@ export interface MobileMenuProps {
   ctaLabel?: string;
   docsTitle?: ReactNode;
   showDocsSection?: boolean;
+  account?: MobileMenuAccount | null;
 }
 
 export function MobileMenu({
   ariaLabel,
   currentPath,
-  ctaHref = '/#waitlist',
-  ctaLabel = 'Get Early Access',
+  ctaHref = '/signin',
+  ctaLabel = 'Sign In',
   docsTitle,
   showDocsSection = true,
+  account,
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const pathname = usePathname();
   const activePath = currentPath ?? pathname;
 
@@ -52,6 +61,15 @@ export function MobileMenu({
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  async function handleSignOut() {
+    setIsSigningOut(true);
+    await performClientSignOut();
+  }
 
   return (
     <>
@@ -108,13 +126,37 @@ export function MobileMenu({
                         </Link>
                       ),
                     )}
-                    <Link
-                      href={ctaHref}
-                      className="mt-3 block rounded-[3px] bg-accent px-3 py-3 text-[15px] font-medium text-white transition hover:bg-[#3AADF5]"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {ctaLabel}
-                    </Link>
+                    {account ? (
+                      <div className="mt-4 rounded-[8px] border border-border bg-surface p-4">
+                        <div className="text-[13px] font-medium text-text">{account.name ?? account.email ?? 'TurnKit account'}</div>
+                        {account.name && account.email ? <div className="mt-1 text-[12px] text-muted">{account.email}</div> : null}
+                        <div className="mt-4 space-y-2">
+                          <Link
+                            href="/games"
+                            className="block rounded-[6px] bg-surface2 px-3 py-3 text-[14px] text-text transition hover:bg-border2"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            Dashboard
+                          </Link>
+                          <button
+                            type="button"
+                            disabled={isSigningOut}
+                            onClick={handleSignOut}
+                            className="block w-full rounded-[6px] border border-border2 px-3 py-3 text-left text-[14px] text-muted transition hover:bg-surface2 hover:text-text disabled:cursor-not-allowed disabled:opacity-70"
+                          >
+                            {isSigningOut ? 'Signing out...' : 'Sign out'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        href={ctaHref}
+                        className="mt-3 block rounded-[3px] bg-accent px-3 py-3 text-[15px] font-medium text-white transition hover:bg-[#3AADF5]"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {ctaLabel}
+                      </Link>
+                    )}
                   </div>
 
                   {showDocsSection ? (
