@@ -9,11 +9,13 @@ const homeSections = [
   { href: '#relay', label: 'Turn Relay' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#modules', label: 'Modules' },
+  { href: '#waitlist', label: 'Early Access' },
+  { href: '#contact', label: 'Contact' },
 ];
 
 export default function HomePage() {
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="home">
       <div className="mx-auto flex w-full max-w-[1180px] px-0 pt-[60px]">
         <main className="min-w-0 flex-1 px-[clamp(24px,5vw,48px)]">
         <div className="mx-auto max-w-[960px]">
@@ -195,6 +197,52 @@ export default function HomePage() {
             <strong className="font-medium text-text">Not locked in.</strong> Each module is optional. Use your own systems and connect
             via webhooks, or adopt TurnKit modules gradually as your game grows.
           </p>
+          <div className="mt-8 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+            <strong className="font-medium text-text">See how TurnKit compares to other options.</strong>{' '}
+            <Link
+              href="/turn-based-game-server-comparison-2026"
+              className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+            >
+              Read the 2026 turn-based server comparison
+            </Link>
+            .
+          </div>
+        </section>
+
+        <section id="waitlist" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+          <div className="rounded border border-border2 bg-surface p-[clamp(36px,5vw,56px)]">
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Early Access</div>
+            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Follow the build.</h2>
+            <p className="mb-8 text-[14px] text-muted">Get updates as TurnKit develops. No spam, just progress.</p>
+            <WaitlistForm />
+          </div>
+        </section>
+
+        <section id="contact" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+          <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Contact</div>
+          <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Operator and contact details.</h2>
+          <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
+            TurnKit is operated by Nenad Nikolic. For support, billing, refunds, or legal requests, use the contact details below.
+          </p>
+          <div className="grid gap-px overflow-hidden rounded border border-border bg-border md:grid-cols-2">
+            <div className="bg-surface p-8">
+              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Email</div>
+              <a
+                href="mailto:support@turnkit.dev"
+                className="text-[15px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+              >
+                support@turnkit.dev
+              </a>
+            </div>
+            <div className="bg-surface p-8">
+              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Mailing Address</div>
+              <p className="text-[15px] leading-[1.8] text-text">
+                Svetosavska 107v/17
+                <br />
+                Kikinda, Serbia
+              </p>
+            </div>
+          </div>
         </section>
       </div>
       </main>

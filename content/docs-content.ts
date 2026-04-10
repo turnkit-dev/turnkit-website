@@ -57,6 +57,7 @@ export const docsNavSections: DocsNavSection[] = [
     title: 'Resources',
     links: [
       { href: '/examples', label: 'Code Examples' },
+      { href: '/turn-based-game-server-comparison-2026', label: 'Turn-Based Server Comparison' },
       { href: '/pricing', label: 'Pricing' },
       { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord Community', external: true },
     ],

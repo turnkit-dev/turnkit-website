@@ -112,6 +112,11 @@ export default function PlayerAuthenticationModesPage() {
           </li>
         </ol>
       </div>
+      <div className="mb-10 rounded-[6px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+        OTP endpoints expect <InlineCode code="Content-Type: application/json" />. Default backend limits are currently 5 requests per
+        10 minutes for <InlineCode code="/v1/client/auth/otp/request" /> and 10 requests per 10 minutes for{' '}
+        <InlineCode code="/v1/client/auth/otp/verify" />, typically scoped by game, email, and client IP.
+      </div>
 
       <SectionTitle id="signed-mode">SIGNED Mode</SectionTitle>
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">Your backend signs player identities.</p>

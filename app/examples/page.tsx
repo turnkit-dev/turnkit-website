@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { CodeBlock } from '@/components/code-block';
 import { DocsSidebar } from '@/components/docs-shell';
 import { MarketingShell } from '@/components/marketing-shell';
+import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
 const sections = [
   { href: '#top', label: 'Top' },
@@ -226,28 +228,39 @@ namespace TurnKit.Example
 }
 `;
 
-export const metadata: Metadata = {
+const examplesDescription = 'See how TurnKit multiplayer code looks in practice with quick snippets and full Unity game examples.';
+
+export const metadata: Metadata = buildMetadata({
   title: 'Examples - TurnKit',
-  description: 'See how TurnKit multiplayer code looks in practice with quick snippets and a full Unity TicTacToe example.',
-  alternates: {
-    canonical: '/examples',
-  },
-  openGraph: {
-    title: 'Examples - TurnKit',
-    description: 'See how TurnKit multiplayer code looks in practice with quick snippets and a full Unity TicTacToe example.',
-    url: 'https://turnkit.dev/examples',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Examples - TurnKit',
-    description: 'See how TurnKit multiplayer code looks in practice with quick snippets and a full Unity TicTacToe example.',
-  },
-};
+  description: examplesDescription,
+  path: '/examples',
+  keywords: ['Unity multiplayer example', 'TurnKit example code', 'authoritative multiplayer sample'],
+});
 
 export default function ExamplesPage() {
+  const articleSchema = buildTechArticleSchema({
+    headline: 'TurnKit Unity multiplayer examples',
+    description: examplesDescription,
+    path: '/examples',
+  });
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Examples', path: '/examples' },
+  ]);
+
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="docs">
+      <Script
+        id="examples-article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <Script
+        id="examples-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 md:block">
           <div
@@ -305,7 +318,7 @@ export default function ExamplesPage() {
             <CodeBlock code={quickSnippetCode} language="csharp" />
           </section>
 
-          <section id="code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+          <section id="secondCode" className="border-t border-border py-[clamp(32px,5vw,48px)]">
             <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example: Turns, Voting, Json</div>
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
               Unity Tic Tac Toe game.

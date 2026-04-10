@@ -1,7 +1,11 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import Script from 'next/script';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { DocsSidebar } from '@/components/docs-shell';
 import { landingContent } from '@/content/site-content';
+import { buildBreadcrumbSchema, buildMetadata, buildServiceSchema } from '@/lib/seo';
 
 const pricingSections = [
   { href: '#overview', label: 'Overview' },
@@ -13,9 +17,40 @@ const pricingSections = [
   { href: '#auto-upgrade', label: 'Auto-upgrade' },
 ];
 
+const pricingDescription =
+  'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.';
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Pricing - TurnKit',
+  description: pricingDescription,
+  path: '/pricing',
+  keywords: ['game backend pricing', 'Unity multiplayer pricing', 'leaderboards pricing'],
+});
+
 export default function PricingPage() {
+  const serviceSchema = buildServiceSchema({
+    name: 'TurnKit Pricing',
+    description: pricingDescription,
+    path: '/pricing',
+  });
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Pricing', path: '/pricing' },
+  ]);
+
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="docs">
+      <Script
+        id="pricing-service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <Script
+        id="pricing-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 md:block">
           <div
@@ -64,6 +99,17 @@ export default function PricingPage() {
               <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
                 <strong className="font-medium text-text">Concurrent Users (CCU)</strong> = Any player who performed an action in the past
                 30 minutes.
+              </div>
+              <div className="rounded-[3px] border border-[rgba(61,214,140,0.24)] bg-[rgba(61,214,140,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+                <strong className="font-medium text-text">TurnKit is the cheapest authoritative option for turn-based games.</strong>{' '}
+                Compare our predictable CCU pricing vs Unity Relay, Photon, and Beamable in the{' '}
+                <Link
+                  href="/turn-based-game-server-comparison-2026"
+                  className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+                >
+                  2026 Turn-Based Server Comparison
+                </Link>
+                .
               </div>
             </div>
           </section>

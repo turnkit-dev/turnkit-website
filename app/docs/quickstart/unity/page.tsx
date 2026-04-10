@@ -1,31 +1,44 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { unityQuickstartPageMeta } from '@/content/docs-content';
+import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Unity Quickstart - TurnKit Docs',
   description: unityQuickstartPageMeta.description,
-  alternates: {
-    canonical: unityQuickstartPageMeta.path,
-  },
-  openGraph: {
-    title: 'Unity Quickstart - TurnKit Docs',
-    description: unityQuickstartPageMeta.description,
-    url: `https://turnkit.dev${unityQuickstartPageMeta.path}`,
-    type: 'article',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Unity Quickstart - TurnKit Docs',
-    description: unityQuickstartPageMeta.description,
-  },
-};
+  path: unityQuickstartPageMeta.path,
+  type: 'article',
+  keywords: ['Unity multiplayer quickstart', 'TurnKit Unity package', 'turn-based Unity backend'],
+});
 
 export default function UnityQuickstartPage() {
+  const articleSchema = buildTechArticleSchema({
+    headline: 'TurnKit Unity quickstart',
+    description: unityQuickstartPageMeta.description,
+    path: unityQuickstartPageMeta.path,
+  });
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Documentation', path: '/docs' },
+    { name: 'Unity Quickstart', path: unityQuickstartPageMeta.path },
+  ]);
+
   return (
     <DocsShell meta={unityQuickstartPageMeta}>
+      <Script
+        id="unity-quickstart-article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <Script
+        id="unity-quickstart-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <p className="mb-5 text-text">
         1. Download{' '}
         <a

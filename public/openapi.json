@@ -5,6 +5,12 @@
     "description": "TurnKit game backend — multi-tenant leaderboard, matchmaking, relay and player store for indie games.",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "https://api.turnkit.dev",
+      "description": "Production"
+    }
+  ],
   "security": [
     {
       "bearerAuth": []
@@ -56,6 +62,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -72,26 +98,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -135,6 +141,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -151,26 +177,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -203,6 +209,19 @@
           }
         ],
         "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -222,19 +241,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -258,6 +264,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmtpConfigDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -274,26 +300,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SmtpConfigDto"
                 }
               }
             }
@@ -328,6 +334,19 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -347,19 +366,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       },
@@ -381,6 +387,19 @@
           }
         ],
         "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -400,19 +419,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -446,6 +452,19 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -465,82 +484,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/v1/webhooks/lemonsqueezy": {
-      "post": {
-        "tags": [
-          "lemon-squeezy-webhook-controller"
-        ],
-        "operationId": "handle",
-        "parameters": [
-          {
-            "name": "X-Signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -564,6 +507,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Response"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -580,29 +546,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Response"
-                  }
                 }
               }
             }
@@ -638,6 +581,26 @@
           "required": true
         },
         "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -654,26 +617,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Created",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Response"
                 }
               }
             }
@@ -700,6 +643,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectSetupResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -716,26 +679,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectSetupResponse"
                 }
               }
             }
@@ -752,6 +695,29 @@
         "description": "Retrieves all game keys owned by the authenticated developer",
         "operationId": "listGameKeys",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GameKey"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -768,29 +734,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GameKey"
-                  }
                 }
               }
             }
@@ -815,6 +758,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameKey"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -831,26 +794,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameKey"
                 }
               }
             }
@@ -877,6 +820,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -893,26 +856,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SecretResponse"
                 }
               }
             }
@@ -939,6 +882,26 @@
           }
         ],
         "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -955,26 +918,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Created",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SecretResponse"
                 }
               }
             }
@@ -991,6 +934,29 @@
         "description": "Retrieves all leaderboards for the current game key",
         "operationId": "list_1",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1007,29 +973,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Leaderboard"
-                  }
                 }
               }
             }
@@ -1054,6 +997,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1070,26 +1033,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Leaderboard"
                 }
               }
             }
@@ -1133,6 +1076,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1152,19 +1108,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1196,6 +1139,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1215,19 +1171,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       },
@@ -1249,6 +1192,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1268,19 +1224,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1305,6 +1248,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientKey"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1321,29 +1287,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClientKey"
-                  }
                 }
               }
             }
@@ -1378,6 +1321,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientKeyResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1394,26 +1357,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientKeyResponse"
                 }
               }
             }
@@ -1441,6 +1384,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1457,29 +1423,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
                 }
               }
             }
@@ -1517,6 +1460,19 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1536,19 +1492,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1570,6 +1513,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1586,26 +1549,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/RefreshResponse"
                 }
               }
             }
@@ -1630,6 +1573,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1649,19 +1605,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -1683,6 +1626,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1699,26 +1662,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
@@ -1744,6 +1687,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1760,26 +1723,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/JoinResponse"
                 }
               }
             }
@@ -1817,6 +1760,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScoreSubmitResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1833,26 +1796,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ScoreSubmitResponse"
                 }
               }
             }
@@ -1888,6 +1831,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedExchangeResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1904,26 +1867,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignedExchangeResponse"
                 }
               }
             }
@@ -1959,6 +1902,26 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpVerifyResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -1978,26 +1941,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtpVerifyResponseDto"
-                }
-              }
-            }
           }
         }
       }
@@ -2007,7 +1950,7 @@
         "tags": [
           "Player Auth"
         ],
-        "summary": "Request an OTP for a player email. Rate limited: 3 per 10 minutes.",
+        "summary": "Request an OTP for a player email. Rate limited: 5 per 10 minutes.",
         "operationId": "requestOtp",
         "parameters": [
           {
@@ -2030,6 +1973,19 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2049,64 +2005,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/v1/admin/admin/variants/reload": {
-      "post": {
-        "tags": [
-          "Internal Admin"
-        ],
-        "summary": "Reload variants",
-        "description": "Reloads Lemon Squeezy variant configurations from cache",
-        "operationId": "reloadVariants",
-        "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -2130,6 +2028,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2149,19 +2060,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       },
@@ -2191,6 +2089,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2207,26 +2125,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/Leaderboard"
                 }
               }
             }
@@ -2273,6 +2171,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScoreEntryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2289,29 +2210,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ScoreEntryResponse"
-                  }
                 }
               }
             }
@@ -2328,6 +2226,29 @@
         "description": "Retrieves all banned player IDs for the current game key",
         "operationId": "listBanned",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2344,29 +2265,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
                 }
               }
             }
@@ -2394,6 +2292,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameDashboardResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2410,26 +2328,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameDashboardResponse"
                 }
               }
             }
@@ -2446,6 +2344,26 @@
         "description": "Retrieves overview of all game keys with current CCU, tiers, and billing status",
         "operationId": "getOverview",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOverview"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2462,26 +2380,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/DashboardOverview"
                 }
               }
             }
@@ -2509,6 +2407,29 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CcuHourlyPeak"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2525,29 +2446,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CcuHourlyPeak"
-                  }
                 }
               }
             }
@@ -2575,6 +2473,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingOverview"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2591,26 +2509,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/BillingOverview"
                 }
               }
             }
@@ -2635,6 +2533,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2651,26 +2569,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object"
                 }
               }
             }
@@ -2687,6 +2585,27 @@
         "description": "Health check endpoint that returns current game key status and CCU",
         "operationId": "ping",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2703,29 +2622,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-
-                  }
                 }
               }
             }
@@ -2763,6 +2659,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopScoresListResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2779,26 +2695,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TopScoresListResponse"
                 }
               }
             }
@@ -2836,6 +2732,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerScoreWithoutMetadataResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2852,26 +2768,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PlayerScoreWithoutMetadataResponse"
                 }
               }
             }
@@ -2919,6 +2815,26 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CombinedLeaderboardResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -2935,26 +2851,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CombinedLeaderboardResponse"
                 }
               }
             }
@@ -2982,6 +2878,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -3001,19 +2910,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -3038,6 +2934,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -3057,19 +2966,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -3103,6 +2999,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -3122,19 +3031,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -3157,6 +3053,19 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -3176,19 +3085,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -3196,131 +3092,6 @@
   },
   "components": {
     "schemas": {
-      "ApiError": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string"
-          }
-        }
-      },
-      "ListConfigRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "tag": {
-            "type": "string"
-          },
-          "ownerSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "visibleToSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
-      "UpdateRequest": {
-        "type": "object",
-        "description": "Relay configuration update request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
-        "properties": {
-          "maxPlayers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "turnEnforcement": {
-            "type": "string",
-            "enum": [
-              "ROUND_ROBIN",
-              "FREE"
-            ]
-          },
-          "votingEnabled": {
-            "type": "boolean"
-          },
-          "ignoreAllOwnership": {
-            "type": "boolean"
-          },
-          "votingMode": {
-            "type": "string",
-            "enum": [
-              "SYNC",
-              "ASYNC"
-            ]
-          },
-          "votesRequired": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "votesToFail": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "failAction": {
-            "type": "string",
-            "enum": [
-              "SKIP_TURN",
-              "END_GAME"
-            ]
-          },
-          "matchTimeoutMinutes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "turnTimeoutSeconds": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "waitReconnectSeconds": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lists": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ListConfigRequest"
-            }
-          }
-        }
-      },
-      "ListConfigResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "tag": {
-            "type": "string"
-          },
-          "ownerSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "visibleToSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
       "Response": {
         "type": "object",
         "properties": {
@@ -3398,7 +3169,154 @@
           }
         }
       },
-      "SmtpConfigRequest": {
+      "ListConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "ownerSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "visibleToSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "description": "Relay configuration update request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
+        "properties": {
+          "maxPlayers": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 16,
+            "minimum": 2
+          },
+          "turnEnforcement": {
+            "type": "string",
+            "enum": [
+              "ROUND_ROBIN",
+              "FREE"
+            ]
+          },
+          "votingEnabled": {
+            "type": "boolean"
+          },
+          "ignoreAllOwnership": {
+            "type": "boolean"
+          },
+          "votingMode": {
+            "type": "string",
+            "enum": [
+              "SYNC",
+              "ASYNC"
+            ]
+          },
+          "votesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "votesToFail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failAction": {
+            "type": "string",
+            "enum": [
+              "SKIP_TURN",
+              "END_GAME"
+            ]
+          },
+          "matchTimeoutMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "turnTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "waitReconnectSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListConfigRequest"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "lists",
+          "turnEnforcement"
+        ]
+      },
+      "ListConfigRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tag": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ownerSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            },
+            "minItems": 1
+          },
+          "visibleToSlots": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "name",
+          "ownerSlots",
+          "tag",
+          "visibleToSlots"
+        ]
+      },
+      "SmtpConfigDto": {
         "type": "object",
         "properties": {
           "host": {
@@ -3411,9 +3329,6 @@
           "username": {
             "type": "string"
           },
-          "password": {
-            "type": "string"
-          },
           "fromAddress": {
             "type": "string"
           },
@@ -3421,6 +3336,45 @@
             "type": "string"
           }
         }
+      },
+      "SmtpConfigRequest": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "minLength": 1
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 65535,
+            "minimum": 1
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fromAddress": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "fromName": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "fromAddress",
+          "fromName",
+          "host",
+          "password",
+          "username"
+        ]
       },
       "SetModeRequest": {
         "type": "object",
@@ -3433,18 +3387,24 @@
               "TURNKIT_AUTH"
             ]
           }
-        }
+        },
+        "required": [
+          "mode"
+        ]
       },
       "CreateRequest": {
         "type": "object",
         "description": "Relay configuration request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
         "properties": {
           "slug": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "maxPlayers": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "maximum": 16,
+            "minimum": 2
           },
           "turnEnforcement": {
             "type": "string",
@@ -3483,23 +3443,32 @@
           },
           "matchTimeoutMinutes": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1
           },
           "turnTimeoutSeconds": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1
           },
           "waitReconnectSeconds": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "minimum": 1
           },
           "lists": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ListConfigRequest"
-            }
+            },
+            "minItems": 1
           }
-        }
+        },
+        "required": [
+          "lists",
+          "slug",
+          "turnEnforcement"
+        ]
       },
       "ProjectSetupRequest": {
         "type": "object",
@@ -3512,17 +3481,6 @@
         "required": [
           "projectName"
         ]
-      },
-      "GameKeyDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
       },
       "ProjectSetupResponse": {
         "type": "object",
@@ -3540,6 +3498,17 @@
             "type": "boolean"
           },
           "generatedClientKey": {
+            "type": "string"
+          }
+        }
+      },
+      "GameKeyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -3616,7 +3585,7 @@
               "format": "int32"
             }
           },
-          "visibleSlots": {
+          "visibleToSlots": {
             "type": "array",
             "items": {
               "type": "integer",
@@ -3686,92 +3655,6 @@
             "type": "string"
           }
         }
-      },
-      "LeaderboardCreateRequest": {
-        "type": "object",
-        "description": "Request object for creating a new leaderboard",
-        "example": {
-          "slug": "global-speedrun-v1",
-          "displayName": "Global Speedrun Rankings",
-          "sortOrder": "ASC",
-          "scoreStrategy": "BEST_ONLY",
-          "minScore": 0,
-          "maxScore": 1000000,
-          "resetFrequency": "NONE",
-          "archiveOnReset": false
-        },
-        "properties": {
-          "slug": {
-            "type": "string",
-            "description": "Unique identifier for the leaderboard. Used in API URLs.",
-            "example": "global-speedrun-v1",
-            "pattern": "^[a-z0-9-]+$"
-          },
-          "displayName": {
-            "type": "string",
-            "description": "The name displayed to players in-game.",
-            "example": "Global High Scores",
-            "maxLength": 50,
-            "minLength": 1
-          },
-          "sortOrder": {
-            "type": "string",
-            "default": "DESC",
-            "description": "Determines the ranking logic. DESC (default) for points where higher is better. ASC for time/speedruns where lower is better.",
-            "enum": [
-              "ASC",
-              "DESC"
-            ],
-            "example": "DESC"
-          },
-          "scoreStrategy": {
-            "type": "string",
-            "default": "BEST_ONLY",
-            "description": "Strategy for handling score submissions. BEST_ONLY (default) keeps only the best score per player. MULTIPLE_ENTRIES stores every submission. CUMULATIVE sums all submissions of same player.",
-            "enum": [
-              "BEST_ONLY",
-              "MULTIPLE_ENTRIES",
-              "CUMULATIVE"
-            ],
-            "example": "BEST_ONLY"
-          },
-          "minScore": {
-            "type": "number",
-            "format": "double",
-            "default": 0,
-            "description": "Optional minimum score value allowed for submission",
-            "example": 0
-          },
-          "maxScore": {
-            "type": "number",
-            "format": "double",
-            "default": 1000000,
-            "description": "Optional maximum score value allowed for submission",
-            "example": 1000000
-          },
-          "resetFrequency": {
-            "type": "string",
-            "default": "NONE",
-            "description": "Frequency of automatic resets. NONE (default), DAILY, WEEKLY, MONTHLY.",
-            "enum": [
-              "NONE",
-              "DAILY",
-              "WEEKLY",
-              "MONTHLY"
-            ],
-            "example": "NONE"
-          },
-          "archiveOnReset": {
-            "type": "boolean",
-            "default": false,
-            "description": "If true, scores are archived before automatic reset. Default is false.",
-            "example": false
-          }
-        },
-        "required": [
-          "displayName",
-          "slug"
-        ]
       },
       "Leaderboard": {
         "type": "object",
@@ -3850,6 +3733,130 @@
           }
         }
       },
+      "LeaderboardCreateRequest": {
+        "type": "object",
+        "description": "Request object for creating a new leaderboard",
+        "example": {
+          "slug": "global-speedrun-v1",
+          "displayName": "Global Speedrun Rankings",
+          "sortOrder": "ASC",
+          "scoreStrategy": "BEST_ONLY",
+          "minScore": 0,
+          "maxScore": 1000000,
+          "resetFrequency": "NONE",
+          "archiveOnReset": false
+        },
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Unique identifier for the leaderboard. Used in API URLs.",
+            "example": "global-speedrun-v1",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "The name displayed to players in-game.",
+            "example": "Global High Scores",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "sortOrder": {
+            "type": "string",
+            "default": "DESC",
+            "description": "Determines the ranking logic. DESC (default) for points where higher is better. ASC for time/speedruns where lower is better.",
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "example": "DESC"
+          },
+          "scoreStrategy": {
+            "type": "string",
+            "default": "BEST_ONLY",
+            "description": "Strategy for handling score submissions. BEST_ONLY (default) keeps only the best score per player. MULTIPLE_ENTRIES stores every submission. CUMULATIVE sums all submissions of same player.",
+            "enum": [
+              "BEST_ONLY",
+              "MULTIPLE_ENTRIES",
+              "CUMULATIVE"
+            ],
+            "example": "BEST_ONLY"
+          },
+          "minScore": {
+            "type": "number",
+            "format": "double",
+            "default": 0,
+            "description": "Optional minimum score value allowed for submission",
+            "example": 0
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double",
+            "default": 1000000,
+            "description": "Optional maximum score value allowed for submission",
+            "example": 1000000
+          },
+          "resetFrequency": {
+            "type": "string",
+            "default": "NONE",
+            "description": "Frequency of automatic resets. NONE (default), DAILY, WEEKLY, MONTHLY.",
+            "enum": [
+              "NONE",
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY"
+            ],
+            "example": "NONE"
+          },
+          "archiveOnReset": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, scores are archived before automatic reset. Default is false.",
+            "example": false
+          }
+        },
+        "required": [
+          "displayName",
+          "slug"
+        ]
+      },
+      "ClientKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "gameKeyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "keyHash": {
+            "type": "string"
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
       "ClientKeyResponse": {
         "type": "object",
         "properties": {
@@ -3874,7 +3881,10 @@
           "enabled": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "enabled"
+        ]
       },
       "RefreshResponse": {
         "type": "object",
@@ -3893,7 +3903,8 @@
         "properties": {
           "provider": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^(google|github)$"
           },
           "idToken": {
             "type": "string"
@@ -3936,26 +3947,12 @@
           }
         }
       },
-      "Item": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "creatorSlot": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "JoinRequest": {
         "type": "object",
         "properties": {
           "slug": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "items": {
             "type": "object",
@@ -3966,7 +3963,32 @@
               }
             }
           }
-        }
+        },
+        "required": [
+          "slug"
+        ]
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          },
+          "creatorSlot": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id",
+          "slug"
+        ]
       },
       "JoinResponse": {
         "type": "object",
@@ -3995,7 +4017,7 @@
             "type": "number",
             "format": "double",
             "description": "Score to be added (Supports decimals)",
-            "example": 1550.5
+            "example": "1550.50"
           },
           "metadata": {
             "type": "string",
@@ -4027,7 +4049,7 @@
             "type": "number",
             "format": "double",
             "description": "The submitted score value",
-            "example": 1550.5
+            "example": "1550.5"
           }
         }
       },
@@ -4073,12 +4095,20 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email",
+            "minLength": 1
           },
           "otp": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^\\d{6}$"
           }
-        }
+        },
+        "required": [
+          "email",
+          "otp"
+        ]
       },
       "OtpVerifyResponseDto": {
         "type": "object",
@@ -4095,30 +4125,14 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "format": "email",
+            "minLength": 1
           }
-        }
-      },
-      "SmtpConfigDto": {
-        "type": "object",
-        "properties": {
-          "host": {
-            "type": "string"
-          },
-          "port": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "username": {
-            "type": "string"
-          },
-          "fromAddress": {
-            "type": "string"
-          },
-          "fromName": {
-            "type": "string"
-          }
-        }
+        },
+        "required": [
+          "email"
+        ]
       },
       "ScoreEntryResponse": {
         "type": "object",
@@ -4128,7 +4142,7 @@
             "type": "string",
             "format": "uuid",
             "description": "Internal ID of the score entry",
-            "example": 101
+            "example": "101"
           },
           "playerAlias": {
             "type": "string",
@@ -4139,7 +4153,7 @@
             "type": "number",
             "format": "double",
             "description": "The score value",
-            "example": 1500.5
+            "example": "1500.5"
           },
           "rank": {
             "type": "integer",
@@ -4157,90 +4171,6 @@
             "type": "string",
             "description": "Optional metadata associated with the score",
             "example": "Level 5 - Warrior"
-          }
-        }
-      },
-      "AuthSection": {
-        "type": "object",
-        "properties": {
-          "mode": {
-            "type": "string",
-            "enum": [
-              "OPEN",
-              "SIGNED",
-              "TURNKIT_AUTH"
-            ]
-          },
-          "hasSecret": {
-            "type": "boolean"
-          },
-          "smtpConfigured": {
-            "type": "boolean"
-          },
-          "smtp": {
-            "$ref": "#/components/schemas/SmtpConfigDto"
-          }
-        }
-      },
-      "BillingSection": {
-        "type": "object",
-        "properties": {
-          "autoUpgrade": {
-            "type": "boolean"
-          },
-          "burstActive": {
-            "type": "boolean"
-          },
-          "burstUsedThisMonth": {
-            "type": "boolean"
-          },
-          "burstExpiresAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "burstUsedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "tiers": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "enum": [
-                "FREE",
-                "INDIE",
-                "STUDIO",
-                "PRO",
-                "SCALE",
-                "ENTERPRISE"
-              ]
-            }
-          },
-          "tierLimits": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
-      "ClientKeySection": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "keyPrefix": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
           }
         }
       },
@@ -4317,6 +4247,47 @@
           }
         }
       },
+      "ClientKeySection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuthSection": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "SIGNED",
+              "TURNKIT_AUTH"
+            ]
+          },
+          "hasSecret": {
+            "type": "boolean"
+          },
+          "smtpConfigured": {
+            "type": "boolean"
+          },
+          "smtp": {
+            "$ref": "#/components/schemas/SmtpConfigDto"
+          }
+        }
+      },
       "LeaderboardSection": {
         "type": "object",
         "properties": {
@@ -4356,24 +4327,6 @@
               "WEEKLY",
               "MONTHLY"
             ]
-          }
-        }
-      },
-      "ModulesSection": {
-        "type": "object",
-        "properties": {
-          "activeModules": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "LEADERBOARDS",
-                "PLAYER_STORE",
-                "MATCHMAKING",
-                "TURN_RELAY"
-              ]
-            },
-            "uniqueItems": true
           }
         }
       },
@@ -4435,40 +4388,64 @@
           }
         }
       },
-      "ClientKey": {
+      "BillingSection": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "gameKeyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "displayName": {
-            "type": "string"
-          },
-          "keyPrefix": {
-            "type": "string"
-          },
-          "keyHash": {
-            "type": "string"
-          },
-          "lastUsedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "revokedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "active": {
+          "autoUpgrade": {
             "type": "boolean"
+          },
+          "burstActive": {
+            "type": "boolean"
+          },
+          "burstUsedThisMonth": {
+            "type": "boolean"
+          },
+          "burstExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "burstUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "enum": [
+                "FREE",
+                "INDIE",
+                "STUDIO",
+                "PRO",
+                "SCALE",
+                "ENTERPRISE"
+              ]
+            }
+          },
+          "tierLimits": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "ModulesSection": {
+        "type": "object",
+        "properties": {
+          "activeModules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LEADERBOARDS",
+                "PLAYER_STORE",
+                "MATCHMAKING",
+                "TURN_RELAY"
+              ]
+            },
+            "uniqueItems": true
           }
         }
       },
@@ -4615,23 +4592,6 @@
           }
         }
       },
-      "TopScoreResponse": {
-        "type": "object",
-        "description": "Minimal response object for top scores",
-        "properties": {
-          "n": {
-            "type": "string",
-            "description": "Player name",
-            "example": "Player1"
-          },
-          "s": {
-            "type": "number",
-            "format": "double",
-            "description": "Score value",
-            "example": 9500
-          }
-        }
-      },
       "TopScoresListResponse": {
         "type": "object",
         "description": "Response object containing a list of top scores",
@@ -4654,6 +4614,23 @@
             "items": {
               "$ref": "#/components/schemas/TopScoreResponse"
             }
+          }
+        }
+      },
+      "TopScoreResponse": {
+        "type": "object",
+        "description": "Minimal response object for top scores",
+        "properties": {
+          "n": {
+            "type": "string",
+            "description": "Player name",
+            "example": "Player1"
+          },
+          "s": {
+            "type": "number",
+            "format": "double",
+            "description": "Score value",
+            "example": 9500
           }
         }
       },
