@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Script from 'next/script';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
@@ -39,7 +40,7 @@ export default function PricingPage() {
   ]);
 
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="docs">
       <Script
         id="pricing-service-schema"
         type="application/ld+json"
@@ -98,6 +99,17 @@ export default function PricingPage() {
               <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.7] text-text">
                 <strong className="font-medium text-text">Concurrent Users (CCU)</strong> = Any player who performed an action in the past
                 30 minutes.
+              </div>
+              <div className="rounded-[3px] border border-[rgba(61,214,140,0.24)] bg-[rgba(61,214,140,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+                <strong className="font-medium text-text">TurnKit is the cheapest authoritative option for turn-based games.</strong>{' '}
+                Compare our predictable CCU pricing vs Unity Relay, Photon, and Beamable in the{' '}
+                <Link
+                  href="/turn-based-game-server-comparison-2026"
+                  className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+                >
+                  2026 Turn-Based Server Comparison
+                </Link>
+                .
               </div>
             </div>
           </section>

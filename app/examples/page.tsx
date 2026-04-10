@@ -250,7 +250,7 @@ export default function ExamplesPage() {
   ]);
 
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="docs">
       <Script
         id="examples-article-schema"
         type="application/ld+json"

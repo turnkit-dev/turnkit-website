@@ -16,7 +16,7 @@ const homeSections = [
 
 export default function HomePage() {
   return (
-    <MarketingShell>
+    <MarketingShell footerLayout="home">
       <div className="mx-auto flex w-full max-w-[1180px] px-0 pt-[60px]">
         <main className="min-w-0 flex-1 px-[clamp(24px,5vw,48px)]">
         <div className="mx-auto max-w-[960px]">
@@ -197,6 +197,16 @@ export default function HomePage() {
             <strong className="font-medium text-text">Not locked in.</strong> Each module is optional. Use your own systems and connect
             via webhooks, or adopt TurnKit modules gradually as your game grows.
           </p>
+          <div className="mt-8 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+            <strong className="font-medium text-text">See how TurnKit compares to other options.</strong>{' '}
+            <Link
+              href="/turn-based-game-server-comparison-2026"
+              className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+            >
+              Read the 2026 turn-based server comparison
+            </Link>
+            .
+          </div>
         </section>
 
         <section id="waitlist" className="border-t border-border py-[clamp(32px,5vw,48px)]">

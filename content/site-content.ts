@@ -55,6 +55,7 @@ export interface LandingContent {
 export const landingContent: LandingContent = {
   navLinks: [
     { href: '/examples', label: 'Examples' },
+    { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
     { href: '/docs/quickstart/unity', label: 'Docs' },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
   ],
