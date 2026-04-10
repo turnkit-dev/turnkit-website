@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { DocsSidebar } from '@/components/docs-shell';
@@ -12,6 +13,28 @@ const pricingSections = [
   { href: '#upgrading', label: 'Upgrading' },
   { href: '#auto-upgrade', label: 'Auto-upgrade' },
 ];
+
+export const metadata: Metadata = {
+  title: 'Pricing - TurnKit',
+  description:
+    'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
+  alternates: {
+    canonical: '/pricing',
+  },
+  openGraph: {
+    title: 'Pricing - TurnKit',
+    description:
+      'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
+    url: 'https://turnkit.dev/pricing',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Pricing - TurnKit',
+    description:
+      'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
+  },
+};
 
 export default function PricingPage() {
   return (

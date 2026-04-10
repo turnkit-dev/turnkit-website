@@ -157,7 +157,9 @@ export const landingContent: LandingContent = {
     }
   ],
   footerLinks: [
-    { href: 'https://github.com/Brainzy', label: 'GitHub', external: true },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
+    { href: '/terms', label: 'Terms' },
+    { href: '/privacy', label: 'Privacy' },
+    { href: '/refunds', label: 'Refunds' },
   ],
 };

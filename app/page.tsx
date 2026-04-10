@@ -11,6 +11,7 @@ const homeSections = [
   { href: '#pricing', label: 'Pricing' },
   { href: '#modules', label: 'Modules' },
   { href: '#waitlist', label: 'Early Access' },
+  { href: '#contact', label: 'Contact' },
 ];
 
 export default function HomePage() {
@@ -204,6 +205,33 @@ export default function HomePage() {
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Follow the build.</h2>
             <p className="mb-8 text-[14px] text-muted">Get updates as TurnKit develops. No spam, just progress.</p>
             <WaitlistForm />
+          </div>
+        </section>
+
+        <section id="contact" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+          <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Contact</div>
+          <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Operator and contact details.</h2>
+          <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
+            TurnKit is operated by Nenad Nikolic. For support, billing, refunds, or legal requests, use the contact details below.
+          </p>
+          <div className="grid gap-px overflow-hidden rounded border border-border bg-border md:grid-cols-2">
+            <div className="bg-surface p-8">
+              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Email</div>
+              <a
+                href="mailto:support@turnkit.dev"
+                className="text-[15px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+              >
+                support@turnkit.dev
+              </a>
+            </div>
+            <div className="bg-surface p-8">
+              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Mailing Address</div>
+              <p className="text-[15px] leading-[1.8] text-text">
+                Svetosavska 107v/17
+                <br />
+                Kikinda, Serbia
+              </p>
+            </div>
           </div>
         </section>
       </div>
