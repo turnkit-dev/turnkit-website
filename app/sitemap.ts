@@ -10,8 +10,7 @@ import {
   unityQuickstartPageMeta,
   websocketPageMeta,
 } from '@/content/docs-content';
-
-const siteUrl = 'https://turnkit.dev';
+import { lastContentUpdate, siteUrl } from '@/lib/seo';
 
 const routes = [
   { path: '/', priority: 1, changeFrequency: 'weekly' as const },
@@ -32,7 +31,7 @@ const routes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  const lastModified = new Date(lastContentUpdate);
 
   return routes.map((route) => ({
     url: `${siteUrl}${route.path}`,

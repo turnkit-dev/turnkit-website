@@ -1,34 +1,47 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { ScalarApiReference } from '@/components/scalar-api-reference';
 import { apiPageMeta } from '@/content/docs-content';
+import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_TURNKIT_API_BASE_URL ?? 'https://api.turnkit.dev';
 const rawSpecPath = '/openapi.json';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'REST API - TurnKit Docs',
   description: apiPageMeta.description,
-  alternates: {
-    canonical: apiPageMeta.path,
-  },
-  openGraph: {
-    title: 'REST API - TurnKit Docs',
-    description: apiPageMeta.description,
-    url: `https://turnkit.dev${apiPageMeta.path}`,
-    type: 'article',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'REST API - TurnKit Docs',
-    description: apiPageMeta.description,
-  },
-};
+  path: apiPageMeta.path,
+  type: 'article',
+  keywords: ['game backend REST API', 'TurnKit API reference', 'multiplayer API docs'],
+});
 
 export default function ApiDocsPage() {
+  const articleSchema = buildTechArticleSchema({
+    headline: 'TurnKit REST API reference',
+    description: apiPageMeta.description,
+    path: apiPageMeta.path,
+  });
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Documentation', path: '/docs' },
+    { name: 'REST API', path: apiPageMeta.path },
+  ]);
+
   return (
     <DocsShell meta={apiPageMeta}>
+      <Script
+        id="api-reference-article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <Script
+        id="api-reference-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div id="overview" className="mb-8 space-y-4">
         <p className="text-base leading-[1.6] text-muted">
           REST API reference for TurnKit server endpoints. The reference below is rendered from the bundled OpenAPI document shipped with

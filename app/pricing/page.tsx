@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { DocsSidebar } from '@/components/docs-shell';
 import { landingContent } from '@/content/site-content';
+import { buildBreadcrumbSchema, buildMetadata, buildServiceSchema } from '@/lib/seo';
 
 const pricingSections = [
   { href: '#overview', label: 'Overview' },
@@ -14,31 +16,40 @@ const pricingSections = [
   { href: '#auto-upgrade', label: 'Auto-upgrade' },
 ];
 
-export const metadata: Metadata = {
+const pricingDescription =
+  'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.';
+
+export const metadata: Metadata = buildMetadata({
   title: 'Pricing - TurnKit',
-  description:
-    'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
-  alternates: {
-    canonical: '/pricing',
-  },
-  openGraph: {
-    title: 'Pricing - TurnKit',
-    description:
-      'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
-    url: 'https://turnkit.dev/pricing',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Pricing - TurnKit',
-    description:
-      'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.',
-  },
-};
+  description: pricingDescription,
+  path: '/pricing',
+  keywords: ['game backend pricing', 'Unity multiplayer pricing', 'leaderboards pricing'],
+});
 
 export default function PricingPage() {
+  const serviceSchema = buildServiceSchema({
+    name: 'TurnKit Pricing',
+    description: pricingDescription,
+    path: '/pricing',
+  });
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Pricing', path: '/pricing' },
+  ]);
+
   return (
     <MarketingShell>
+      <Script
+        id="pricing-service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <Script
+        id="pricing-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 md:block">
           <div
