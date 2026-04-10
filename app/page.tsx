@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { landingContent } from '@/content/site-content';
+import { WaitlistForm } from '@/components/waitlist-form';
 
 const homeSections = [
   { href: '#top', label: 'Top' },
@@ -9,7 +10,6 @@ const homeSections = [
   { href: '#relay', label: 'Turn Relay' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#modules', label: 'Modules' },
-  { href: '#waitlist', label: 'Early Access' },
   { href: '#contact', label: 'Contact' },
 ];
 
@@ -206,15 +206,6 @@ export default function HomePage() {
               Read the 2026 turn-based server comparison
             </Link>
             .
-          </div>
-        </section>
-
-        <section id="waitlist" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-          <div className="rounded border border-border2 bg-surface p-[clamp(36px,5vw,56px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Early Access</div>
-            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Follow the build.</h2>
-            <p className="mb-8 text-[14px] text-muted">Get updates as TurnKit develops. No spam, just progress.</p>
-            <WaitlistForm />
           </div>
         </section>
 
