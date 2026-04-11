@@ -29,7 +29,7 @@ export default function RestApiQuickstartPage() {
       <p className="mb-5 text-text">
         1. Go to the{' '}
         <Link 
-          href="/" 
+          href="/games" 
           className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
         >
           Dashboard

@@ -62,7 +62,7 @@ const featureRows = [
 ];
 
 const pricingRows = [
-  { ccu: '20', unityRelay: '$0.00', photon: '$0.00', beamable: '$100.00', turnKit: '$0.00', lowest: ['unityRelay', 'photon', 'turnKit'] },
+  { ccu: '20', unityRelay: '$0.00', photon: '$0.00', beamable: '$125.00', turnKit: '$0.00', lowest: ['unityRelay', 'photon', 'turnKit'] },
   { ccu: '40', unityRelay: '$0.00', photon: '$0.00', beamable: '$595.00', turnKit: '$4.99', lowest: ['unityRelay', 'photon'] },
   { ccu: '80', unityRelay: '$4.80', photon: '$0.00', beamable: '$595.00', turnKit: '$9.99', lowest: ['photon'] },
   { ccu: '160', unityRelay: '$17.60', photon: '$95.00', beamable: '$595.00', turnKit: '$19.99', lowest: ['unityRelay'] },
@@ -132,7 +132,6 @@ export default function TurnBasedGameServerComparisonPage() {
           </section>
 
           <section id="tldr" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">TL;DR</div>
             <div className="rounded border border-[rgba(61,214,140,0.24)] bg-[rgba(61,214,140,0.08)] p-6">
               <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
                 TurnKit Relay is winner for most indie turn-based games.
@@ -176,22 +175,20 @@ export default function TurnBasedGameServerComparisonPage() {
               <div className="bg-surface p-6">
                 <h2 className="mb-2 font-display text-[20px] font-semibold tracking-[-0.02em] text-text">Build your own custom backend</h2>
                 <p className="text-[14px] leading-[1.8] text-muted">
-                  Full control, but also weeks or months of work for turn validation, hidden data handling, reconnect logic, signed
-                  results, and all the edge cases that appear once real players start exploiting your flow.
+                  Full control, but also months of work for turn validation, hidden data handling, reconnect logic, signed
+                  results, and all the edge cases that appear once real players start exploiting your flow. Not to mention the ongoing burden of DevOps and infrastructure scaling.
                 </p>
               </div>
               <div className="bg-[#0d1319] p-6">
                 <h2 className="mb-2 font-display text-[20px] font-semibold tracking-[-0.02em] text-text">Per-match game servers</h2>
                 <p className="text-[14px] leading-[1.8] text-muted">
-                  Photon rooms with custom logic, Nakama real-time, PlayFab or Unity servers, and Colyseus can be authoritative, but they
-                  are often overkill for turn-based games where players spend most of the match thinking instead of sending actions.
+                    Frameworks like Mirror or Netcode for GameObjects require a full headless game instance for every single match. This leads to massive overhead, high hosting bills, and complex orchestration—especially for games that don't need real-time physics. 
                 </p>
               </div>
               <div className="bg-surface p-6">
                 <h2 className="mb-2 font-display text-[20px] font-semibold tracking-[-0.02em] text-text">Basic relays</h2>
                 <p className="text-[14px] leading-[1.8] text-muted">
-                  Unity Relay, Photon Relay, or a thin WebSocket relay are fast and cheap to start, but they do not enforce turns or hide
-                  private state. That leaves cheating risk on hands, secret stats, and out-of-turn actions.
+                  Standard relays (Unity, Photon) offer no authority. One player acts as the host, leaving your game state vulnerable to memory injection, speed hacks, and "god mode" exploits.
                 </p>
               </div>
             </div>
@@ -213,6 +210,12 @@ export default function TurnBasedGameServerComparisonPage() {
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
               A card game example with pricing comparisons
             </h2>
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">TL;DR</div>
+            <div className="rounded border border-[rgba(61,214,140,0.24)] bg-[rgba(61,214,140,0.08)] p-6">
+              <p className="text-[15px] leading-[1.8] text-text">
+                <strong className="font-medium">TurnKit is cheapest authorative option at any CCU and even cheaper than non authorative ones at 320+ CCU.</strong>
+              </p>
+            </div>
             <div className="overflow-hidden rounded border border-border bg-border">
               <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse text-left">
@@ -251,7 +254,7 @@ export default function TurnBasedGameServerComparisonPage() {
             <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Limitations and Flaws</div>
             <div className="grid gap-5">
               <div className="rounded-[3px] border border-[rgba(240,164,41,0.24)] bg-[rgba(240,164,41,0.08)] px-5 py-4 text-[14px] leading-[1.8] text-text">
-                TurnKit is meant for turn-based games only. It is not a replacement for full real-time server simulation.
+                TurnKit is meant for turn-based games only.
               </div>
               <div className="rounded-[3px] border border-border2 bg-surface2 px-5 py-4 text-[14px] leading-[1.8] text-text">
                 In 1v1 games, client voting allows possible vote grief: a losing player can falsely vote fail. A reputation system is planned to reduce this abuse.

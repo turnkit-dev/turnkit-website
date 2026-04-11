@@ -55,14 +55,13 @@ export const landingContent: LandingContent = {
   navLinks: [
     { href: '/examples', label: 'Examples' },
     { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
-    { href: '/docs/quickstart/unity', label: 'Docs' },
-    { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
+    { href: '/docs', label: 'Docs' },
   ],
-  heroTitle: ['Backend infrastructure for', 'turn-based multiplayer games.'],
+  heroTitle: ['Turn-Based Multiplayer API & Authoritative Server', 'for Unity, Godot and other Engines'],
   heroSubtitle:
     'Your game logic stays on the client, works with Unity, Godot, or any engine.',
   heroHighlight:
-    'TurnKit is an authoritative game server that enforces turns, hides player data, and prevents cheating.',
+    'TurnKit is an authoritative game server for turn-based games that enforces turns, hides player data, and prevents cheating.',
   engineTags: ['Works with Unity', 'Works with Godot', 'Works with any engine', 'REST + WebSocket API'],
   features: [
     {
@@ -75,13 +74,13 @@ export const landingContent: LandingContent = {
       icon: '◐',
       title: 'Hand Hiding',
       description:
-        'Each player only receives the data they are allowed to see. Hidden cards, stats, and moves stay filtered server-side.',
+        'Server-side data masking. Clients receive item IDs, createBy, but item data (slug) is empty if list not visible to them. Use server-managed lists (Spawn, Move, Shuffle) to control hidden state like hands, decks.',
     },
     {
       icon: '✓',
       title: 'Player Voting',
       description:
-        'Players vote automatically based on your game rules. Validate moves before continuing, or handle outcomes later.',
+        'Clients automatically validate each move using your game logic and submit a pass/fail vote. The server enforces the outcome based on config(votes required, votes to fail). Even if one client is compromised, honest clients can reject invalid moves.',
     },
     {
       icon: '⬡',
@@ -110,7 +109,6 @@ export const landingContent: LandingContent = {
       key: 'On vote fail',
       values: [
         { label: 'End match', active: true },
-        { label: 'Reject move' },
         { label: 'Skip turn' },
       ],
     },
@@ -145,8 +143,8 @@ export const landingContent: LandingContent = {
       status: 'available',
     },
     {
-      name: 'Matchmaking',
-      description: 'Queue players and validate inventory before a match starts.',
+      name: 'Advanced Matchmaking',
+      description: 'Match with anyone and lobby work now and are free. Matchmaking by elo coming soon as a separate module.',
       status: 'coming_soon',
     },
     {
@@ -156,6 +154,9 @@ export const landingContent: LandingContent = {
     }
   ],
   footerLinks: [
+    { href: '/examples', label: 'Examples' },
+    { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
+    { href: '/docs', label: 'Docs' },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
     { href: '/terms', label: 'Terms' },
     { href: '/privacy', label: 'Privacy' },

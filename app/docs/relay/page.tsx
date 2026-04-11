@@ -27,7 +27,11 @@ export default function RelayDocsPage() {
   return (
     <DocsShell meta={relayPageMeta}>
       <p id="intro" className="mb-10 max-w-[760px] text-base leading-[1.7] text-muted">
-        An authoritative server that enforces fair play while your game logic stays on the client. It connects players over WebSocket,
+        An authoritative server that enforces fair play while your game logic stays on the client. {' '}
+        <Link href="/turn-based-game-server-comparison-2026" className="text-accent transition hover:text-text">
+          See how it compares to other options here
+        </Link>
+         . It connects players over WebSocket,
         validates moves server-side, filters private state per player, and produces a cryptographically signed match result when the
         game ends or hands off directly to{' '}
         <Link href="/docs/leaderboards" className="text-accent transition hover:text-text">

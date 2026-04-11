@@ -20,7 +20,6 @@ export async function MarketingShell({ children, footerLayout = 'centered' }: Ma
   const footerContent = (
     <footer className="border-t border-border py-8">
       <div className="flex flex-col gap-4 text-[13px] text-faint">
-        <div>TurnKit.dev - built by an indie developer, for indie developers.</div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           {landingContent.footerLinks.map((link) =>
             link.external ? (

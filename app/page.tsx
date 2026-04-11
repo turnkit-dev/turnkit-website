@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
+import { CodeBlock } from '@/components/code-block';
 import { landingContent } from '@/content/site-content';
 import { WaitlistForm } from '@/components/waitlist-form';
 
@@ -8,12 +9,40 @@ const homeSections = [
   { href: '#top', label: 'Top' },
   { href: '#overview', label: 'Overview' },
   { href: '#relay', label: 'Turn Relay' },
+  { href: '#simple-api', label: 'How it works in Code' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#modules', label: 'Modules' },
   { href: '#contact', label: 'Contact' },
 ];
 
+const quickUnitySnippet = `// Find a match
+await Relay.MatchWithAnyone("player1", ExampleConfig.Slug);
+
+// Send a move as a Json
+Relay.SendJson(moveData);
+// Optionally use server lists for hand hiding
+var myHand = Relay.GetMyLists(ExampleConfig.Tag.hand).First();
+myHand.Move(SelectorType.ALL).To(revealedList);
+myHand.Spawn("aceDiamonds");
+Relay.EndMyTurn();
+
+// Validate & vote
+Relay.OnMoveMade += (message) =>
+{
+    bool isValid = IsMoveValid(message);
+    Relay.Vote(message.moveNumber, isValid);
+    // Configurable: Server can wait for consensus before the next turn (SYNC)
+    // or allow moves to flow while validating in the background (ASYNC).
+};
+
+// 5. React if cheating is detected
+Relay.OnVoteFailed += () => EndGame("Invalid move detected");`;
+
 export default function HomePage() {
+  const turnOrderRow = landingContent.configRows.find((row) => row.key === 'Turn order');
+  const playerVotingRow = landingContent.configRows.find((row) => row.key === 'Player voting');
+  const onVoteFailRow = landingContent.configRows.find((row) => row.key === 'On vote fail');
+
   return (
     <MarketingShell footerLayout="home">
       <div className="mx-auto flex w-full max-w-[1180px] px-0 pt-[60px]">
@@ -82,18 +111,16 @@ export default function HomePage() {
       <div className="mx-auto max-w-[960px]">
         <section id="overview" className="py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Overview</div>
-          <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">What is TurnKit?</h2>
-          <div className="mt-6 grid gap-8 text-[14px] leading-[1.8] text-muted sm:grid-cols-2">
+          <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Why TurnKit?</h2>
+          <div className="mt-6 text-[14px] leading-[1.8] text-muted">
             <p>
-              TurnKit is <strong className="font-medium text-text">backend infrastructure for turn-based multiplayer games</strong>. It
-              provides an authoritative relay that connects your game clients, validates turns server-side, filters what each player
-              can see, and generates a cryptographically signed match result when the game ends.
-            </p>
-            <p>
-              A typical match flow: <strong className="font-medium text-text">Matchmaking</strong> queues players and checks inventory is
-              valid before the game starts. <strong className="font-medium text-text">TurnRelay</strong> enforces turns and keeps the match
-              fair. <strong className="font-medium text-text">PlayerStore</strong> handles rewards, currencies, and the in-game shop after
-              the match ends. <strong className="font-medium text-text">Leaderboards</strong> records the final score.
+              TurnKit is purpose-built for turn-based games: faster to ship, harder to cheat, and cheaper to run than alternatives. {' '}
+            <Link
+              href="/turn-based-game-server-comparison-2026"
+              className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+            >
+              See how TurnKit compares to other options.
+            </Link>
             </p>
           </div>
           <div className="mt-8 flex flex-wrap gap-2">
@@ -123,19 +150,9 @@ export default function HomePage() {
                 </div>
                 <h3 className="mb-2 font-display text-base font-semibold tracking-[-0.01em] text-text">{feature.title}</h3>
                 <p className="text-[13px] leading-[1.6] text-muted">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12">
-            <p className="mb-1 text-[13px] text-muted">Every option is configurable per game.</p>
-            <div className="mt-8 flex flex-col gap-px overflow-hidden rounded border border-border bg-border">
-              {landingContent.configRows.map((row) => (
-                <div key={row.key} className="grid bg-surface transition hover:bg-surface2 md:grid-cols-[200px_1fr]">
-                  <div className="flex items-center border-b border-border px-6 py-4 text-xs font-medium text-accent md:border-b-0 md:border-r">
-                    {row.key}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 px-6 py-4">
-                    {row.values.map((value) => (
+                {feature.title === 'Turn Enforcement' && turnOrderRow ? (
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    {turnOrderRow.values.map((value) => (
                       <span
                         key={value.label}
                         className={`rounded-[2px] border px-2.5 py-[3px] text-[11px] ${
@@ -148,29 +165,87 @@ export default function HomePage() {
                       </span>
                     ))}
                   </div>
-                </div>
-              ))}
-            </div>
+                ) : null}
+                {feature.title === 'Player Voting' && playerVotingRow && onVoteFailRow ? (
+                  <div className="mt-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {playerVotingRow.values.map((value) => (
+                        <span
+                          key={value.label}
+                          className={`rounded-[2px] border px-2.5 py-[3px] text-[11px] ${
+                            value.active
+                              ? 'border-[rgba(47,156,235,0.3)] bg-[rgba(47,156,235,0.15)] text-accent'
+                              : 'border-border2 bg-surface2 text-muted'
+                          }`}
+                        >
+                          {value.label}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-3 mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">On vote fail</div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {onVoteFailRow.values.map((value) => (
+                        <span
+                          key={value.label}
+                          className={`rounded-[2px] border px-2.5 py-[3px] text-[11px] ${
+                            value.active
+                              ? 'border-[rgba(47,156,235,0.3)] bg-[rgba(47,156,235,0.15)] text-accent'
+                              : 'border-border2 bg-surface2 text-muted'
+                          }`}
+                        >
+                          {value.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         </section>
+
+       <section id="simple-api" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">How It Works in Code</div>
+            <h2 className="mb-8 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
+              Simple API. Match players, send moves, validate turns, and handle cheating without writing server side game logic.
+            </h2>
+            <CodeBlock code={quickUnitySnippet} language="csharp" />
+            <p className="mt-6 text-[14px] text-muted">
+              <Link
+                href="/examples"
+                className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+              >
+                See full Unity examples. → Tic Tac Toe, Rock Paper Scissors games in under 100 lines.
+              </Link>
+            </p>
+          </section>
 
         <section id="pricing" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Pricing</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Free to start.</h2>
-          <p className="mb-12 max-w-[560px] text-[15px] text-muted">
-            No credit card needed to start. First 20 concurrent players are free across Relay and Leaderboards.
+          <p className="mb-12 text-[15px] text-muted">
+            No credit card needed to start. First 20 concurrent players are free for all modules. Relay pricing:
           </p>
           <PricingGrid tiers={landingContent.pricing.relay} showFullPricingLink />
           <div className="mt-5 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
             <strong className="font-medium text-text">Burst protection included.</strong> If your game spikes past its limit, TurnKit
             automatically grants 24 hours of unlimited capacity once per month.
           </div>
+          <div className="mt-8 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
+            <strong className="font-medium text-text"></strong>{' '}
+            <Link
+              href="/turn-based-game-server-comparison-2026#pricing-comparison"
+              className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+            >
+              See how pricing compares to other options.
+            </Link>
+          </div>
         </section>
 
         <section id="modules" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Modules</div>
           <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Use only what you need.</h2>
-          <p className="mb-12 max-w-[560px] text-[15px] text-muted">
+          <p className="mb-12 text-[15px] text-muted">
             Start with Relay or Leaderboards today, then add more TurnKit modules as your game grows.
           </p>
           <div className="flex flex-col gap-px overflow-hidden rounded border border-border bg-border">
@@ -197,43 +272,20 @@ export default function HomePage() {
             <strong className="font-medium text-text">Not locked in.</strong> Each module is optional. Use your own systems and connect
             via webhooks, or adopt TurnKit modules gradually as your game grows.
           </p>
-          <div className="mt-8 rounded-[3px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
-            <strong className="font-medium text-text">See how TurnKit compares to other options.</strong>{' '}
-            <Link
-              href="/turn-based-game-server-comparison-2026"
-              className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
-            >
-              Read the 2026 turn-based server comparison
-            </Link>
-            .
-          </div>
         </section>
 
         <section id="contact" className="border-t border-border py-[clamp(32px,5vw,48px)]">
           <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Contact</div>
-          <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Operator and contact details.</h2>
-          <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
-            TurnKit is operated by Nenad Nikolic. For support, billing, refunds, or legal requests, use the contact details below.
+          
+          <p className="max-w-[800px] text-[15px] leading-[1.8] text-muted">
+            TurnKit is operated by <span className="text-text font-medium">Nenad Nikolic</span>. 
+            For support, billing, or legal requests, email: 
+            <a href="mailto:support@turnkit.dev" className="mx-1.5 text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.2em] transition hover:text-[#b2ddff]">
+              support@turnkit.dev
+            </a> 
+            <span className="mx-2 text-border">•</span> 
+            Mail: <span className="text-text">Svetosavska 107v/17, Kikinda, Serbia</span>
           </p>
-          <div className="grid gap-px overflow-hidden rounded border border-border bg-border md:grid-cols-2">
-            <div className="bg-surface p-8">
-              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Email</div>
-              <a
-                href="mailto:support@turnkit.dev"
-                className="text-[15px] text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
-              >
-                support@turnkit.dev
-              </a>
-            </div>
-            <div className="bg-surface p-8">
-              <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent">Mailing Address</div>
-              <p className="text-[15px] leading-[1.8] text-text">
-                Svetosavska 107v/17
-                <br />
-                Kikinda, Serbia
-              </p>
-            </div>
-          </div>
         </section>
       </div>
       </main>
@@ -256,3 +308,5 @@ export default function HomePage() {
     </MarketingShell>
   );
 }
+
+
