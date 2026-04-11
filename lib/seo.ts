@@ -6,7 +6,7 @@ export const defaultOgImage = '/assets/og-card.png';
 export const defaultOgImageAlt = 'TurnKit branding and multiplayer backend messaging';
 export const siteLocale = 'en_US';
 export const siteDescription =
-  'TurnKit handles turn enforcement, matchmaking, and leaderboards so you can ship your turn-based game faster. Authoritative relay for Unity, Godot, and custom engines. Free to start.';
+  "Ship your turn-based Unity or Godot multiplayer faster with TurnKit's authoritative relay and leaderboards. Start free.";
 export const lastContentUpdate = '2026-04-10T00:00:00.000Z';
 
 const baseKeywords = [

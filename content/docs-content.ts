@@ -66,7 +66,7 @@ export const docsNavSections: DocsNavSection[] = [
 
 export const docsIndexPageMeta: DocsPageMeta = {
   title: 'Documentation',
-  description: 'TurnKit docs for quickstarts, Relay, leaderboards, and API reference.',
+  description: 'Open the TurnKit docs to launch faster with Unity quickstarts, Relay guides, leaderboards, and API references.',
   path: '/docs',
   eyebrow: 'Docs',
   breadcrumbLabel: 'Overview',
@@ -79,7 +79,7 @@ export const docsIndexPageMeta: DocsPageMeta = {
 export const websocketPageMeta: DocsPageMeta = {
   title: 'WebSocket Protocol',
   description:
-    'Complete WebSocket protocol reference for TurnKit Relay. Real-time turn enforcement, hand hiding, and match state synchronization.',
+    'Implement TurnKit Relay faster with the full WebSocket protocol for turns, hidden data, reconnects, and sync.',
   path: '/docs/websocket',
   eyebrow: 'TurnKit Relay',
   breadcrumbLabel: 'WebSocket Protocol',
@@ -103,7 +103,7 @@ export const websocketPageMeta: DocsPageMeta = {
 export const relayPageMeta: DocsPageMeta = {
   title: 'TurnKit Relay',
   description:
-    'Overview of TurnKit Relay, the authoritative multiplayer server for fair turn validation, filtered private state, and signed match results.',
+    'See how TurnKit Relay enforces fair turns, hides private state, and signs results so you can ship with less backend.',
   path: '/docs/relay',
   eyebrow: 'TurnKit Relay',
   breadcrumbLabel: 'Relay',
@@ -119,7 +119,7 @@ export const relayPageMeta: DocsPageMeta = {
 export const leaderboardsPageMeta: DocsPageMeta = {
   title: 'Leaderboards',
   description:
-    'Submit scores, query ranks, and configure seasonal or all-time leaderboards with validation, metadata, and authoritative integrations.',
+    'Launch validated leaderboards with seasons, metadata, and rank queries so players have a reason to come back.',
   path: '/docs/leaderboards',
   eyebrow: 'Features',
   breadcrumbLabel: 'Leaderboards',
@@ -136,7 +136,7 @@ export const leaderboardsPageMeta: DocsPageMeta = {
 export const playerAuthenticationModesPageMeta: DocsPageMeta = {
   title: 'Player Authentication Modes',
   description:
-    'Choose between OPEN, TURNKIT_AUTH, and SIGNED player authentication for TurnKit based on speed, simplicity, or backend control.',
+    'Pick the right TurnKit auth mode fast, from open setup to signed backend control, and launch player login cleanly.',
   path: '/docs/player-authentication-modes',
   eyebrow: 'Features',
   breadcrumbLabel: 'Player Authentication Modes',
@@ -150,7 +150,7 @@ export const playerAuthenticationModesPageMeta: DocsPageMeta = {
 
 export const apiPageMeta: DocsPageMeta = {
   title: 'REST API',
-  description: 'REST API reference for TurnKit server endpoints generated from the OpenAPI specification.',
+  description: 'Explore every TurnKit REST endpoint in one place so you can wire dashboards, clients, and backend flows faster.',
   path: '/docs/api',
   eyebrow: 'API Reference',
   breadcrumbLabel: 'REST API',
@@ -163,7 +163,7 @@ export const apiPageMeta: DocsPageMeta = {
 export const unityQuickstartPageMeta: DocsPageMeta = {
   title: 'Unity Quickstart',
   description:
-    'Install the TurnKit Unity package, sign in, generate keys, and open the multiplayer example scene.',
+    'Install the TurnKit Unity package, generate keys, and run the example scene to get multiplayer working today.',
   path: '/docs/quickstart/unity',
   eyebrow: 'Getting Started',
   breadcrumbLabel: 'Unity Quickstart',
@@ -175,7 +175,7 @@ export const unityQuickstartPageMeta: DocsPageMeta = {
 
 export const restQuickstartPageMeta: DocsPageMeta = {
   title: 'REST API Quickstart',
-  description: 'Create a game in the dashboard, generate your client key, and interface with the TurnKit REST and WebSocket APIs.',
+  description: 'Generate a client key and use TurnKit REST and WebSocket APIs to launch your first multiplayer flow in minutes.',
   path: '/docs/quickstart/rest-api',
   eyebrow: 'Getting Started',
   breadcrumbLabel: 'REST API Quickstart',
@@ -187,7 +187,7 @@ export const restQuickstartPageMeta: DocsPageMeta = {
 export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
   title: 'TurnKit Auth with Brevo',
   description:
-    'Configure Brevo SMTP for TurnKit Auth so players can sign in with email OTP without running your own auth backend.',
+    'Set up email OTP with Brevo and TurnKit Auth so players can sign in quickly without building auth infrastructure.',
   path: '/docs/guides/turnkit-auth-brevo',
   eyebrow: 'Guides',
   breadcrumbLabel: 'TurnKit Auth with Brevo',

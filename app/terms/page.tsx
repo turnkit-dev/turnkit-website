@@ -1,22 +1,24 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
 
+const termsDescription = 'Read TurnKit terms before you launch so billing, permitted use, and liability limits are clear from day one.';
+
 export const metadata: Metadata = {
   title: 'Terms of Service - TurnKit',
-  description: 'TurnKit terms of service covering usage, billing, liability, and governing law.',
+  description: termsDescription,
   alternates: {
     canonical: '/terms',
   },
   openGraph: {
     title: 'Terms of Service - TurnKit',
-    description: 'TurnKit terms of service covering usage, billing, liability, and governing law.',
+    description: termsDescription,
     url: 'https://turnkit.dev/terms',
     type: 'website',
   },
   twitter: {
     card: 'summary',
     title: 'Terms of Service - TurnKit',
-    description: 'TurnKit terms of service covering usage, billing, liability, and governing law.',
+    description: termsDescription,
   },
 };
 

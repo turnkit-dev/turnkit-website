@@ -1,22 +1,24 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
 
+const refundsDescription = 'Check TurnKit refund rules before you subscribe so guarantees, downtime credits, and usage charges are clear.';
+
 export const metadata: Metadata = {
   title: 'Refund Policy - TurnKit',
-  description: 'TurnKit refund policy covering the 14-day guarantee, usage-based charges, downtime, and refund requests.',
+  description: refundsDescription,
   alternates: {
     canonical: '/refunds',
   },
   openGraph: {
     title: 'Refund Policy - TurnKit',
-    description: 'TurnKit refund policy covering the 14-day guarantee, usage-based charges, downtime, and refund requests.',
+    description: refundsDescription,
     url: 'https://turnkit.dev/refunds',
     type: 'website',
   },
   twitter: {
     card: 'summary',
     title: 'Refund Policy - TurnKit',
-    description: 'TurnKit refund policy covering the 14-day guarantee, usage-based charges, downtime, and refund requests.',
+    description: refundsDescription,
   },
 };
 

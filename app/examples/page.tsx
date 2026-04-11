@@ -228,7 +228,8 @@ namespace TurnKit.Example
 }
 `;
 
-const examplesDescription = 'See how TurnKit multiplayer code looks in practice with quick snippets and full Unity game examples.';
+const examplesDescription =
+  'Browse real TurnKit Unity snippets and full game scripts, then copy the patterns to ship your own multiplayer faster.';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Examples - TurnKit',

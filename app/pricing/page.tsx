@@ -18,7 +18,7 @@ const pricingSections = [
 ];
 
 const pricingDescription =
-  'TurnKit pricing for Relay and Leaderboards. Start free, scale on a simple CCU model, and use burst protection when traffic spikes.';
+  'Compare TurnKit pricing, start free, and choose the lowest-cost authoritative backend plan before your next spike.';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Pricing - TurnKit',

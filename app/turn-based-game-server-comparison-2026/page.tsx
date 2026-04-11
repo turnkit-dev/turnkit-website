@@ -14,7 +14,7 @@ const sections = [
 ];
 
 const comparisonDescription =
-  'Honest 2026 comparison of turn-based game server options: custom backend, per-match servers, basic relays, and TurnKit authoritative relay pricing.';
+  'Compare turn-based backend options, spot the tradeoffs fast, and choose the cheapest authoritative setup for 2026.';
 
 const featureRows = [
   {

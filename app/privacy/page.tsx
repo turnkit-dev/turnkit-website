@@ -1,22 +1,24 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
 
+const privacyDescription = 'Review how TurnKit handles developer and player data before you ship, integrate, or create an account.';
+
 export const metadata: Metadata = {
   title: 'Privacy Policy - TurnKit',
-  description: 'TurnKit privacy policy covering developer data, service data, end-user data, and processors.',
+  description: privacyDescription,
   alternates: {
     canonical: '/privacy',
   },
   openGraph: {
     title: 'Privacy Policy - TurnKit',
-    description: 'TurnKit privacy policy covering developer data, service data, end-user data, and processors.',
+    description: privacyDescription,
     url: 'https://turnkit.dev/privacy',
     type: 'website',
   },
   twitter: {
     card: 'summary',
     title: 'Privacy Policy - TurnKit',
-    description: 'TurnKit privacy policy covering developer data, service data, end-user data, and processors.',
+    description: privacyDescription,
   },
 };
 
