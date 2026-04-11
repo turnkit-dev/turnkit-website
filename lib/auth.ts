@@ -3,7 +3,18 @@ import { getServerSession } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    throw new Error(`Missing required auth environment variable: ${name}`);
+  }
+  return value;
+}
+
 const authSecret = process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET;
+if (!authSecret || authSecret.trim().length === 0) {
+  throw new Error('Missing required auth environment variable: NEXTAUTH_SECRET or AUTH_SECRET');
+}
 
 export const authOptions: NextAuthOptions = {
   secret: authSecret,
@@ -16,12 +27,12 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+      clientId: getRequiredEnv('GOOGLE_CLIENT_ID'),
+      clientSecret: getRequiredEnv('GOOGLE_CLIENT_SECRET'),
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_ID ?? '',
-      clientSecret: process.env.GITHUB_SECRET ?? '',
+      clientId: getRequiredEnv('GITHUB_ID'),
+      clientSecret: getRequiredEnv('GITHUB_SECRET'),
       authorization: {
         params: {
           scope: 'read:user user:email',
