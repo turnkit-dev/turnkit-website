@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState, useMemo, useState } from 'react';
+import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   createLeaderboardAction,
   createRelayConfigAction,
@@ -13,7 +14,8 @@ import {
   updateBillingAutoUpgradeAction,
   updateRelayConfigAction,
 } from '@/app/actions/dashboard';
-import { CopyButton, Field, Modal, PendingButton, SectionButton, TextArea, useDashboardActionFeedback } from '@/components/dashboard-ui';
+import { CopyButton, Field, Modal, PendingButton, SectionButton, TextArea, showDashboardToast, useDashboardActionFeedback } from '@/components/dashboard-ui';
+import { UpgradeSubscriptionModal } from '@/components/upgrade-subscription-modal';
 import { initialDashboardActionState } from '@/lib/dashboard-action-state';
 import type { AuthMode, FailAction, LeaderboardRecord, RelayConfigInput, RelayConfigRecord, RelayListConfigRecord, SmtpSettings, TurnEnforcement, VotingMode } from '@/lib/dashboard';
 
@@ -830,26 +832,210 @@ export function DeleteRelayConfigButton({ gameId, relayConfigId }: { gameId: str
   );
 }
 
-export function BillingAutoUpgradeForm({ gameId, autoUpgrade, upgradeHref }: { gameId: string; autoUpgrade: boolean; upgradeHref: string }) {
+export function BillingAutoUpgradeForm({
+  gameId,
+  autoUpgrade,
+  currentCcu,
+  activeModules,
+  supportContactName,
+  supportContactEmail,
+}: {
+  gameId: string;
+  autoUpgrade: boolean;
+  currentCcu: number;
+  activeModules: string[];
+  supportContactName: string;
+  supportContactEmail: string;
+}) {
+  type BillingChargeSummary = {
+    orderId: string;
+    subscriptionId: string;
+    invoiceNumber: string | null;
+    status: string;
+    paid: boolean;
+    totalAmount: number;
+    subtotalAmount: number | null;
+    taxAmount: number | null;
+    currency: string;
+    billingReason: string;
+    createdAt: string | null;
+    paidAt: string | null;
+  };
+
+  type BillingPollResponse = {
+    tiers?: Record<string, string>;
+    tierLimits?: Record<string, number>;
+    latestSubscriptionUpdateCharge?: BillingChargeSummary | null;
+  };
+
+  function getCurrentPlanCcuFromTierLimits(tierLimits: Record<string, number> | undefined) {
+    const numericValues = Object.values(tierLimits ?? {}).filter((value) => Number.isFinite(value));
+    if (numericValues.length === 0) {
+      return 0;
+    }
+    return Math.max(...numericValues);
+  }
+
   const [state, formAction] = useActionState(updateBillingAutoUpgradeAction, initialDashboardActionState);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [pendingUpgrade, setPendingUpgrade] = useState<{
+    targetPlanId: string;
+    targetProductId: string;
+    selectedCcu: number;
+    selectedModules: string[];
+    currency: string;
+    billingStateSynchronized: boolean;
+    latestSubscriptionUpdateCharge: BillingChargeSummary | null;
+  } | null>(null);
+  const router = useRouter();
 
   useDashboardActionFeedback(state);
 
+  useEffect(() => {
+    if (!pendingUpgrade) {
+      return;
+    }
+    if (pendingUpgrade.latestSubscriptionUpdateCharge || pendingUpgrade.billingStateSynchronized) {
+      return;
+    }
+
+    let cancelled = false;
+    const pollIntervalMs = 5000;
+
+    const pollStatus = async () => {
+      try {
+        const response = await fetch(`/api/dev/dashboard/${gameId}/billing`, {
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as BillingPollResponse;
+        const currentPlanCcu = getCurrentPlanCcuFromTierLimits(data.tierLimits);
+        const hasTargetPlanId = Object.values(data.tiers ?? {}).includes(pendingUpgrade.targetPlanId);
+        const hasReachedTargetCcu = currentPlanCcu >= pendingUpgrade.selectedCcu;
+        const billingStateSynchronized = hasTargetPlanId || hasReachedTargetCcu;
+
+        if (data.latestSubscriptionUpdateCharge && !cancelled) {
+          setPendingUpgrade((current) => (current ? { ...current, latestSubscriptionUpdateCharge: data.latestSubscriptionUpdateCharge ?? null } : current));
+          router.refresh();
+          showDashboardToast({
+            tone: 'success',
+            message: 'Subscription update completed.',
+          });
+          return;
+        }
+
+        if (billingStateSynchronized && !cancelled) {
+          setPendingUpgrade((current) => (current ? { ...current, billingStateSynchronized: true } : current));
+          router.refresh();
+          showDashboardToast({
+            tone: 'success',
+            message: 'Subscription update completed.',
+          });
+        }
+      } catch {
+        return;
+      }
+    };
+
+    void pollStatus();
+    const timer = window.setInterval(() => {
+      if (pendingUpgrade.latestSubscriptionUpdateCharge || pendingUpgrade.billingStateSynchronized) {
+        return;
+      }
+      void pollStatus();
+    }, pollIntervalMs);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [gameId, pendingUpgrade, router]);
+
   return (
-    <form action={formAction} className="space-y-5">
-      <input type="hidden" name="gameId" value={gameId} />
-      <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
-        <input type="checkbox" name="autoUpgrade" defaultChecked={autoUpgrade} />
-        Auto-upgrade when limits reached
-      </label>
-      <div className="flex flex-wrap items-center gap-3">
-        <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Saving...">
-          Save Billing
-        </PendingButton>
-        <a href={upgradeHref} className="inline-flex items-center rounded-[3px] border border-border2 px-4 py-2.5 text-[13px] text-text transition hover:bg-surface2">
-          Upgrade Plan
-        </a>
-      </div>
-    </form>
+    <>
+      <form action={formAction} className="space-y-5">
+        <input type="hidden" name="gameId" value={gameId} />
+        <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
+          <input type="checkbox" name="autoUpgrade" defaultChecked={autoUpgrade} />
+          Auto-upgrade when limits reached
+        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Saving...">
+            Save Billing
+          </PendingButton>
+          <button
+            type="button"
+            onClick={() => setUpgradeOpen(true)}
+            className="inline-flex items-center rounded-[3px] border border-border2 px-4 py-2.5 text-[13px] text-text transition hover:bg-surface2"
+          >
+            Upgrade Plan
+          </button>
+        </div>
+        {pendingUpgrade ? (
+          <div className="rounded border border-[rgba(58,173,245,0.32)] bg-[rgba(58,173,245,0.08)] px-4 py-3 text-[13px] text-text">
+            <div>
+              Subscription update requested for <span className="font-medium">{pendingUpgrade.targetPlanId}</span>.
+            </div>
+            {pendingUpgrade.latestSubscriptionUpdateCharge ? (
+              <>
+                <div className="mt-2 font-medium">
+                  Charged today:{' '}
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: pendingUpgrade.latestSubscriptionUpdateCharge.currency || pendingUpgrade.currency || 'USD',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(pendingUpgrade.latestSubscriptionUpdateCharge.totalAmount)}
+                </div>
+                <div className="mt-1 text-[12px] text-muted">
+                  Invoice {pendingUpgrade.latestSubscriptionUpdateCharge.invoiceNumber ?? pendingUpgrade.latestSubscriptionUpdateCharge.orderId}
+                </div>
+                <div className="mt-1 text-[12px] text-muted">
+                  {pendingUpgrade.latestSubscriptionUpdateCharge.paid ? 'Paid' : 'Unpaid'} / {pendingUpgrade.latestSubscriptionUpdateCharge.status}
+                </div>
+              </>
+            ) : pendingUpgrade.billingStateSynchronized ? (
+              <>
+                <div className="mt-2 font-medium">Subscription update completed.</div>
+              </>
+            ) : (
+              <>
+                <div className="mt-2 font-medium">Subscription update is processing.</div>
+              </>
+            )}
+          </div>
+        ) : null}
+      </form>
+      {upgradeOpen ? (
+        <UpgradeSubscriptionModal
+          open={upgradeOpen}
+          onClose={() => setUpgradeOpen(false)}
+          gameId={gameId}
+          currentCcu={currentCcu}
+          activeModules={activeModules}
+          supportContactName={supportContactName}
+          supportContactEmail={supportContactEmail}
+          onPendingUpgradeStart={(pending) => {
+            setPendingUpgrade({
+              targetPlanId: pending.targetPlanId,
+              targetProductId: pending.targetProductId,
+              selectedCcu: pending.selectedCcu,
+              selectedModules: pending.selectedModules,
+              currency: pending.currency,
+              billingStateSynchronized: false,
+              latestSubscriptionUpdateCharge: null,
+            });
+            showDashboardToast({
+              tone: 'success',
+              message: 'Subscription update requested.',
+            });
+          }}
+        />
+      ) : null}
+    </>
   );
 }

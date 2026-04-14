@@ -16,6 +16,12 @@ interface BackendDeveloper {
   image?: string;
 }
 
+export interface BackendDeveloperProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
 interface BackendSessionResponse {
   jwt: string;
   developer?: BackendDeveloper;
@@ -346,10 +352,19 @@ async function getServerBackendAccessToken() {
   const accessToken = cookieStore.get(backendAccessTokenCookieName)?.value;
   const expiresAt = Number(cookieStore.get(backendAccessExpiryCookieName)?.value ?? 0) || null;
 
-  if (!accessToken || !expiresAt) {
-    throw new BackendAuthError('AUTH_TOKEN_MISSING', 'Your dashboard session expired. Sign in again.');
+  if (accessToken && expiresAt && !isBackendAccessTokenStale(expiresAt)) {
+    return accessToken;
   }
-  return accessToken;
+
+  try {
+    const refreshedSession = await refreshServerBackendSession();
+    return refreshedSession.jwt;
+  } catch (error) {
+    if (error instanceof BackendAuthError) {
+      throw error;
+    }
+    throw new BackendAuthError('AUTH_UNAUTHORIZED', 'Your dashboard session expired. Sign in again.');
+  }
 }
 
 async function fetchWithBackendToken(path: string, accessToken: string, init?: RequestInit) {
@@ -406,3 +421,36 @@ export async function backendFetch(path: string, init?: RequestInit) {
 type RequestCookiesLike = {
   get(name: string): { value: string } | undefined;
 };
+
+function readJwtStringClaim(claims: Record<string, unknown>, key: string) {
+  const value = claims[key];
+  return typeof value === 'string' ? value : '';
+}
+
+export async function getServerBackendDeveloperProfile(): Promise<BackendDeveloperProfile | null> {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get(backendAccessTokenCookieName)?.value;
+
+    if (!accessToken) {
+      return null;
+    }
+
+    const claims = decodeJwt(accessToken) as Record<string, unknown>;
+    const id = readJwtStringClaim(claims, 'sub');
+    const name = readJwtStringClaim(claims, 'name');
+    const email = readJwtStringClaim(claims, 'email');
+
+    if (!id && !name && !email) {
+      return null;
+    }
+
+    return {
+      id,
+      name,
+      email,
+    };
+  } catch {
+    return null;
+  }
+}

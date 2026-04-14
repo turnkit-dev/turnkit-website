@@ -76,6 +76,57 @@ function cloneJson(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function normalizeOperationIds(paths) {
+  const operations = [];
+
+  for (const [pathKey, pathItem] of Object.entries(paths ?? {})) {
+    if (!isPlainObject(pathItem)) {
+      continue;
+    }
+
+    for (const method of HTTP_METHODS) {
+      const operation = pathItem[method];
+      if (isPlainObject(operation)) {
+        operations.push({ pathKey, method, operation });
+      }
+    }
+  }
+
+  const existingIds = new Set(
+    operations.map(({ operation }) => operation.operationId).filter((id) => typeof id === "string"),
+  );
+  const assignedIds = new Set();
+
+  for (const { operation } of operations) {
+    if (typeof operation.operationId !== "string") {
+      continue;
+    }
+
+    const originalId = operation.operationId;
+    const suffixMatch = /^(.*)_([1-9]\d*)$/.exec(originalId);
+
+    let preferredId = originalId;
+    if (suffixMatch) {
+      const baseId = suffixMatch[1];
+      if (baseId && !existingIds.has(baseId) && !assignedIds.has(baseId)) {
+        preferredId = baseId;
+      }
+    }
+
+    let finalId = preferredId;
+    if (assignedIds.has(finalId)) {
+      let index = 1;
+      while (assignedIds.has(`${preferredId}_${index}`)) {
+        index += 1;
+      }
+      finalId = `${preferredId}_${index}`;
+    }
+
+    operation.operationId = finalId;
+    assignedIds.add(finalId);
+  }
+}
+
 const sanitized = cloneJson(spec);
 const sanitizedPaths = {};
 const usedTags = new Set();
@@ -111,6 +162,7 @@ for (const [pathKey, pathItem] of Object.entries(sanitized.paths ?? {})) {
 }
 
 sanitized.paths = sanitizedPaths;
+normalizeOperationIds(sanitized.paths);
 sanitized.servers = [
   {
     url: PROD_SERVER_URL,

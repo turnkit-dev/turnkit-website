@@ -2,7 +2,12 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { SignInButtons } from '@/components/auth-buttons';
 import { getAuthSession } from '@/lib/auth';
-import { backendAccessTokenCookieName, buildSignInPath } from '@/lib/backend-auth';
+import {
+  backendAccessTokenCookieName,
+  backendAccessExpiryCookieName,
+  buildSignInPath,
+  isBackendAccessTokenStale,
+} from '@/lib/backend-auth';
 
 export default async function SignInPage({
   searchParams,
@@ -12,13 +17,15 @@ export default async function SignInPage({
   const [session, cookieStore, params] = await Promise.all([getAuthSession(), cookies(), searchParams]);
   const callbackPath = params.callbackUrl?.startsWith('/') ? params.callbackUrl : undefined;
   const backendAccessToken = cookieStore.get(backendAccessTokenCookieName)?.value;
+  const backendAccessExpiresAt = Number(cookieStore.get(backendAccessExpiryCookieName)?.value ?? 0) || null;
   const requiresFreshSignIn = params.reauth === '1';
+  const backendTokenStale = isBackendAccessTokenStale(backendAccessExpiresAt);
 
-  if (session && backendAccessToken) {
+  if (session && backendAccessToken && !backendTokenStale) {
     redirect(callbackPath ?? '/games');
   }
 
-  if (session && !requiresFreshSignIn) {
+  if (session && (!backendAccessToken || backendTokenStale) && !requiresFreshSignIn) {
     redirect(callbackPath ? `/auth/post-login?callbackUrl=${encodeURIComponent(callbackPath)}` : '/auth/post-login');
   }
   if (params.error || params.details) {

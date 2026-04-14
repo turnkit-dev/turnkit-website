@@ -109,7 +109,6 @@ export interface UsageBillingSnapshot {
   burstUsedAt: string;
   burstUsedThisMonth: boolean;
   autoUpgrade: boolean;
-  upgradeHref: string;
 }
 
 export interface GameDashboard {
@@ -332,7 +331,6 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
       burstUsedAt: response.billing.burstUsedAt ?? '',
       burstUsedThisMonth: response.billing.burstUsedThisMonth ?? false,
       autoUpgrade: response.billing.autoUpgrade,
-      upgradeHref: '#',
     },
     activeModules: response.modules.activeModules,
   };

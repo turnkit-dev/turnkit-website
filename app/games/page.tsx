@@ -1,23 +1,32 @@
 import Link from 'next/link';
 import { unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { BillingReturnToast } from '@/components/billing-return-toast';
 import { NewGameModal, DeleteGameButton } from '@/components/dashboard-game-controls';
 import { CopyButton } from '@/components/dashboard-ui';
 import { DashboardPageFrame } from '@/components/dashboard-shell';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
 import { formatRelativeTime, listGames } from '@/lib/dashboard';
 
-export default async function GamesPage() {
+export default async function GamesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ billing?: string }>;
+}) {
   noStore();
-  const games = await listGames().catch((error) => {
-    if (error instanceof BackendAuthError) {
-      redirect(buildSignInPath('/games'));
-    }
-    throw error;
-  });
+  const [query, games] = await Promise.all([
+    searchParams,
+    listGames().catch((error) => {
+      if (error instanceof BackendAuthError) {
+        redirect(buildSignInPath('/games'));
+      }
+      throw error;
+    }),
+  ]);
 
   return (
     <DashboardPageFrame>
+      <BillingReturnToast billingStatus={query.billing} />
       <div className="mx-auto max-w-[960px] px-5 py-10 md:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>

@@ -932,7 +932,7 @@
         ],
         "summary": "List all leaderboards",
         "description": "Retrieves all leaderboards for the current game key",
-        "operationId": "list_1",
+        "operationId": "list",
         "responses": {
           "200": {
             "description": "OK",
@@ -985,7 +985,7 @@
         ],
         "summary": "Create a new leaderboard",
         "description": "Creates a new leaderboard with the specified configuration. Available enum values: sortOrder: ASC (for time-based where lower is better), DESC (for points where higher is better); scoreStrategy: BEST_ONLY (keeps only best score per player), MULTIPLE_ENTRIES (stores all submissions), CUMULATIVE (sums all submissions); resetFrequency: NONE, DAILY, WEEKLY, MONTHLY",
-        "operationId": "create_1",
+        "operationId": "create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1235,7 +1235,7 @@
         ],
         "summary": "List client keys",
         "description": "Retrieves all active client keys for the specified game key",
-        "operationId": "list_2",
+        "operationId": "list",
         "parameters": [
           {
             "name": "gameKeyId",
@@ -1364,14 +1364,14 @@
         }
       }
     },
-    "/v1/dev/dashboard/{gameKeyId}/upgrade": {
+    "/v1/dev/dashboard/{gameKeyId}/upgrade/confirm": {
       "post": {
         "tags": [
           "Dev — Dashboard"
         ],
-        "summary": "Get upgrade checkout URL",
-        "description": "Generates a Lemon Squeezy checkout URL for upgrading to a paid tier",
-        "operationId": "getCheckoutUrl",
+        "summary": "Confirm upgrade",
+        "description": "Confirms an upgrade after the frontend shows the proration preview",
+        "operationId": "confirmUpgrade",
         "parameters": [
           {
             "name": "gameKeyId",
@@ -1383,16 +1383,96 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeCheckoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/UpgradeConfirmResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/dashboard/{gameKeyId}/upgrade/checkout": {
+      "post": {
+        "tags": [
+          "Dev — Dashboard"
+        ],
+        "summary": "Create upgrade checkout",
+        "description": "Creates a checkout for new subscriptions or a proration preview for existing subscriptions",
+        "operationId": "createUpgradeCheckout",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeCheckoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpgradeCheckoutResponse"
                 }
               }
             }
@@ -1950,7 +2030,7 @@
         "tags": [
           "Player Auth"
         ],
-        "summary": "Request an OTP for a player email. Rate limited: 5 per 10 minutes.",
+        "summary": "Request an OTP for a player email. Rate limited: 3 per 10 minutes.",
         "operationId": "requestOtp",
         "parameters": [
           {
@@ -2016,7 +2096,7 @@
         ],
         "summary": "Delete leaderboard",
         "description": "Permanently deletes a leaderboard and all its scores",
-        "operationId": "delete_1",
+        "operationId": "delete",
         "parameters": [
           {
             "name": "slug",
@@ -2069,7 +2149,7 @@
         ],
         "summary": "Update leaderboard display name",
         "description": "Updates only the display name of an existing leaderboard",
-        "operationId": "update_1",
+        "operationId": "update",
         "parameters": [
           {
             "name": "slug",
@@ -3095,68 +3175,20 @@
       "Response": {
         "type": "object",
         "properties": {
-          "id": {
+          "entityId": {
             "type": "string",
             "format": "uuid"
           },
-          "slug": {
+          "id": {
             "type": "string"
           },
-          "maxPlayers": {
-            "type": "integer",
-            "format": "int32"
+          "url": {
+            "type": "string"
           },
-          "turnEnforcement": {
-            "type": "string",
-            "enum": [
-              "ROUND_ROBIN",
-              "FREE"
-            ]
-          },
-          "ignoreAllOwnership": {
-            "type": "boolean"
-          },
-          "votingEnabled": {
-            "type": "boolean"
-          },
-          "votingMode": {
-            "type": "string",
-            "enum": [
-              "SYNC",
-              "ASYNC"
-            ]
-          },
-          "votesRequired": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "votesToFail": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "failAction": {
-            "type": "string",
-            "enum": [
-              "SKIP_TURN",
-              "END_GAME"
-            ]
-          },
-          "matchTimeoutMinutes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "turnTimeoutSeconds": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "waitReconnectSeconds": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lists": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ListConfigResponse"
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             }
           },
           "createdAt": {
@@ -3166,35 +3198,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
-          }
-        }
-      },
-      "ListConfigResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "tag": {
-            "type": "string"
-          },
-          "ownerSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          "visibleToSlots": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         }
       },
@@ -3272,6 +3275,12 @@
               "$ref": "#/components/schemas/ListConfigRequest"
             },
             "minItems": 1
+          },
+          "trackedStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackedStatRequest"
+            }
           }
         },
         "required": [
@@ -3314,6 +3323,62 @@
           "ownerSlots",
           "tag",
           "visibleToSlots"
+        ]
+      },
+      "TrackedStatRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dataType": {
+            "type": "string",
+            "enum": [
+              "DOUBLE",
+              "STRING",
+              "LIST_STRING"
+            ]
+          },
+          "initialValue": {},
+          "scope": {
+            "type": "string",
+            "enum": [
+              "PER_PLAYER",
+              "MATCH"
+            ]
+          },
+          "syncTo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatSyncDestinationRequest"
+            }
+          }
+        },
+        "required": [
+          "dataType",
+          "name",
+          "scope"
+        ]
+      },
+      "StatSyncDestinationRequest": {
+        "type": "object",
+        "properties": {
+          "destinationType": {
+            "type": "string",
+            "enum": [
+              "LEADERBOARD",
+              "WEBHOOK"
+            ]
+          },
+          "destinationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "destinationId",
+          "destinationType"
         ]
       },
       "SmtpConfigDto": {
@@ -3462,6 +3527,12 @@
               "$ref": "#/components/schemas/ListConfigRequest"
             },
             "minItems": 1
+          },
+          "trackedStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackedStatRequest"
+            }
           }
         },
         "required": [
@@ -3488,6 +3559,12 @@
           "gameKey": {
             "$ref": "#/components/schemas/GameKeyDto"
           },
+          "leaderboards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardDto"
+            }
+          },
           "relayConfigs": {
             "type": "array",
             "items": {
@@ -3510,6 +3587,41 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "LeaderboardDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "type": "string"
+          },
+          "scoreStrategy": {
+            "type": "string"
+          },
+          "minScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "resetFrequency": {
+            "type": "string"
+          },
+          "archiveOnReset": {
+            "type": "boolean"
+          },
+          "nextResetAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -3566,6 +3678,12 @@
             "items": {
               "$ref": "#/components/schemas/RelayListConfigDto"
             }
+          },
+          "trackedStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackedStatDto"
+            }
           }
         }
       },
@@ -3591,6 +3709,41 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        }
+      },
+      "TrackedStatDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dataType": {
+            "type": "string"
+          },
+          "initialValue": {
+            "$ref": "#/components/schemas/JsonNode"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "syncTo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatSyncDestinationDto"
+            }
+          }
+        }
+      },
+      "JsonNode": {},
+      "StatSyncDestinationDto": {
+        "type": "object",
+        "properties": {
+          "destinationType": {
+            "type": "string"
+          },
+          "destinationId": {
+            "type": "string"
           }
         }
       },
@@ -3871,6 +4024,140 @@
             "type": "string"
           },
           "displayName": {
+            "type": "string"
+          }
+        }
+      },
+      "UpgradeCheckoutRequest": {
+        "type": "object",
+        "properties": {
+          "selectedCcu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selectedModules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "LEADERBOARDS",
+                "PLAYER_STORE",
+                "MATCHMAKING",
+                "TURN_RELAY"
+              ]
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "selectedCcu",
+          "selectedModules"
+        ]
+      },
+      "UpgradeConfirmResponse": {
+        "type": "object",
+        "properties": {
+          "flowType": {
+            "type": "string"
+          },
+          "optimistic": {
+            "type": "boolean"
+          },
+          "subscriptionUpdateRequested": {
+            "type": "boolean"
+          },
+          "checkoutUrl": {
+            "type": "string"
+          },
+          "checkoutSessionId": {
+            "type": "string"
+          },
+          "subscriptionId": {
+            "type": "string"
+          },
+          "targetProductId": {
+            "type": "string"
+          },
+          "targetPlanId": {
+            "type": "string"
+          },
+          "targetPriceInCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "UpgradeCheckoutResponse": {
+        "type": "object",
+        "properties": {
+          "checkoutUrl": {
+            "type": "string"
+          },
+          "checkoutSessionId": {
+            "type": "string"
+          },
+          "subscriptionUpdated": {
+            "type": "boolean"
+          },
+          "flowType": {
+            "type": "string"
+          },
+          "requiresConfirmation": {
+            "type": "boolean"
+          },
+          "subscriptionId": {
+            "type": "string"
+          },
+          "currentPlanId": {
+            "type": "string"
+          },
+          "currentPlanName": {
+            "type": "string"
+          },
+          "currentPriceInCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetPlanId": {
+            "type": "string"
+          },
+          "targetPlanName": {
+            "type": "string"
+          },
+          "targetPriceInCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estimatedProrationCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estimatedChargeTodayCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estimatedCreditTodayCents": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "billingPeriodStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "billingPeriodEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "estimateIsExact": {
+            "type": "boolean"
+          },
+          "targetProductId": {
+            "type": "string"
+          },
+          "currency": {
             "type": "string"
           }
         }
@@ -4589,6 +4876,55 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          "latestSubscriptionUpdateCharge": {
+            "$ref": "#/components/schemas/BillingChargeSummary"
+          }
+        }
+      },
+      "BillingChargeSummary": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "subscriptionId": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "paid": {
+            "type": "boolean"
+          },
+          "totalAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "subtotalAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "taxAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "billingReason": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paidAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

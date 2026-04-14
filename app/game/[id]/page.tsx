@@ -15,7 +15,8 @@ import {
 import { DeleteClientKeyButton, DeleteGameButton, GeneratedClientKeyPrompt, NewClientKeyModal } from '@/components/dashboard-game-controls';
 import { GameDashboardShell } from '@/components/dashboard-shell';
 import { CopyButton } from '@/components/dashboard-ui';
-import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
+import { getAuthSession } from '@/lib/auth';
+import { BackendAuthError, buildSignInPath, getServerBackendDeveloperProfile } from '@/lib/backend-auth';
 import { formatRelativeTime, getGameDashboard, listGames, MissingGameKeyError } from '@/lib/dashboard';
 
 const sections = [
@@ -115,7 +116,12 @@ export default async function GameDashboardPage({
 }) {
   noStore();
   const [{ id }, query] = await Promise.all([params, searchParams]);
-  const [game, games] = await Promise.all([getGameDashboard(id), listGames()]).catch((error) => {
+  const [game, games, developerProfile, authSession] = await Promise.all([
+    getGameDashboard(id),
+    listGames(),
+    getServerBackendDeveloperProfile(),
+    getAuthSession(),
+  ]).catch((error) => {
     if (error instanceof BackendAuthError) {
       redirect(buildSignInPath(`/game/${id}`));
     }
@@ -283,7 +289,14 @@ export default async function GameDashboardPage({
             )}
           </div>
         </div>
-        <BillingAutoUpgradeForm gameId={game.id} autoUpgrade={game.usageBilling.autoUpgrade} upgradeHref={game.usageBilling.upgradeHref} />
+        <BillingAutoUpgradeForm
+          gameId={game.id}
+          autoUpgrade={game.usageBilling.autoUpgrade}
+          currentCcu={game.usageBilling.currentPlanCcu}
+          activeModules={game.activeModules}
+          supportContactName={authSession?.user?.name ?? developerProfile?.name ?? ''}
+          supportContactEmail={authSession?.user?.email ?? developerProfile?.email ?? ''}
+        />
       </SectionCard>
     </GameDashboardShell>
   );
