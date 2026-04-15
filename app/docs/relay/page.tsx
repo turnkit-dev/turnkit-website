@@ -36,6 +36,10 @@ export default function RelayDocsPage() {
         game ends or hands off directly to{' '}
         <Link href="/docs/leaderboards" className="text-accent transition hover:text-text">
           Leaderboards
+        </Link>{' '}
+        or a{' '}
+        <Link href="/docs/relay-stats-and-leaderboards" className="text-accent transition hover:text-text">
+          Relay Stats &amp; Leaderboards
         </Link>
         .
       </p>
@@ -88,7 +92,11 @@ export default function RelayDocsPage() {
         <InfoCard title="4. Sign The Result">
           <p className="text-[13px] leading-[1.6] text-muted">
             When the match ends, Relay produces a signed result your backend can trust for rewards, progression, or leaderboard
-            updates.
+            updates. You can route those results through{' '}
+            <Link href="/docs/relay-stats-and-leaderboards" className="text-accent transition hover:text-text">
+              Relay Stats &amp; Leaderboards
+            </Link>
+            .
           </p>
         </InfoCard>
       </div>
@@ -181,6 +189,10 @@ export default function RelayDocsPage() {
       <p className="max-w-[760px] text-base leading-[1.7] text-muted">
         Integrate from Unity, Godot, or any engine over REST and WebSocket. For wire format, message types, reconnect flow, and protocol
         details, continue to the{' '}
+        <Link href="/docs/unity-client" className="text-accent transition hover:text-text">
+          Unity client API reference
+        </Link>
+        , the{' '}
         <Link href="/docs/websocket" className="text-accent transition hover:text-text">
           WebSocket protocol docs
         </Link>

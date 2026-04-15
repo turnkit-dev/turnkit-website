@@ -9,8 +9,10 @@ import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/
 const sections = [
   { href: '#top', label: 'Top' },
   { href: '#quick', label: 'Quick Snippets' },
-  { href: '#code', label: 'Full Example: Turns, Voting, Json' },
-  { href: '#secondCode', label: 'Full Example: Hand Hiding, Ownership' },
+  { href: '#code', label: 'Full Relay Example: Turns, Voting, Json' },
+  { href: '#secondCode', label: 'Full Relay Example: Hand Hiding, Ownership' },
+  { href: '#leaderboard-code', label: 'Full Leaderboard Example: Submit and get results' },
+  { href: '#relay-to-leaderboard-code', label: 'Full Leaderboard Example: Relay synced authorative submission' }
 ];
 
 const quickSnippetCode = `// Find Match
@@ -228,6 +230,158 @@ namespace TurnKit.Example
 }
 `;
 
+const leaderboardCode = `using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace TurnKit.Example
+{
+    public class LeaderboardControllerExample : MonoBehaviour
+    {
+        [Header("Input")] [SerializeField] private InputField playerIdText;
+        [SerializeField] private InputField scoreInput;
+
+        [Header("Leaderboard")] [SerializeField]
+        private Transform content;
+
+        [SerializeField] private LeaderboardEntryViewExample entryPrefab;
+
+        private readonly List<LeaderboardEntryViewExample> _entries = new();
+        
+        public async void OnSubmitScoreButton()
+        {
+            var name = playerIdText.text;
+            var score = double.TryParse(scoreInput.text, out var s) ? s : 0;
+            await Leaderboard.SubmitScore(name, score);
+            await RefreshTopScores();
+        }
+
+        public async void OnGetTopScoresButton()
+        {
+            await RefreshTopScores();
+        }
+
+        public async void OnGetPlayerRankAndSurroundingButton()
+        {
+            PlayerScore result = await Leaderboard.GetPlayerRank(playerIdText.text);
+            PopulateList(result.scores, result.startRank);
+        }
+        
+        public async void OnGetTopScoresAndPlayerRankButton()
+        {
+            CombinedScores result = await Leaderboard.GetCombined(playerIdText.text); // Can add more params like Leaderboard.GetCombined(playerNameInput.text, 10, 3, true, "new-admin-added-leaderboard");
+            PopulateList(result.topScores.scores);
+            PopulateList(result.playerScore.scores, result.playerScore.startRank, true);
+        }
+
+        private async Task RefreshTopScores()
+        {
+            var result = await Leaderboard.GetTopScores(playerIdText.text);
+            PopulateList(result.scores);
+        }
+
+        private void PopulateList(List<LeaderboardEntry> scores, long startRank = 1, bool skipDestroy = false)
+        {
+            if (!skipDestroy)
+            {
+                foreach (var e in _entries) Destroy(e.gameObject);
+                _entries.Clear();
+            }
+
+            for (int i = 0; i < scores.Count; i++)
+            {
+                var view = Instantiate(entryPrefab, content);
+                view.rankText.text = $"#{startRank + i}";
+                view.nameText.text = scores[i].n;
+                view.scoreText.text = scores[i].s.ToString("N0");
+                _entries.Add(view);
+            }
+        }
+    }
+}
+`;
+
+const relaySyncedLeaderboardCode = `using System.Collections.Generic;
+using TurnKit.Internal.ParrelSync;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace TurnKit.Example
+{
+    public class RelaySyncedLeaderboardControllerExample : MonoBehaviour
+    {
+        [Header("Input")] [SerializeField] private InputField playerIdText;
+        [SerializeField] private InputField scoreInput;
+        [SerializeField] private Text statusText;
+
+        [Header("Leaderboard")] [SerializeField]
+        private Transform content;
+
+        [SerializeField] private LeaderboardEntryViewExample entryPrefab;
+
+        private readonly List<LeaderboardEntryViewExample> _entries = new();
+        
+        private void Awake()
+        {
+#if UNITY_EDITOR
+            playerIdText.text = ClonesManager.IsClone() ? "player2" : "player1";
+#endif
+            Relay.OnMatchStarted += (_, _) => { statusText.text = "Game started"; };
+            Relay.OnMoveMade += (msg, _) => { ValidateStatChange(msg); };
+            Relay.OnGameEnded += (_) => { statusText.text = "Game ended"; };
+        }
+
+        private void ValidateStatChange(MoveMadeMessage msg)
+        {
+            bool isExampleValid = !(msg.statChanges.TryGet(ExampleConfig.Stats.Score, out var scoreChange) && scoreChange.Value < 0);
+            // add your game logic here to check if score is valid
+            // alternatively use msg.statChanges.allChanges or msg.statChanges.doubleChanges
+            Relay.Vote(msg.moveNumber, isExampleValid);
+        }
+
+        public async void OnFindMatch()
+        {
+            statusText.text = "Waiting for opponent, connect with another client";
+            await Relay.MatchWithAnyone(playerIdText.text, ExampleConfig.Slug);
+        }
+        
+        public void OnAddRelayScoreButton()
+        {
+            Relay.Stat(ExampleConfig.Stats.Score).ForPlayer(Relay.MySlot).Add(double.Parse(scoreInput.text));
+            // this stat is connected to Leaderboards via config and executes Leaderboard.SubmitScore but on backend and is verified by votes of other players in this match
+            // go to asset menu TurnKit > Configuration > ExampleConfig to see connection, can use same way for your own webhooks to your backend or similar
+            Relay.EndMyTurn();
+        }
+
+        public void OnEndRelayMatch()
+        {
+            Relay.EndGame();
+            statusText.text = "Click end game on other client too";
+        }
+
+        public async void OnShowTopScores()
+        {
+            statusText.text = "Game ended";
+            var result = await Leaderboard.GetTopScores(playerIdText.text);
+            var scores = result.scores;
+            
+            foreach (var e in _entries) Destroy(e.gameObject);
+            _entries.Clear();
+
+            for (int i = 0; i < scores.Count; i++)
+            {
+                var view = Instantiate(entryPrefab, content);
+                view.rankText.text = $"#{1 + i}";
+                view.nameText.text = scores[i].n;
+                view.scoreText.text = scores[i].s.ToString("N0");
+                _entries.Add(view);
+            }
+        }
+    }
+}
+`;
+
 const examplesDescription =
   'Browse real TurnKit Unity snippets and full game scripts, then copy the patterns to ship your own multiplayer faster.';
 
@@ -320,7 +474,7 @@ export default function ExamplesPage() {
           </section>
 
           <section id="secondCode" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example: Turns, Voting, Json</div>
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Relay Example: Turns, Voting, Json</div>
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
               Unity Tic Tac Toe game.
             </h2>
@@ -332,7 +486,7 @@ export default function ExamplesPage() {
           </section>
 
           <section id="code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
-            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Example: Hand Hiding, Ownership</div>
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Relay Example: Hand Hiding, Ownership</div>
             <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
               Unity Rock Paper Scissor game.
             </h2>
@@ -340,6 +494,31 @@ export default function ExamplesPage() {
               In addition to features covered in previous example here is manipulation of server lists, showcasing hand hiding, ownership of lists
             </p>
             <CodeBlock code={rockPaperCode} language="csharp" />
+          </section>
+
+          <section id="leaderboard-code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Leaderboard Example: Submit and get results</div>
+            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
+              Client submit and get results.
+            </h2>
+            <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
+                This code works in single player as well, features getting and submitting score (can be optionally disabled in config).
+            </p>
+            <CodeBlock code={leaderboardCode} language="csharp" />
+          </section>
+
+          <section id="relay-to-leaderboard-code" className="border-t border-border py-[clamp(32px,5vw,48px)]">
+            <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Full Leaderboard Example: Relay synced authorative submission</div>
+            <h2 className="mb-3 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">
+              Results from relay match are submitted server side.
+            </h2>
+            <p className="mb-8 max-w-[620px] text-[15px] leading-[1.7] text-muted">
+              Leaderboards are synced to relay results for authorative (voted by other players in that relay match) result submission. {' '}
+              <Link href="/docs/relay-stats-and-leaderboards#setting-up-tracked-stats" className="text-accent transition hover:text-text">
+                See how to set it up.
+              </Link>
+            </p>
+            <CodeBlock code={relaySyncedLeaderboardCode} language="csharp" />
           </section>
 
         </main>

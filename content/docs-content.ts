@@ -39,6 +39,7 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'Features',
     links: [
+      { href: '/docs/relay-stats-and-leaderboards', label: 'Relay Stats & Leaderboards' },
       { href: '/docs/player-authentication-modes', label: 'Player Authentication Modes' },
     ],
   },
@@ -49,6 +50,7 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'API Reference',
     links: [
+      { href: '/docs/unity-client', label: 'Unity Client API' },
       { href: '/docs/api', label: 'REST API' },
       { href: '/docs/websocket', label: 'WebSocket Protocol' },
     ],
@@ -133,6 +135,21 @@ export const leaderboardsPageMeta: DocsPageMeta = {
   ],
 };
 
+export const relayIntegrationsPageMeta: DocsPageMeta = {
+  title: 'Relay Stats & Leaderboards',
+  description:
+    'Connect TurnKit Relay match results to leaderboards or webhooks so rankings, Discord bots, and backend flows update automatically.',
+  path: '/docs/relay-stats-and-leaderboards',
+  eyebrow: 'Features',
+  breadcrumbLabel: 'Relay Stats & Leaderboards',
+  toc: [
+    { href: '#quick-overview', label: 'Quick Overview' },
+    { href: '#setting-up-tracked-stats', label: 'Setting Up Tracked Stats' },
+    { href: '#adding-webhooks', label: 'Adding Webhooks' },
+    { href: '#example-webhook-payload', label: 'Example Webhook Payload' },
+  ],
+};
+
 export const playerAuthenticationModesPageMeta: DocsPageMeta = {
   title: 'Player Authentication Modes',
   description:
@@ -157,6 +174,25 @@ export const apiPageMeta: DocsPageMeta = {
   toc: [
     { href: '#overview', label: 'Overview' },
     { href: '#reference', label: 'Reference' },
+  ],
+};
+
+export const unityClientPageMeta: DocsPageMeta = {
+  title: 'Unity Client API Reference',
+  description:
+    'Browse the full TurnKit Unity client runtime API for Relay, lists, stats, voting, leaderboards, and player auth.',
+  path: '/docs/unity-client',
+  eyebrow: 'API Reference',
+  breadcrumbLabel: 'Unity Client API',
+  toc: [
+    { href: '#getting-started', label: 'Getting Started' },
+    { href: '#connection-flow', label: 'Connection Flow' },
+    { href: '#core-relay-actions', label: 'Core Relay Actions' },
+    { href: '#lists-and-items', label: 'Lists & Items' },
+    { href: '#stats-and-leaderboards', label: 'Stats & Leaderboards' },
+    { href: '#player-and-session', label: 'Player & Session' },
+    { href: '#best-practices', label: 'Best Practices' },
+    { href: '#source-files', label: 'Source Files' },
   ],
 };
 

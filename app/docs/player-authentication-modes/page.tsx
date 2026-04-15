@@ -112,6 +112,13 @@ export default function PlayerAuthenticationModesPage() {
           </li>
         </ol>
       </div>
+      <p className="mb-10 max-w-[760px] text-base leading-[1.7] text-muted">
+        In Unity, the matching client-side calls are documented in the{' '}
+        <Link href="/docs/unity-client#player-and-session" className="text-accent transition hover:text-text">
+          Unity Client API reference
+        </Link>
+        .
+      </p>
       <div className="mb-10 rounded-[6px] border border-[rgba(47,156,235,0.24)] bg-[rgba(47,156,235,0.08)] px-5 py-4 text-[14px] leading-[1.7] text-text">
         OTP endpoints expect <InlineCode code="Content-Type: application/json" />. Default backend limits are currently 5 requests per
         10 minutes for <InlineCode code="/v1/client/auth/otp/request" /> and 10 requests per 10 minutes for{' '}

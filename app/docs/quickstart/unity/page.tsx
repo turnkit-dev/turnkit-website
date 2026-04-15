@@ -52,7 +52,6 @@ export default function UnityQuickstartPage() {
         and import it into your Unity project.
       </p>
       <p className="mb-10 text-text">2. In the editor pop up fill project name and continue to login. After login everything is generated and linked.</p>
-
       <h2 id="get-started-window" className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">
         Get Started Window
       </h2>
@@ -61,6 +60,14 @@ export default function UnityQuickstartPage() {
         for more control use the Unity menu at <InlineCode code="TurnKit/ParrelSync" />.
       </p>
       <p className="mb-5 text-text">4. Run the sample scene in two Unity editors.</p>
+
+      <p className="mb-10 max-w-[760px] text-base leading-[1.7] text-muted">
+        Power your game logic with the {' '}
+        <Link href="/docs/unity-client" className="text-accent transition hover:text-text">
+          Unity Client API reference
+        </Link>{' '}
+        . It provides everything you need for runtime method, including <InlineCode code="Relay.MatchWithAnyone()" language="csharp" />, plus built-in support for stats, lists, and leaderboards.
+      </p>
 
       <div className="mb-6 rounded-[6px] border border-[rgba(240,164,41,0.3)] bg-[rgba(240,164,41,0.08)] px-5 py-4 text-[14px] leading-[1.6]">
         <strong className="text-amber">Note:</strong> The client key is only shown on first creation. If you need a new one later,

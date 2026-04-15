@@ -135,24 +135,37 @@ export default function WebsocketDocsPage() {
         className="mb-6"
         language="json"
         code={`{
-  "type": "MOVE",
+  "type": "MOVE_MADE",
+  "actingPlayerId": "p1",
+  "moveNumber": 1,
   "json": {
-    "cardId": "c_17",
-    "targetLane": "discard"
+    "move": "alpha"
   },
-  "shouldEndMyTurn": true,
-  "actions": [
+  "changes": [
     {
-      "action": "MOVE",
-      "selector": "BY_ITEM_IDS",
-      "itemIds": ["c_17"],
-      "fromList": "hand",
-      "toList": "discard",
-      "repeat": 1,
-      "ignoreOwnership": false
+      "type": "MOVE",
+      "fromList": "deck",
+      "toList": "hand",
+      "items": [
+        {
+          "id": "card-1",
+          "slug": "fireball",
+          "creatorSlot": 1
+        }
+      ],
+      "actingPlayerSlot": "1"
+    }
+  ],
+  "statChanges": [
+    {
+      "statName": "score",
+      "playerId": "p1",
+      "oldValue": 0.0,
+      "value": 3.0
     }
   ]
-}`}
+}
+`}
       />
 
       <SubTitle id="action-variants">Action Variants</SubTitle>

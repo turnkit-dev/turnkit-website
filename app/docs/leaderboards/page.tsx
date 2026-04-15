@@ -56,6 +56,10 @@ export default function LeaderboardsDocsPage() {
         <Link href="/docs/relay" className="text-accent transition hover:text-text">
           TurnKit Relay
         </Link>{' '}
+        and{' '}
+        <Link href="/docs/relay-stats-and-leaderboards" className="text-accent transition hover:text-text">
+          Relay Stats &amp; Leaderboards
+        </Link>{' '}
         for authoritative scoring.
       </div>
       <p className="mb-8 max-w-[760px] text-base leading-[1.7] text-muted">
@@ -95,6 +99,23 @@ export default function LeaderboardsDocsPage() {
         <InfoCard title="Configuration">
           <p className="text-[13px] leading-[1.6] text-muted">
             Configure leaderboard behavior in full when creating it, including bounds, reset schedule, ordering, and entry rules.
+          </p>
+        </InfoCard>
+        <InfoCard title="Connect to Relay">
+          <p className="text-[13px] leading-[1.6] text-muted">
+            <Link 
+              href="/docs/relay-stats-and-leaderboards#setting-up-tracked-stats" 
+              className="text-accent transition hover:text-text"
+            >
+              Set up tracked stats
+            </Link>
+            {' '}and have them authoritatively submitted automatically at the end of a Relay match. See{' '}
+            <Link 
+              href="/examples#relay-to-leaderboard-code" 
+              className="text-accent transition hover:text-text"
+            >
+              full example here.
+            </Link>
           </p>
         </InfoCard>
       </div>

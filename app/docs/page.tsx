@@ -48,6 +48,11 @@ export default function DocsIndexPage() {
           href="/docs/quickstart/unity"
         />
         <DocsCard
+          title="Unity Client API"
+          description="Reference Relay, lists, stats, voting, auth, and leaderboard helpers in the Unity runtime."
+          href="/docs/unity-client"
+        />
+        <DocsCard
           title="REST API Quickstart"
           description="Create a game, generate your client key, and connect over REST or WebSocket."
           href="/docs/quickstart/rest-api"
@@ -61,6 +66,11 @@ export default function DocsIndexPage() {
           title="Leaderboards"
           description="Submit scores, query ranks, and build seasonal or all-time boards."
           href="/docs/leaderboards"
+        />
+        <DocsCard
+          title="Relay Stats & Leaderboards"
+          description="Connect Relay match results to leaderboards, webhooks, Discord bots, and backend workflows."
+          href="/docs/relay-stats-and-leaderboards"
         />
       </div>
 
