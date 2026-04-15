@@ -10,14 +10,28 @@ import {
   deleteRelayConfigAction,
   resetLeaderboardAction,
   rotateSignedSecretAction,
+  updateLeaderboardDisplayNameAction,
   updateAuthSettingsAction,
   updateBillingAutoUpgradeAction,
   updateRelayConfigAction,
 } from '@/app/actions/dashboard';
-import { CopyButton, Field, Modal, PendingButton, SectionButton, TextArea, showDashboardToast, useDashboardActionFeedback } from '@/components/dashboard-ui';
+import { CopyButton, Field, Modal, PendingButton, SectionButton, showDashboardToast, useDashboardActionFeedback } from '@/components/dashboard-ui';
 import { UpgradeSubscriptionModal } from '@/components/upgrade-subscription-modal';
 import { initialDashboardActionState } from '@/lib/dashboard-action-state';
-import type { AuthMode, FailAction, LeaderboardRecord, RelayConfigInput, RelayConfigRecord, RelayListConfigRecord, SmtpSettings, TurnEnforcement, VotingMode } from '@/lib/dashboard';
+import type {
+  AuthMode,
+  FailAction,
+  LeaderboardRecord,
+  LeaderboardResetFrequency,
+  LeaderboardScoreStrategy,
+  LeaderboardSortOrder,
+  RelayConfigInput,
+  RelayConfigRecord,
+  RelayListConfigRecord,
+  SmtpSettings,
+  TurnEnforcement,
+  VotingMode,
+} from '@/lib/dashboard';
 
 export function AuthSecurityForm({
   gameId,
@@ -153,6 +167,25 @@ export function AuthSecurityForm({
   );
 }
 
+const leaderboardSortOrderOptions: LeaderboardSortOrder[] = ['DESC', 'ASC'];
+const leaderboardScoreStrategyOptions: LeaderboardScoreStrategy[] = ['BEST_ONLY', 'MULTIPLE_ENTRIES', 'CUMULATIVE'];
+const leaderboardResetFrequencyOptions: LeaderboardResetFrequency[] = ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY'];
+
+function formatDateTime(value: string) {
+  if (!value) {
+    return 'Not scheduled';
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return 'Not scheduled';
+  }
+  return date.toLocaleString();
+}
+
+function formatLeaderboardMode(leaderboard: LeaderboardRecord) {
+  return `${leaderboard.sortOrder} / ${leaderboard.scoreStrategy}`;
+}
+
 export function NewLeaderboardModal({ gameId }: { gameId: string }) {
   const [open, setOpen] = useState(false);
   const [state, formAction] = useActionState(createLeaderboardAction, initialDashboardActionState);
@@ -166,11 +199,61 @@ export function NewLeaderboardModal({ gameId }: { gameId: string }) {
   return (
     <>
       <SectionButton onClick={() => setOpen(true)}>+ New Leaderboard</SectionButton>
-      <Modal open={open} onClose={() => setOpen(false)} title="New Leaderboard">
+      <Modal open={open} onClose={() => setOpen(false)} title="New Leaderboard" panelClassName="max-w-[760px]">
         <form action={formAction} className="space-y-5">
           <input type="hidden" name="gameId" value={gameId} />
-          <Field label="Slug" name="slug" required placeholder="weekly" />
-          <TextArea label="Description" name="description" placeholder="Optional details" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Slug" name="slug" required placeholder="weekly" />
+            <Field label="Display Name" name="displayName" required placeholder="Weekly Rankings" />
+            <label className="block">
+              <FieldLabel>Sort Order</FieldLabel>
+              <select
+                name="sortOrder"
+                defaultValue="DESC"
+                className="w-full rounded-[3px] border border-border2 bg-bg px-3 py-2.5 text-[14px] text-text outline-none transition focus:border-accent"
+              >
+                {leaderboardSortOrderOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block">
+              <FieldLabel>Score Strategy</FieldLabel>
+              <select
+                name="scoreStrategy"
+                defaultValue="BEST_ONLY"
+                className="w-full rounded-[3px] border border-border2 bg-bg px-3 py-2.5 text-[14px] text-text outline-none transition focus:border-accent"
+              >
+                {leaderboardScoreStrategyOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Field label="Min Score" name="minScore" type="number" required defaultValue="0" />
+            <Field label="Max Score" name="maxScore" type="number" required defaultValue="1000000" />
+            <label className="block md:col-span-2">
+              <FieldLabel>Reset Frequency</FieldLabel>
+              <select
+                name="resetFrequency"
+                defaultValue="NONE"
+                className="w-full rounded-[3px] border border-border2 bg-bg px-3 py-2.5 text-[14px] text-text outline-none transition focus:border-accent"
+              >
+                {leaderboardResetFrequencyOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
+            <input type="checkbox" name="archiveOnReset" />
+            Archive scores on automatic reset
+          </label>
           <div className="flex justify-end">
             <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Creating...">
               Create Leaderboard
@@ -182,37 +265,57 @@ export function NewLeaderboardModal({ gameId }: { gameId: string }) {
   );
 }
 
-export function ViewLeaderboardButton({ leaderboard }: { leaderboard: LeaderboardRecord }) {
+function LeaderboardSetting({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded border border-border2 bg-bg px-4 py-3">
+      <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-faint">{label}</div>
+      <div className="mt-1 text-[13px] text-text">{value}</div>
+    </div>
+  );
+}
+
+export function ViewLeaderboardButton({ gameId, leaderboard }: { gameId: string; leaderboard: LeaderboardRecord }) {
   const [open, setOpen] = useState(false);
+  const [state, formAction] = useActionState(updateLeaderboardDisplayNameAction, initialDashboardActionState);
+
+  useDashboardActionFeedback(state, {
+    onSuccess() {
+      setOpen(false);
+    },
+  });
 
   return (
     <>
-      <SectionButton onClick={() => setOpen(true)}>View</SectionButton>
-      <Modal open={open} onClose={() => setOpen(false)} title={`Leaderboard: ${leaderboard.slug}`}>
-        {leaderboard.topScores.length === 0 ? (
-          <div className="rounded border border-border2 bg-bg px-4 py-6 text-[14px] text-muted">No scores yet.</div>
-        ) : (
-          <div className="overflow-x-auto rounded border border-border">
-            <table className="min-w-full border-collapse">
-              <thead className="bg-surface text-[11px] uppercase tracking-[0.08em] text-faint">
-                <tr>
-                  <th className="border-b border-border px-4 py-3 text-left font-medium">Player</th>
-                  <th className="border-b border-border px-4 py-3 text-left font-medium">Score</th>
-                  <th className="border-b border-border px-4 py-3 text-left font-medium">Submitted</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboard.topScores.map((score) => (
-                  <tr key={`${score.playerName}-${score.submittedAt}`} className="bg-surface text-[13px]">
-                    <td className="border-b border-border px-4 py-3 text-text">{score.playerName}</td>
-                    <td className="border-b border-border px-4 py-3 text-text">{score.score}</td>
-                    <td className="border-b border-border px-4 py-3 text-muted">{score.submittedAt ? new Date(score.submittedAt).toLocaleDateString() : '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <SectionButton onClick={() => setOpen(true)}>View/Edit</SectionButton>
+      <Modal open={open} onClose={() => setOpen(false)} title={`Leaderboard: ${leaderboard.slug}`} panelClassName="max-w-[760px]">
+        <div className="space-y-5">
+          <form action={formAction} className="space-y-3 rounded border border-border2 bg-bg p-4">
+            <input type="hidden" name="gameId" value={gameId} />
+            <input type="hidden" name="leaderboardSlug" value={leaderboard.slug} />
+            <Field label="Display Name" name="displayName" defaultValue={leaderboard.displayName} required />
+            <div className="flex justify-end">
+              <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Saving...">
+                Save Display Name
+              </PendingButton>
+            </div>
+          </form>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <LeaderboardSetting label="Slug" value={leaderboard.slug} />
+            <LeaderboardSetting label="Score Mode" value={formatLeaderboardMode(leaderboard)} />
+            <LeaderboardSetting label="Min Score" value={String(leaderboard.minScore)} />
+            <LeaderboardSetting label="Max Score" value={String(leaderboard.maxScore)} />
+            <LeaderboardSetting label="Reset Frequency" value={leaderboard.resetFrequency} />
+            <LeaderboardSetting label="Archive On Reset" value={leaderboard.archiveOnReset ? 'Yes' : 'No'} />
+            <LeaderboardSetting label="Next Reset" value={formatDateTime(leaderboard.nextResetAt)} />
           </div>
-        )}
+        </div>
       </Modal>
     </>
   );
@@ -235,6 +338,11 @@ export function ResetLeaderboardButton({ gameId, leaderboardId }: { gameId: stri
         <form action={formAction} className="space-y-5">
           <input type="hidden" name="gameId" value={gameId} />
           <input type="hidden" name="leaderboardSlug" value={leaderboardId} />
+          <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
+            <input type="checkbox" name="archive" />
+            Archive current scores before reset
+          </label>
+          <Field label="Reset Label (Optional)" name="resetLabel" placeholder="Season 1 reset" />
           <div className="flex justify-end gap-3">
             <SectionButton onClick={() => setOpen(false)}>Cancel</SectionButton>
             <PendingButton

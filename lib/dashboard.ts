@@ -5,6 +5,9 @@ export type AuthMode = 'OPEN' | 'SIGNED' | 'TURNKIT_AUTH';
 export type TurnEnforcement = 'ROUND_ROBIN' | 'FREE';
 export type VotingMode = 'SYNC' | 'ASYNC';
 export type FailAction = 'SKIP_TURN' | 'END_GAME';
+export type LeaderboardSortOrder = 'ASC' | 'DESC';
+export type LeaderboardScoreStrategy = 'BEST_ONLY' | 'MULTIPLE_ENTRIES' | 'CUMULATIVE';
+export type LeaderboardResetFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
 
 export interface RelayListConfigRecord {
   id?: string;
@@ -72,10 +75,25 @@ export interface LeaderboardRecord {
   id: string;
   slug: string;
   displayName: string;
-  sortOrder: string;
-  scoreStrategy: string;
-  resetFrequency: string;
+  sortOrder: LeaderboardSortOrder;
+  scoreStrategy: LeaderboardScoreStrategy;
+  resetFrequency: LeaderboardResetFrequency;
+  minScore: number;
+  maxScore: number;
+  archiveOnReset: boolean;
+  nextResetAt: string;
   topScores: LeaderboardScore[];
+}
+
+export interface LeaderboardCreateInput {
+  slug: string;
+  displayName: string;
+  sortOrder: LeaderboardSortOrder;
+  scoreStrategy: LeaderboardScoreStrategy;
+  minScore: number;
+  maxScore: number;
+  resetFrequency: LeaderboardResetFrequency;
+  archiveOnReset: boolean;
 }
 
 export interface RelayConfigRecord {
@@ -172,9 +190,13 @@ interface ApiDashboardResponse {
     id: string;
     slug: string;
     displayName: string;
-    sortOrder: string;
-    scoreStrategy: string;
-    resetFrequency: string;
+    sortOrder: LeaderboardSortOrder;
+    scoreStrategy: LeaderboardScoreStrategy;
+    resetFrequency: LeaderboardResetFrequency;
+    minScore?: number;
+    maxScore?: number;
+    archiveOnReset?: boolean;
+    nextResetAt?: string;
   }>;
   usage: {
     currentCcu: number;
@@ -316,6 +338,10 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
       sortOrder: item.sortOrder,
       scoreStrategy: item.scoreStrategy,
       resetFrequency: item.resetFrequency,
+      minScore: item.minScore ?? 0,
+      maxScore: item.maxScore ?? 1000000,
+      archiveOnReset: item.archiveOnReset ?? false,
+      nextResetAt: item.nextResetAt ?? '',
       topScores: [],
     })),
     relayConfigs: relayConfigs.map(mapRelayConfig),
@@ -334,14 +360,6 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
     },
     activeModules: response.modules.activeModules,
   };
-}
-
-function titleizeSlug(slug: string) {
-  return slug
-    .split('-')
-    .filter(Boolean)
-    .map((part) => part[0]?.toUpperCase() + part.slice(1))
-    .join(' ');
 }
 
 function normalizeName(value: string) {
@@ -550,35 +568,61 @@ export async function rotateSignedSecret(gameId: string) {
   })) as ApiSecretResponse;
 }
 
-export async function createLeaderboard(gameId: string, slug: string, description: string) {
-  const normalizedSlug = normalizeSlug(slug);
+export async function createLeaderboard(gameId: string, input: LeaderboardCreateInput) {
+  const normalizedSlug = normalizeSlug(input.slug);
   if (!normalizedSlug) {
     throw new Error('Slug is required');
+  }
+
+  const displayName = normalizeName(input.displayName);
+  if (!displayName) {
+    throw new Error('Display name is required');
   }
 
   await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards`, {
     method: 'POST',
     body: JSON.stringify({
       slug: normalizedSlug,
-      displayName: description.trim() || titleizeSlug(normalizedSlug),
-      sortOrder: 'DESC',
-      scoreStrategy: 'BEST_ONLY',
-      minScore: 0,
-      maxScore: 1000000,
-      resetFrequency: 'NONE',
-      archiveOnReset: false,
+      displayName,
+      sortOrder: input.sortOrder,
+      scoreStrategy: input.scoreStrategy,
+      minScore: input.minScore,
+      maxScore: input.maxScore,
+      resetFrequency: input.resetFrequency,
+      archiveOnReset: input.archiveOnReset,
     }),
   });
 }
 
-export async function resetLeaderboard(gameId: string, leaderboardSlug: string) {
-  await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards/${leaderboardSlug}/reset`, {
+export async function updateLeaderboardDisplayName(gameId: string, leaderboardSlug: string, displayName: string) {
+  const normalizedDisplayName = normalizeName(displayName);
+  if (!normalizedDisplayName) {
+    throw new Error('Display name is required');
+  }
+
+  await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards/${encodeURIComponent(leaderboardSlug)}?displayName=${encodeURIComponent(normalizedDisplayName)}`, {
+    method: 'PATCH',
+  });
+}
+
+export async function resetLeaderboard(gameId: string, leaderboardSlug: string, options?: { archive?: boolean; resetLabel?: string }) {
+  const params = new URLSearchParams();
+  if (options?.archive) {
+    params.set('archive', 'true');
+  }
+  const resetLabel = options?.resetLabel?.trim();
+  if (resetLabel) {
+    params.set('resetLabel', resetLabel);
+  }
+  const query = params.toString();
+
+  await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards/${encodeURIComponent(leaderboardSlug)}/reset${query ? `?${query}` : ''}`, {
     method: 'POST',
   });
 }
 
 export async function deleteLeaderboard(gameId: string, leaderboardSlug: string) {
-  await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards/${leaderboardSlug}`, {
+  await apiFetch(`/v1/dev/game-keys/${gameId}/leaderboards/${encodeURIComponent(leaderboardSlug)}`, {
     method: 'DELETE',
   });
 }

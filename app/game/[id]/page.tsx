@@ -193,18 +193,24 @@ export default async function GameDashboardPage({
       </SectionCard>
 
       <SectionCard id="leaderboards" title="Leaderboards">
-        <DashboardTable headers={['Slug', 'Reset Frequency', 'Actions']} emptyMessage="No leaderboards yet.">
+        <DashboardTable headers={['Slug', 'Display Name', 'Score Mode', 'Reset', 'Actions']} emptyMessage="No leaderboards yet.">
           {game.leaderboards.map((leaderboard) => (
             <tr key={leaderboard.id}>
               <DashboardCell>
                 <span className="text-text">{leaderboard.slug}</span>
               </DashboardCell>
               <DashboardCell>
+                <span className="text-text">{leaderboard.displayName}</span>
+              </DashboardCell>
+              <DashboardCell>
+                <span className="text-muted">{`${leaderboard.sortOrder} / ${leaderboard.scoreStrategy}`}</span>
+              </DashboardCell>
+              <DashboardCell>
                 <span className="text-muted">{leaderboard.resetFrequency}</span>
               </DashboardCell>
               <DashboardCell>
                 <div className="flex flex-wrap items-center gap-2">
-                  <ViewLeaderboardButton leaderboard={leaderboard} />
+                  <ViewLeaderboardButton gameId={game.id} leaderboard={leaderboard} />
                   <ResetLeaderboardButton gameId={game.id} leaderboardId={leaderboard.slug} />
                   <DeleteLeaderboardButton gameId={game.id} leaderboardId={leaderboard.slug} />
                 </div>

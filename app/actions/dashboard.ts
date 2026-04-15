@@ -13,11 +13,15 @@ import {
   deleteRelayConfig,
   resetLeaderboard,
   rotateSignedSecret,
+  updateLeaderboardDisplayName,
   updateAuthSettings,
   updateBillingAutoUpgrade,
   updateRelayConfig,
   type AuthMode,
   type FailAction,
+  type LeaderboardResetFrequency,
+  type LeaderboardScoreStrategy,
+  type LeaderboardSortOrder,
   type SetupMode,
   type TurnEnforcement,
   type VotingMode,
@@ -51,6 +55,14 @@ function readInt(formData: FormData, key: string) {
     throw new Error(`${key} must be a number`);
   }
   return Math.trunc(value);
+}
+
+function readNumber(formData: FormData, key: string) {
+  const value = Number(readRequiredString(formData, key));
+  if (!Number.isFinite(value)) {
+    throw new Error(`${key} must be a number`);
+  }
+  return value;
 }
 
 function readRelayLists(formData: FormData) {
@@ -210,9 +222,22 @@ export async function rotateSignedSecretAction(_previousState: DashboardActionSt
 export async function createLeaderboardAction(_previousState: DashboardActionState, formData: FormData) {
   try {
     const gameId = readGameId(formData);
-    const slug = readRequiredString(formData, 'slug');
-    const description = readString(formData, 'description');
-    await createLeaderboard(gameId, slug, description);
+    const minScore = readNumber(formData, 'minScore');
+    const maxScore = readNumber(formData, 'maxScore');
+    if (minScore > maxScore) {
+      throw new Error('minScore cannot be greater than maxScore');
+    }
+
+    await createLeaderboard(gameId, {
+      slug: readRequiredString(formData, 'slug'),
+      displayName: readRequiredString(formData, 'displayName'),
+      sortOrder: readRequiredString(formData, 'sortOrder') as LeaderboardSortOrder,
+      scoreStrategy: readRequiredString(formData, 'scoreStrategy') as LeaderboardScoreStrategy,
+      minScore,
+      maxScore,
+      resetFrequency: readRequiredString(formData, 'resetFrequency') as LeaderboardResetFrequency,
+      archiveOnReset: readBoolean(formData, 'archiveOnReset'),
+    });
     refreshGamePaths(gameId);
     return successState('Leaderboard created.');
   } catch (error) {
@@ -220,11 +245,27 @@ export async function createLeaderboardAction(_previousState: DashboardActionSta
   }
 }
 
+export async function updateLeaderboardDisplayNameAction(_previousState: DashboardActionState, formData: FormData) {
+  try {
+    const gameId = readGameId(formData);
+    const leaderboardSlug = readRequiredString(formData, 'leaderboardSlug');
+    const displayName = readRequiredString(formData, 'displayName');
+    await updateLeaderboardDisplayName(gameId, leaderboardSlug, displayName);
+    refreshGamePaths(gameId);
+    return successState('Leaderboard name updated.');
+  } catch (error) {
+    return errorState(error, 'Failed to update leaderboard name.', `/game/${readGameId(formData)}`);
+  }
+}
+
 export async function resetLeaderboardAction(_previousState: DashboardActionState, formData: FormData) {
   try {
     const gameId = readGameId(formData);
     const leaderboardSlug = readRequiredString(formData, 'leaderboardSlug');
-    await resetLeaderboard(gameId, leaderboardSlug);
+    await resetLeaderboard(gameId, leaderboardSlug, {
+      archive: readBoolean(formData, 'archive'),
+      resetLabel: readString(formData, 'resetLabel'),
+    });
     refreshGamePaths(gameId);
     return successState('Leaderboard reset.');
   } catch (error) {
