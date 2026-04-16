@@ -45,7 +45,10 @@ export const docsNavSections: DocsNavSection[] = [
   },
   {
     title: 'Guides',
-    links: [{ href: '/docs/guides/turnkit-auth-brevo', label: 'TurnKit Auth with Brevo' }],
+    links: [
+      { href: '/docs/guides/free-unity-leaderboards', label: 'Free Unity Leaderboards' },
+      { href: '/docs/guides/turnkit-auth-brevo', label: 'TurnKit Auth with Brevo' },
+    ],
   },
   {
     title: 'API Reference',
@@ -58,6 +61,7 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'Resources',
     links: [
+      { href: '/leaderboard-options', label: 'Leaderboard Options for Unity Games' },
       { href: '/examples', label: 'Code Examples' },
       { href: '/turn-based-game-server-comparison-2026', label: 'Turn-Based Server Comparison' },
       { href: '/pricing', label: 'Pricing' },
@@ -232,5 +236,36 @@ export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
     { href: '#copy-smtp-credentials', label: 'Copy SMTP Credentials' },
     { href: '#configure-turnkit-auth', label: 'Configure TurnKit Auth' },
     { href: '#sender-note', label: 'Sender Note' },
+  ],
+};
+
+export const freeUnityLeaderboardsPageMeta: DocsPageMeta = {
+  title: 'Free Unity Leaderboards',
+  description:
+    'Set up RankDrop for Unity with a free self-hosted leaderboard stack, Docker backend, score submission, and pagination.',
+  path: '/docs/guides/free-unity-leaderboards',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Free Unity Leaderboards',
+  toc: [
+    { href: '#what-you-get', label: 'What You Get' },
+    { href: '#quick-start', label: 'Quick Start' },
+    { href: '#when-to-use-open-source', label: 'When to Use Open Source' },
+    { href: '#faster-alternatives', label: 'Faster Alternatives' },
+    { href: '#next-steps', label: 'Next Steps' },
+  ],
+};
+
+export const leaderboardOptionsPageMeta: DocsPageMeta = {
+  title: 'Leaderboard Options for Unity Games',
+  description:
+    'Compare open source RankDrop, the upcoming Unity Asset, and TurnKit Hosted SaaS so you can pick the right leaderboard path.',
+  path: '/leaderboard-options',
+  eyebrow: 'Resources',
+  breadcrumbLabel: 'Leaderboard Options',
+  toc: [
+    { href: '#quick-decision-guide', label: 'Quick Decision Guide' },
+    { href: '#detailed-comparison', label: 'Detailed Comparison' },
+    { href: '#honest-breakdown', label: 'Honest Breakdown' },
+    { href: '#ready-to-begin', label: 'Ready to Begin' },
   ],
 };
