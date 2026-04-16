@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { unityQuickstartPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -29,16 +29,8 @@ export default function UnityQuickstartPage() {
 
   return (
     <DocsShell meta={unityQuickstartPageMeta}>
-      <Script
-        id="unity-quickstart-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="unity-quickstart-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="unity-quickstart-article-schema" data={articleSchema} />
+      <JsonLd id="unity-quickstart-breadcrumb-schema" data={breadcrumbSchema} />
       <p className="mb-5 text-text">
         1. Download{' '}
         <a

@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     applyBackendSession(response, session);
     return response;
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Refresh failed' }, { status: 401 });
+    console.error('[AUTH_REFRESH_ERROR]', error);
+    return NextResponse.json({ error: 'Session refresh failed.' }, { status: 401 });
   }
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { unityClientPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -29,16 +29,8 @@ export default function UnityClientDocsPage() {
 
   return (
     <DocsShell meta={unityClientPageMeta}>
-      <Script
-        id="unity-client-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="unity-client-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="unity-client-article-schema" data={articleSchema} />
+      <JsonLd id="unity-client-breadcrumb-schema" data={breadcrumbSchema} />
 
       <p className="mb-8 max-w-[760px] text-base leading-[1.7] text-muted">
         This is the complete reference for the TurnKit Unity client runtime API. <InlineCode code="Relay" language="csharp" /> is the

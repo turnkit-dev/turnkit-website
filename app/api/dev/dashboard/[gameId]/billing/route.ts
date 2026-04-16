@@ -37,6 +37,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ gam
 
     return NextResponse.json(response);
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to load billing status' }, { status: 500 });
+    console.error('[BILLING_STATUS_ERROR]', error);
+    return NextResponse.json({ error: 'Failed to load billing status.' }, { status: 500 });
   }
 }

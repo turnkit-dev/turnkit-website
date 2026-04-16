@@ -10,10 +10,7 @@ export function DocsShell({ meta, children }: DocsShellProps) {
   return (
     <div className="mx-auto flex w-full max-w-[1400px] px-0">
       <aside className="hidden w-[260px] shrink-0 md:block">
-        <div
-          className="fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8"
-          style={{ left: 'max(0px, calc((100vw - 1400px) / 2))' }}
-        >
+        <div className="shell-left-offset fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8">
           <DocsSidebar currentPath={meta.path} />
         </div>
       </aside>
@@ -32,10 +29,7 @@ export function DocsShell({ meta, children }: DocsShellProps) {
         {children}
       </main>
       <aside className="hidden w-[220px] shrink-0 xl:block">
-        <div
-          className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
-          style={{ right: 'max(0px, calc((100vw - 1400px) / 2))' }}
-        >
+        <div className="shell-right-offset fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12">
           <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
           <div className="flex flex-col gap-2">
             {meta.toc.map((item) => (

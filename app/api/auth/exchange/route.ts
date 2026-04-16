@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     applyBackendSession(response, session);
     return response;
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Exchange failed' }, { status: 500 });
+    console.error('[AUTH_EXCHANGE_ERROR]', error);
+    return NextResponse.json({ error: 'Authentication exchange failed.' }, { status: 500 });
   }
 }

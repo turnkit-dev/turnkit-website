@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { leaderboardOptionsPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -70,16 +70,8 @@ export default function LeaderboardOptionsPage() {
 
   return (
     <DocsShell meta={leaderboardOptionsPageMeta}>
-      <Script
-        id="leaderboard-options-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="leaderboard-options-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="leaderboard-options-article-schema" data={articleSchema} />
+      <JsonLd id="leaderboard-options-breadcrumb-schema" data={breadcrumbSchema} />
 
       <p className="mb-6 max-w-[760px] text-base leading-[1.7] text-muted">
         RankDrop started as a completely free, open-source leaderboard backend. It has now grown into three clear options so you can

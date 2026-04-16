@@ -16,6 +16,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json(response);
   } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to start upgrade checkout' }, { status: 500 });
+    console.error('[UPGRADE_CHECKOUT_ERROR]', error);
+    return NextResponse.json({ error: 'Failed to start upgrade checkout.' }, { status: 500 });
   }
 }

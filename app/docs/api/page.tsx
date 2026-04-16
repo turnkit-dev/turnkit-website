@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { ScalarApiReference } from '@/components/scalar-api-reference';
 import { apiPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
@@ -32,16 +32,8 @@ export default function ApiDocsPage() {
 
   return (
     <DocsShell meta={apiPageMeta}>
-      <Script
-        id="api-reference-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="api-reference-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="api-reference-article-schema" data={articleSchema} />
+      <JsonLd id="api-reference-breadcrumb-schema" data={breadcrumbSchema} />
       <div id="overview" className="mb-8 space-y-4">
         <p className="text-base leading-[1.6] text-muted">
           REST API reference for TurnKit server endpoints. The reference below is rendered from the bundled OpenAPI document shipped with

@@ -71,10 +71,7 @@ export function GameDashboardShell({ games, currentGameId, sections, children }:
       <DashboardToaster />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 xl:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8"
-            style={{ left: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-left-offset fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8">
             <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.1em] text-faint">Games</div>
             <div className="flex flex-col gap-1">
               <Link href="/games" className="mb-2 rounded-[3px] px-3 py-2 text-[13px] text-muted transition hover:bg-surface hover:text-text">
@@ -98,10 +95,7 @@ export function GameDashboardShell({ games, currentGameId, sections, children }:
         </aside>
         <main className="min-w-0 flex-1 px-5 py-8 md:px-[clamp(24px,5vw,64px)] md:py-10 xl:max-w-[900px]">{children}</main>
         <aside className="hidden w-[220px] shrink-0 xl:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
-            style={{ right: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-right-offset fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12">
             <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
             <div className="flex flex-col gap-2">
               {sections.map((section) => (

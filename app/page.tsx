@@ -290,10 +290,7 @@ export default function HomePage() {
       </div>
       </main>
       <aside className="hidden w-[220px] shrink-0 xl:block">
-        <div
-          className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
-          style={{ right: 'max(0px, calc((100vw - 1180px) / 2))' }}
-        >
+        <div className="home-right-offset fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12">
           <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
           <div className="flex flex-col gap-2">
             {homeSections.map((section) => (

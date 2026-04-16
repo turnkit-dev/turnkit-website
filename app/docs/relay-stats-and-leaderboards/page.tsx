@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { relayIntegrationsPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -29,16 +29,8 @@ export default function RelayIntegrationsDocsPage() {
 
   return (
     <DocsShell meta={relayIntegrationsPageMeta}>
-      <Script
-        id="relay-stats-and-leaderboards-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="relay-stats-and-leaderboards-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="relay-stats-and-leaderboards-article-schema" data={articleSchema} />
+      <JsonLd id="relay-stats-and-leaderboards-breadcrumb-schema" data={breadcrumbSchema} />
 
       <p className="mb-8 max-w-[760px] text-base leading-[1.7] text-muted">
         Easily connect the results of your{' '}

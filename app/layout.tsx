@@ -1,7 +1,9 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
 import Script from 'next/script';
 import { DM_Mono, Syne } from 'next/font/google';
+import { JsonLd } from '@/components/json-ld';
 import { absoluteUrl, buildMetadata, siteDescription, siteName, siteUrl } from '@/lib/seo';
 
 const syne = Syne({
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Nenad Nikolic', url: siteUrl }],
   creator: 'Nenad Nikolic',
   publisher: siteName,
-  referrer: 'origin-when-cross-origin',
+  referrer: 'strict-origin-when-cross-origin',
   formatDetection: {
     telephone: false,
     address: false,
@@ -44,7 +46,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -98,28 +101,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="relative z-10 min-h-screen">
           {children}
         </main>
-        <Script
-          id="turnkit-organization-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
-        />
-        <Script
-          id="turnkit-website-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
-        />
-        <Script
-          id="turnkit-software-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(softwareSchema),
-          }}
-        />
-        <Script defer src="https://cloud.umami.is/script.js" data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7" />
+        <JsonLd id="turnkit-organization-schema" data={organizationSchema} />
+        <JsonLd id="turnkit-website-schema" data={websiteSchema} />
+        <JsonLd id="turnkit-software-schema" data={softwareSchema} />
+        <Script nonce={nonce} defer src="https://cloud.umami.is/script.js" data-website-id="91a29c3a-7aea-44d4-a0f2-d2d6060821b7" />
       </body>
     </html>
   );

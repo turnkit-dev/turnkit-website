@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { CodeBlock } from '@/components/code-block';
 import { DocsSidebar } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { MarketingShell } from '@/components/marketing-shell';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -406,22 +406,11 @@ export default function ExamplesPage() {
 
   return (
     <MarketingShell footerLayout="docs">
-      <Script
-        id="examples-article-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-      <Script
-        id="examples-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="examples-article-schema" data={articleSchema} />
+      <JsonLd id="examples-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 md:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8"
-            style={{ left: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-left-offset fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8">
             <DocsSidebar currentPath="/examples" />
           </div>
         </aside>
@@ -523,10 +512,7 @@ export default function ExamplesPage() {
 
         </main>
         <aside className="hidden w-[220px] shrink-0 xl:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
-            style={{ right: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-right-offset fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12">
             <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
             <div className="flex flex-col gap-2">
               {sections.map((section) => (

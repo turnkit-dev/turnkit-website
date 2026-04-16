@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { DocsShell } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { docsIndexPageMeta, docsNavSections } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildCollectionPageSchema, buildMetadata } from '@/lib/seo';
 
@@ -26,16 +26,8 @@ export default function DocsIndexPage() {
 
   return (
     <DocsShell meta={docsIndexPageMeta}>
-      <Script
-        id="docs-collection-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionPageSchema) }}
-      />
-      <Script
-        id="docs-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="docs-collection-schema" data={collectionPageSchema} />
+      <JsonLd id="docs-breadcrumb-schema" data={breadcrumbSchema} />
       <p id="start-here" className="mb-10 max-w-[760px] text-base leading-[1.7] text-muted">
         Start here if you are integrating TurnKit for the first time. This hub links the fastest quickstarts, the core Relay and
         Leaderboards docs, and the protocol reference Google should be able to crawl directly from one place.

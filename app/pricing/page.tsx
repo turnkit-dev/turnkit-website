@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { DocsSidebar } from '@/components/docs-shell';
+import { JsonLd } from '@/components/json-ld';
 import { landingContent } from '@/content/site-content';
 import { buildBreadcrumbSchema, buildMetadata, buildServiceSchema } from '@/lib/seo';
 
@@ -41,22 +41,11 @@ export default function PricingPage() {
 
   return (
     <MarketingShell footerLayout="docs">
-      <Script
-        id="pricing-service-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
-      />
-      <Script
-        id="pricing-breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      <JsonLd id="pricing-service-schema" data={serviceSchema} />
+      <JsonLd id="pricing-breadcrumb-schema" data={breadcrumbSchema} />
       <div className="mx-auto flex w-full max-w-[1400px] px-0 pt-[60px]">
         <aside className="hidden w-[260px] shrink-0 md:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8"
-            style={{ left: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-left-offset fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8">
             <DocsSidebar currentPath="/pricing" />
           </div>
         </aside>
@@ -145,10 +134,7 @@ export default function PricingPage() {
           </section>
         </main>
         <aside className="hidden w-[220px] shrink-0 xl:block">
-          <div
-            className="fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12"
-            style={{ right: 'max(0px, calc((100vw - 1400px) / 2))' }}
-          >
+          <div className="shell-right-offset fixed top-[60px] h-[calc(100vh-60px)] w-[220px] overflow-y-auto border-l border-border bg-bg px-6 py-12">
             <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">On This Page</div>
             <div className="flex flex-col gap-2">
               {pricingSections.map((section) => (

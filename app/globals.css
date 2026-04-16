@@ -29,6 +29,18 @@
                              linear-gradient(90deg, #1C2733 1px, transparent 1px);
 }
 
+@utility shell-left-offset {
+  left: max(0px, calc((100vw - 1400px) / 2));
+}
+
+@utility shell-right-offset {
+  right: max(0px, calc((100vw - 1400px) / 2));
+}
+
+@utility home-right-offset {
+  right: max(0px, calc((100vw - 1180px) / 2));
+}
+
 @layer base {
   h1, h2, h3, h4, p {
     margin: 0;

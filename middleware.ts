@@ -9,6 +9,58 @@ import {
   csrfCookieName,
 } from '@/lib/backend-auth';
 
+function buildContentSecurityPolicy(nonce: string) {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' https://cloud.umami.is`,
+    "script-src-attr 'none'",
+    "style-src 'self'",
+    "style-src-attr 'none'",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https:",
+    "connect-src 'self' https://cloud.umami.is https://api.resend.com",
+    "object-src 'none'",
+    "frame-src 'none'",
+    "manifest-src 'self'",
+    "worker-src 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    ...(process.env.NODE_ENV === 'production' ? ['upgrade-insecure-requests'] : []),
+  ].join('; ');
+}
+
+function applySecurityHeaders(response: NextResponse, contentSecurityPolicy: string) {
+  response.headers.set('Content-Security-Policy', contentSecurityPolicy);
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  if (process.env.NODE_ENV === 'production') {
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
+  return response;
+}
+
+function createForwardedResponse(request: NextRequest, nonce: string, contentSecurityPolicy: string) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  return applySecurityHeaders(response, contentSecurityPolicy);
+}
+
+function createRedirectResponse(destination: URL, contentSecurityPolicy: string) {
+  return applySecurityHeaders(NextResponse.redirect(destination), contentSecurityPolicy);
+}
+
+function isProtectedPath(request: NextRequest) {
+  return request.nextUrl.pathname === '/games' || request.nextUrl.pathname.startsWith('/games/') || request.nextUrl.pathname.startsWith('/game/');
+}
+
 function buildSignInUrl(request: NextRequest) {
   const url = new URL('/signin', request.url);
   const callbackUrl = `${request.nextUrl.pathname}${request.nextUrl.search}`;
@@ -18,7 +70,7 @@ function buildSignInUrl(request: NextRequest) {
   return url;
 }
 
-async function refreshBackendSessionIfPossible(request: NextRequest) {
+async function refreshBackendSessionIfPossible(request: NextRequest, nonce: string, contentSecurityPolicy: string) {
   const cookieHeader = request.headers.get('cookie') ?? undefined;
   if (!cookieHeader) {
     return null;
@@ -26,28 +78,35 @@ async function refreshBackendSessionIfPossible(request: NextRequest) {
 
   const csrfToken = request.cookies.get(csrfCookieName)?.value ?? undefined;
   const session = await refreshDeveloperSession(cookieHeader, cookieHeader, csrfToken);
-  const response = NextResponse.next();
+  const response = createForwardedResponse(request, nonce, contentSecurityPolicy);
   applyBackendSession(response, session);
   return response;
 }
 
 export async function middleware(request: NextRequest) {
+  const nonce = crypto.randomUUID().replace(/-/g, '');
+  const contentSecurityPolicy = buildContentSecurityPolicy(nonce);
+
+  if (!isProtectedPath(request)) {
+    return createForwardedResponse(request, nonce, contentSecurityPolicy);
+  }
+
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET });
   const { accessToken, expiresAt } = getBackendAuthCookies(request.cookies);
   const staleBackendToken = isBackendAccessTokenStale(expiresAt);
 
   if (!token) {
     if (accessToken || expiresAt) {
-      const response = NextResponse.redirect(buildSignInUrl(request));
+      const response = createRedirectResponse(buildSignInUrl(request), contentSecurityPolicy);
       clearBackendSession(response);
       return response;
     }
-    return NextResponse.redirect(buildSignInUrl(request));
+    return createRedirectResponse(buildSignInUrl(request), contentSecurityPolicy);
   }
 
   if (!accessToken || !expiresAt || staleBackendToken) {
     try {
-      const refreshedResponse = await refreshBackendSessionIfPossible(request);
+      const refreshedResponse = await refreshBackendSessionIfPossible(request, nonce, contentSecurityPolicy);
       if (refreshedResponse) {
         return refreshedResponse;
       }
@@ -55,14 +114,14 @@ export async function middleware(request: NextRequest) {
       // Fall through to the sign-in redirect below.
     }
 
-    const response = NextResponse.redirect(buildSignInUrl(request));
+    const response = createRedirectResponse(buildSignInUrl(request), contentSecurityPolicy);
     clearBackendSession(response);
     return response;
   }
 
-  return NextResponse.next();
+  return createForwardedResponse(request, nonce, contentSecurityPolicy);
 }
 
 export const config = {
-  matcher: ['/games/:path*', '/game/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|css|js|map)$).*)'],
 };
