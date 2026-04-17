@@ -22,10 +22,9 @@ const TicTacToeLiveDemoClient = dynamic(
 );
 
 interface TicTacToeLiveDemoProps {
-  apiBaseUrl: string;
   isConfigured: boolean;
 }
 
-export function TicTacToeLiveDemo({ apiBaseUrl, isConfigured }: TicTacToeLiveDemoProps) {
-  return <TicTacToeLiveDemoClient apiBaseUrl={apiBaseUrl} isConfigured={isConfigured} />;
+export function TicTacToeLiveDemo({ isConfigured }: TicTacToeLiveDemoProps) {
+  return <TicTacToeLiveDemoClient isConfigured={isConfigured} />;
 }

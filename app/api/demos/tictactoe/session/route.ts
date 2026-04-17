@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
+import { getTicTacToeDemoPublicConfig, getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
 import type { TurnKitRelayDemoSessionResponse, TurnKitRelayQueueResponse } from '@/types/turnkit-relay-demo';
 
 function createDemoPlayerId() {
@@ -22,6 +22,7 @@ async function readBackendError(response: Response) {
 
 export async function POST() {
   const config = getTicTacToeDemoServerConfig();
+  const publicConfig = getTicTacToeDemoPublicConfig();
   const playerId = createDemoPlayerId();
 
   if (!config.isReady) {
@@ -60,6 +61,7 @@ export async function POST() {
   const payload = (await response.json()) as TurnKitRelayQueueResponse;
   const session: TurnKitRelayDemoSessionResponse = {
     ...payload,
+    apiBaseUrl: publicConfig.apiBaseUrl,
     playerId,
   };
 

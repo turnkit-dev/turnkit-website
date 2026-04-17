@@ -11,6 +11,7 @@ export interface TurnKitRelayDemoSessionResponse {
   relayToken: string;
   status: string;
   playerId: string;
+  apiBaseUrl: string;
 }
 
 export interface TurnKitRelayPlayer {

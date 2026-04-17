@@ -15,7 +15,6 @@ import {
 type DemoSeatKey = 'playerA' | 'playerB';
 
 interface TicTacToeLiveDemoClientProps {
-  apiBaseUrl: string;
   isConfigured: boolean;
 }
 
@@ -220,7 +219,7 @@ function DemoBoard({
   );
 }
 
-export function TicTacToeLiveDemoClient({ apiBaseUrl, isConfigured }: TicTacToeLiveDemoClientProps) {
+export function TicTacToeLiveDemoClient({ isConfigured }: TicTacToeLiveDemoClientProps) {
   const [board, setBoard] = useState<string[]>(() => createEmptyBoard());
   const [phase, setPhase] = useState<'idle' | 'queueing' | 'live' | 'ended' | 'error'>('idle');
   const [status, setStatus] = useState('Queue two browser clients and let the relay drive the match.');
@@ -542,7 +541,7 @@ export function TicTacToeLiveDemoClient({ apiBaseUrl, isConfigured }: TicTacToeL
 
       for (const { key, session } of queueResponses) {
         const client = createRelayClient({
-          apiBaseUrl,
+          apiBaseUrl: session.apiBaseUrl,
           relayToken: session.relayToken,
           onOpen: () => {
             updateSeat(key, (seat) => ({

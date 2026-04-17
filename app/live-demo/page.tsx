@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { TicTacToeLiveDemo } from '@/components/live-demo/tictactoe-live-demo';
 import { buildMetadata } from '@/lib/seo';
-import { getTicTacToeDemoPublicConfig, getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
+import { getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
+
+export const dynamic = 'force-dynamic';
 
 const liveDemoDescription =
   'Play a live TurnKit Tic-Tac-Toe match in the browser and see authoritative relay validation, synced turns, and real-time updates.';
@@ -16,7 +18,6 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function LiveDemoPage() {
-  const publicConfig = getTicTacToeDemoPublicConfig();
   const serverConfig = getTicTacToeDemoServerConfig();
 
   return (
@@ -43,10 +44,7 @@ export default function LiveDemoPage() {
           </p>
         </section>
 
-        <TicTacToeLiveDemo
-          apiBaseUrl={publicConfig.apiBaseUrl}
-          isConfigured={serverConfig.isReady}
-        />
+        <TicTacToeLiveDemo isConfigured={serverConfig.isReady} />
       </main>
     </MarketingShell>
   );
