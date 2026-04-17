@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { SignInButtons } from '@/components/auth-buttons';
@@ -8,6 +9,14 @@ import {
   buildSignInPath,
   isBackendAccessTokenStale,
 } from '@/lib/backend-auth';
+import { buildMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Sign In - TurnKit Dashboard',
+  description: 'Sign in to the TurnKit developer dashboard.',
+  path: '/signin',
+  noIndex: true,
+});
 
 export default async function SignInPage({
   searchParams,

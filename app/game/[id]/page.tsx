@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -18,6 +19,7 @@ import { CopyButton } from '@/components/dashboard-ui';
 import { getAuthSession } from '@/lib/auth';
 import { BackendAuthError, buildSignInPath, getServerBackendDeveloperProfile } from '@/lib/backend-auth';
 import { formatRelativeTime, getGameDashboard, listGames, MissingGameKeyError } from '@/lib/dashboard';
+import { buildMetadata } from '@/lib/seo';
 
 const sections = [
   { href: '#client-keys', label: 'Client Keys' },
@@ -28,6 +30,13 @@ const sections = [
 ];
 
 const hiddenBillingModules = new Set(['PLAYER_STORE', 'MATCHMAKING']);
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Game Dashboard - TurnKit',
+  description: 'Manage TurnKit game configuration, keys, leaderboards, relay settings, and billing.',
+  path: '/games',
+  noIndex: true,
+});
 
 function formatModuleName(value: string) {
   return value

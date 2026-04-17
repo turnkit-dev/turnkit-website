@@ -7,7 +7,7 @@ export const defaultOgImageAlt = 'TurnKit branding and multiplayer backend messa
 export const siteLocale = 'en_US';
 export const siteDescription =
   "Ship your turn-based Unity or Godot multiplayer faster with TurnKit's authoritative relay and leaderboards. Start free.";
-export const lastContentUpdate = '2026-04-10T00:00:00.000Z';
+export const lastContentUpdate = '2026-04-17T00:00:00.000Z';
 
 const baseKeywords = [
   'turn-based multiplayer backend',

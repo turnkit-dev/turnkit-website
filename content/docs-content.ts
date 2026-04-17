@@ -63,6 +63,7 @@ export const docsNavSections: DocsNavSection[] = [
     links: [
       { href: '/leaderboard-options', label: 'Leaderboard Options for Unity Games' },
       { href: '/examples', label: 'Code Examples' },
+      { href: '/examples/live-demo', label: 'Live Tic-Tac-Toe Demo' },
       { href: '/turn-based-game-server-comparison-2026', label: 'Turn-Based Server Comparison' },
       { href: '/pricing', label: 'Pricing' },
       { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord Community', external: true },
@@ -267,5 +268,20 @@ export const leaderboardOptionsPageMeta: DocsPageMeta = {
     { href: '#detailed-comparison', label: 'Detailed Comparison' },
     { href: '#honest-breakdown', label: 'Honest Breakdown' },
     { href: '#ready-to-begin', label: 'Ready to Begin' },
+  ],
+};
+
+export const liveDemoExamplePageMeta: DocsPageMeta = {
+  title: 'Live Tic-Tac-Toe Demo (Next.js + React)',
+  description:
+    'Copy a minimal browser relay SDK and a minimal TicTacToe game example that runs two players through the same TurnKit relay session.',
+  path: '/examples/live-demo',
+  eyebrow: 'Web Demo',
+  breadcrumbLabel: 'Live Tic-Tac-Toe Demo',
+  toc: [
+    { href: '#overview', label: 'Overview' },
+    { href: '#sdk', label: 'TurnKit Web SDK' },
+    { href: '#game', label: 'Tic-Tac-Toe Game Logic' },
+    { href: '#notes', label: 'Notes' },
   ],
 };

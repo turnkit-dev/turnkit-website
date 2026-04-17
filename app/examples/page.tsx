@@ -430,6 +430,13 @@ export default function ExamplesPage() {
               Start with one queue call, one score submit, and one move payload. Then see the full Unity TicTacToe controller that handles
               matching, turn flow, vote validation, and game end state without a custom backend.
             </p>
+            <ul className="mt-4 list-disc pl-5 text-[15px] leading-[1.7] text-muted">
+              <li>
+                <Link href="/examples/live-demo" className="text-accent transition hover:text-text">
+                  Live Tic-Tac-Toe Demo (Web)
+                </Link>
+              </li>
+            </ul>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/docs/quickstart/unity"

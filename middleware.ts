@@ -8,8 +8,31 @@ import {
   refreshDeveloperSession,
   csrfCookieName,
 } from '@/lib/backend-auth';
+import { getTurnKitDemoBrowserApiBaseUrl, getTurnKitPublicApiBaseUrl, getTurnKitServerApiBaseUrl } from '@/lib/turnkit-demo-config';
 
 function buildContentSecurityPolicy(nonce: string) {
+  const connectSources = new Set<string>([
+    "'self'",
+    'https://cloud.umami.is',
+    'https://api.resend.com',
+  ]);
+
+  const configuredApiBases = [
+    getTurnKitPublicApiBaseUrl(),
+    getTurnKitServerApiBaseUrl(),
+    getTurnKitDemoBrowserApiBaseUrl(),
+  ];
+
+  for (const apiBase of configuredApiBases) {
+    try {
+      const url = new URL(apiBase);
+      connectSources.add(url.origin);
+      connectSources.add(`${url.protocol === 'https:' ? 'wss:' : 'ws:'}//${url.host}`);
+    } catch {
+      // Ignore malformed env config and keep the base policy intact.
+    }
+  }
+
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' https://cloud.umami.is`,
@@ -18,7 +41,7 @@ function buildContentSecurityPolicy(nonce: string) {
     "style-src-attr 'none'",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
-    "connect-src 'self' https://cloud.umami.is https://api.resend.com",
+    `connect-src ${Array.from(connectSources).join(' ')}`,
     "object-src 'none'",
     "frame-src 'none'",
     "manifest-src 'self'",

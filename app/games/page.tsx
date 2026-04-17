@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -7,6 +8,14 @@ import { CopyButton } from '@/components/dashboard-ui';
 import { DashboardPageFrame } from '@/components/dashboard-shell';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
 import { formatRelativeTime, listGames } from '@/lib/dashboard';
+import { buildMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Games - TurnKit Dashboard',
+  description: 'Manage games in the TurnKit dashboard.',
+  path: '/games',
+  noIndex: true,
+});
 
 export default async function GamesPage({
   searchParams,

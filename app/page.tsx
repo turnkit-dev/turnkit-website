@@ -73,6 +73,12 @@ export default function HomePage() {
             >
               Sign In
             </Link>
+            <Link
+              href="/live-demo"
+              className="inline-flex items-center gap-2 rounded-[3px] border border-border2 px-[22px] py-[11px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+            >
+              Try Demo
+            </Link>
             <a
               href="https://discord.gg/SqMVU5xex3"
               target="_blank"
@@ -216,6 +222,14 @@ export default function HomePage() {
                 className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
               >
                 See full Unity examples. → Tic Tac Toe, Rock Paper Scissors games in under 100 lines.
+              </Link>
+            </p>
+            <p className="mt-3 text-[14px] text-muted">
+              <Link
+                href="/examples/live-demo"
+                className="font-medium text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+              >
+                Try the Live Tic-Tac-Toe Demo (Next.js + React)
               </Link>
             </p>
           </section>
