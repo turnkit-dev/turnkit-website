@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { restQuickstartPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'REST API Quickstart - TurnKit Docs',
   description: restQuickstartPageMeta.description,
   alternates: {
-    canonical: restQuickstartPageMeta.path,
+    canonical: absoluteUrl(restQuickstartPageMeta.path),
   },
   openGraph: {
     title: 'REST API Quickstart - TurnKit Docs',
     description: restQuickstartPageMeta.description,
-    url: `https://turnkit.dev${restQuickstartPageMeta.path}`,
+    url: absoluteUrl(restQuickstartPageMeta.path),
     type: 'article',
   },
   twitter: {

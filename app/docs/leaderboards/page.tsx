@@ -4,17 +4,18 @@ import Link from 'next/link';
 import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { leaderboardsPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Leaderboards - TurnKit Docs',
   description: leaderboardsPageMeta.description,
   alternates: {
-    canonical: leaderboardsPageMeta.path,
+    canonical: absoluteUrl(leaderboardsPageMeta.path),
   },
   openGraph: {
     title: 'Leaderboards - TurnKit Docs',
     description: leaderboardsPageMeta.description,
-    url: `https://turnkit.dev${leaderboardsPageMeta.path}`,
+    url: absoluteUrl(leaderboardsPageMeta.path),
     type: 'article',
   },
   twitter: {

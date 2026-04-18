@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
+import { absoluteUrl } from '@/lib/seo';
 
 const privacyDescription = 'Review how TurnKit handles developer and player data before you ship, integrate, or create an account.';
 
@@ -7,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Privacy Policy - TurnKit',
   description: privacyDescription,
   alternates: {
-    canonical: '/privacy',
+    canonical: absoluteUrl('/privacy'),
   },
   openGraph: {
     title: 'Privacy Policy - TurnKit',
     description: privacyDescription,
-    url: 'https://turnkit.dev/privacy',
+    url: absoluteUrl('/privacy'),
     type: 'website',
   },
   twitter: {

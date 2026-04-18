@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { playerAuthenticationModesPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Player Authentication Modes - TurnKit Docs',
   description: playerAuthenticationModesPageMeta.description,
   alternates: {
-    canonical: playerAuthenticationModesPageMeta.path,
+    canonical: absoluteUrl(playerAuthenticationModesPageMeta.path),
   },
   openGraph: {
     title: 'Player Authentication Modes - TurnKit Docs',
     description: playerAuthenticationModesPageMeta.description,
-    url: `https://turnkit.dev${playerAuthenticationModesPageMeta.path}`,
+    url: absoluteUrl(playerAuthenticationModesPageMeta.path),
     type: 'article',
   },
   twitter: {

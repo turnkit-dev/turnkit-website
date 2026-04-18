@@ -41,7 +41,6 @@ export default async function handler(req, res) {
   // -----------------------------
   const allowedOrigins = [
     'https://turnkit.dev',
-    'https://www.turnkit.dev',
     process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : null,
   ].filter(Boolean);
 

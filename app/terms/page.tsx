@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
+import { absoluteUrl } from '@/lib/seo';
 
 const termsDescription = 'Read TurnKit terms before you launch so billing, permitted use, and liability limits are clear from day one.';
 
@@ -7,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Terms of Service - TurnKit',
   description: termsDescription,
   alternates: {
-    canonical: '/terms',
+    canonical: absoluteUrl('/terms'),
   },
   openGraph: {
     title: 'Terms of Service - TurnKit',
     description: termsDescription,
-    url: 'https://turnkit.dev/terms',
+    url: absoluteUrl('/terms'),
     type: 'website',
   },
   twitter: {

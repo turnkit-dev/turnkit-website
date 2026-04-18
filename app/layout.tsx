@@ -19,7 +19,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL('https://turnkit.dev'),
   applicationName: siteName,
   authors: [{ name: 'Nenad Nikolic', url: siteUrl }],
   creator: 'Nenad Nikolic',

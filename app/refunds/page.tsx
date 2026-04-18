@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { LegalPage } from '@/components/legal-page';
+import { absoluteUrl } from '@/lib/seo';
 
 const refundsDescription = 'Check TurnKit refund rules before you subscribe so guarantees, downtime credits, and usage charges are clear.';
 
@@ -7,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Refund Policy - TurnKit',
   description: refundsDescription,
   alternates: {
-    canonical: '/refunds',
+    canonical: absoluteUrl('/refunds'),
   },
   openGraph: {
     title: 'Refund Policy - TurnKit',
     description: refundsDescription,
-    url: 'https://turnkit.dev/refunds',
+    url: absoluteUrl('/refunds'),
     type: 'website',
   },
   twitter: {

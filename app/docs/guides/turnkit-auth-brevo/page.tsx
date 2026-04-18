@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { turnkitAuthBrevoPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'TurnKit Auth with Brevo - TurnKit Docs',
   description: turnkitAuthBrevoPageMeta.description,
   alternates: {
-    canonical: turnkitAuthBrevoPageMeta.path,
+    canonical: absoluteUrl(turnkitAuthBrevoPageMeta.path),
   },
   openGraph: {
     title: 'TurnKit Auth with Brevo - TurnKit Docs',
     description: turnkitAuthBrevoPageMeta.description,
-    url: `https://turnkit.dev${turnkitAuthBrevoPageMeta.path}`,
+    url: absoluteUrl(turnkitAuthBrevoPageMeta.path),
     type: 'article',
   },
   twitter: {

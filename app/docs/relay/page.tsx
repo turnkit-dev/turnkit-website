@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { DocsShell } from '@/components/docs-shell';
 import { InlineCode } from '@/components/code-block';
 import { relayPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'TurnKit Relay - TurnKit Docs',
   description: relayPageMeta.description,
   alternates: {
-    canonical: relayPageMeta.path,
+    canonical: absoluteUrl(relayPageMeta.path),
   },
   openGraph: {
     title: 'TurnKit Relay - TurnKit Docs',
     description: relayPageMeta.description,
-    url: `https://turnkit.dev${relayPageMeta.path}`,
+    url: absoluteUrl(relayPageMeta.path),
     type: 'article',
   },
   twitter: {

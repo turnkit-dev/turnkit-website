@@ -50,7 +50,7 @@ export function buildMetadata({
     description,
     keywords: [...new Set([...baseKeywords, ...keywords])],
     alternates: {
-      canonical: path,
+      canonical: url,
     },
     category: 'technology',
     robots: noIndex

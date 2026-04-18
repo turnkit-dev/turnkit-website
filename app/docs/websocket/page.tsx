@@ -2,17 +2,18 @@ import type { Metadata } from 'next';
 import { CodeBlock, InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { websocketPageMeta } from '@/content/docs-content';
+import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'WebSocket Protocol - TurnKit Docs',
   description: websocketPageMeta.description,
   alternates: {
-    canonical: websocketPageMeta.path,
+    canonical: absoluteUrl(websocketPageMeta.path),
   },
   openGraph: {
     title: 'WebSocket Protocol - TurnKit Docs',
     description: websocketPageMeta.description,
-    url: `https://turnkit.dev${websocketPageMeta.path}`,
+    url: absoluteUrl(websocketPageMeta.path),
     type: 'article',
   },
   twitter: {
