@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import {
   apiPageMeta,
+  clientReconnectionPageMeta,
   docsIndexPageMeta,
   freeUnityLeaderboardsPageMeta,
   leaderboardsPageMeta,
@@ -33,6 +34,7 @@ const routes = [
   { path: restQuickstartPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
   { path: apiPageMeta.path, priority: 0.6, changeFrequency: 'weekly' as const },
   { path: unityClientPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
+  { path: clientReconnectionPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
   { path: freeUnityLeaderboardsPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
   { path: playerAuthenticationModesPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: turnkitAuthBrevoPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },

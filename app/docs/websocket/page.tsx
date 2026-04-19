@@ -127,7 +127,7 @@ export default function WebsocketDocsPage() {
           ],
           ['VOTE', 'moveNumber, isValid', 'Only meaningful when sync voting is enabled and that move is currently pending vote.'],
           ['END_GAME', '{ "type": "END_GAME" }', 'Session ends with END_GAME only after every player has sent it.'],
-          ['RECONNECT', 'lastMoveNumber', 'Requests delta replay or full resync after reconnect.'],
+          ['RECONNECT', 'lastMoveNumber', 'Requests delta replay or full resync after reconnect or resume.'],
         ]}
       />
 
@@ -286,6 +286,10 @@ export default function WebsocketDocsPage() {
         <li>
           After reconnect sync, the player enters a 2 second sync window. Moves from that player during that window are rejected with <InlineCode code="SYNC_WINDOW" />.
         </li>
+        <li>
+          If the reconnect token is too old, the server returns <InlineCode code="RECONNECT_EXPIRED" /> and the client must start a fresh
+          join flow.
+        </li>
       </ul>
       <CodeBlock className="mb-6" language="json" code={`{ "type": "RECONNECT", "lastMoveNumber": 12 }`} />
 
@@ -299,6 +303,7 @@ export default function WebsocketDocsPage() {
           ['PAYLOAD_TOO_LARGE', 'MOVE.json exceeded 1024 bytes.'],
           ['INVALID_JSON', 'The optional json payload could not be serialized.'],
           ['ACTION_FAILED', 'An action was invalid for the current authoritative state.'],
+          ['RECONNECT_EXPIRED', 'Saved reconnect state is no longer valid and the match cannot be resumed.'],
           ['STALE_SOCKET', 'Message or disconnect came from a superseded socket.'],
           ['SUPERSEDED_CONNECTION', 'An older socket was closed because a newer one connected.'],
         ]}

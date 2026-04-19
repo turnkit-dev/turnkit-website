@@ -46,6 +46,7 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'Guides',
     links: [
+      { href: '/docs/client-reconnection', label: 'Client Reconnection' },
       { href: '/docs/guides/free-unity-leaderboards', label: 'Free Unity Leaderboards' },
       { href: '/docs/guides/turnkit-auth-brevo', label: 'TurnKit Auth with Brevo' },
     ],
@@ -237,6 +238,20 @@ export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
     { href: '#copy-smtp-credentials', label: 'Copy SMTP Credentials' },
     { href: '#configure-turnkit-auth', label: 'Configure TurnKit Auth' },
     { href: '#sender-note', label: 'Sender Note' },
+  ],
+};
+
+export const clientReconnectionPageMeta: DocsPageMeta = {
+  title: 'Unity Client Reconnection',
+  description:
+    'Handle dropped sockets and app restarts in TurnKit with replayed moves, resume tokens, and safe reconnect flow.',
+  path: '/docs/client-reconnection',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Client Reconnection',
+  toc: [
+    { href: '#socket-drop', label: 'Socket Drop' },
+    { href: '#restart', label: 'Crash or Restart' },
+    { href: '#other-clients', label: 'Other Clients' },
   ],
 };
 

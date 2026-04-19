@@ -71,22 +71,28 @@ export const landingContent: LandingContent = {
         'Prevent players from acting out of turn. Server-side turn validation means no client-side tricks can bypass it.',
     },
     {
+      icon: '🔄',
+      title: 'Reconnects',
+      description:
+        'TurnKit automatically reconnects dropped connections and replays missed moves so matches stay smooth.',
+    },
+    {
       icon: '◐',
       title: 'Hand Hiding',
       description:
         'Server-side data masking. Clients receive item IDs, createBy, but item data (slug) is empty if list not visible to them. Use server-managed lists (Spawn, Move, Shuffle) to control hidden state like hands, decks.',
     },
     {
-      icon: '✓',
-      title: 'Player Voting',
-      description:
-        'Clients automatically validate each move using your game logic and submit a pass/fail vote. The server enforces the outcome based on config(votes required, votes to fail). Even if one client is compromised, honest clients can reject invalid moves.',
-    },
-    {
       icon: '⬡',
       title: 'Signed Match Results',
       description:
         'A cryptographically signed result is generated automatically at match end for rewards, leaderboards, or your own webhooks.',
+    },
+    {
+      icon: '✓',
+      title: 'Player Voting',
+      description:
+        'Clients automatically validate each move using your game logic and submit a pass/fail vote. The server enforces the outcome based on config(votes required, votes to fail). Even if one client is compromised, honest clients can reject invalid moves.',
     },
   ],
   configRows: [

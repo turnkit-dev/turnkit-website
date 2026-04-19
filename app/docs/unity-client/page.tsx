@@ -80,6 +80,14 @@ await Relay.MatchWithAnyone(signed, ExampleConfig.Slug);`}
             'Retries the WebSocket connection using the last known session context.',
           ],
           [
+            <InlineCode
+              key="resume"
+              code="bool resumed = await Relay.Resume(playerId, slug, savedRelayToken, savedLastMoveNumber);"
+              language="csharp"
+            />,
+            'Resumes a match after an app restart by reconnecting with saved state and replaying missed moves.',
+          ],
+          [
             <InlineCode key="leave" code="await Relay.LeaveQueue(playerId, configSlug)" language="csharp" />,
             'Leaves the matchmaking queue and closes any active WebSocket.',
           ],
@@ -91,7 +99,11 @@ await Relay.MatchWithAnyone(signed, ExampleConfig.Slug);`}
         <Link href="/docs/websocket" className="text-accent transition hover:text-text">
           WebSocket Protocol
         </Link>{' '}
-        reference.
+        reference. For restart-safe reconnect flow in Unity, see{' '}
+        <Link href="/docs/client-reconnection" className="text-accent transition hover:text-text">
+          Unity Client Reconnection
+        </Link>
+        .
       </Notice>
 
       <SectionTitle id="core-relay-actions">Core Relay Actions</SectionTitle>
@@ -306,6 +318,9 @@ signedPlayer.BuildSignaturePayload(); // returns the string to sign`}
         <p>
           <InlineCode code="Relay.LastAcknowledgedMoveNumber" language="csharp" />
         </p>
+        <p>
+          <InlineCode code="Relay.Resume(playerId, slug, relayToken, lastMoveNumber)" language="csharp" />
+        </p>
       </div>
 
       <SubTitle>Helper &amp; Utility Methods</SubTitle>
@@ -337,6 +352,10 @@ signedPlayer.BuildSignaturePayload(); // returns the string to sign`}
         <li>Complex list operations are safest and clearest when you use the fluent builder pattern.</li>
         <li>
           Combine Relay with post-match webhooks for backend workflows, rewards, or verified leaderboard submission after each match.
+        </li>
+        <li>
+          Wait until <InlineCode code="Relay.IsReady" language="csharp" /> is true before sending actions after reconnect. If the app
+          restarts, persist the reconnect token and last acknowledged move number, then call <InlineCode code="Relay.Resume(...)" language="csharp" />.
         </li>
       </ul>
 

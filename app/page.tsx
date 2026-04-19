@@ -149,8 +149,13 @@ export default function HomePage() {
             The parts that take weeks to get right, TurnKit handles them out of the box.
           </p>
           <div className="grid gap-px overflow-hidden rounded border border-border bg-border md:grid-cols-2">
-            {landingContent.features.map((feature) => (
-              <div key={feature.title} className="bg-surface p-8 transition hover:bg-surface2">
+            {landingContent.features.map((feature, index) => (
+              <div
+                key={feature.title}
+                className={`bg-surface p-8 transition hover:bg-surface2 ${
+                  landingContent.features.length % 2 === 1 && index === landingContent.features.length - 1 ? 'md:col-span-2' : ''
+                }`}
+              >
                 <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-[3px] border border-[rgba(47,156,235,0.2)] bg-[rgba(47,156,235,0.15)] text-base">
                   {feature.icon}
                 </div>
