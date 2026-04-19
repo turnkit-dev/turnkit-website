@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { InlineCode } from '@/components/code-block';
 import { DocsShell } from '@/components/docs-shell';
 import { JsonLd } from '@/components/json-ld';
-import { ScalarApiReference } from '@/components/scalar-api-reference';
+import { LazyScalarApiReference } from '@/components/lazy-scalar-api-reference';
 import { apiPageMeta } from '@/content/docs-content';
 import { buildBreadcrumbSchema, buildMetadata, buildTechArticleSchema } from '@/lib/seo';
 
@@ -67,7 +67,7 @@ export default function ApiDocsPage() {
         </div>
       </div>
       <div id="reference" className="overflow-hidden rounded-[6px] border border-border bg-white">
-        <ScalarApiReference specUrl={rawSpecPath} />
+        <LazyScalarApiReference specUrl={rawSpecPath} />
       </div>
     </DocsShell>
   );

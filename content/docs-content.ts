@@ -272,11 +272,11 @@ export const leaderboardOptionsPageMeta: DocsPageMeta = {
 };
 
 export const liveDemoExamplePageMeta: DocsPageMeta = {
-  title: 'Live Tic-Tac-Toe Demo (Next.js + React)',
+  title: 'TurnKit Live Demo: Authoritative Relay for Turn-Based Games',
   description:
-    'Copy a minimal browser relay SDK and a minimal TicTacToe game example that runs two players through the same TurnKit relay session.',
+    'Experience TurnKit in action — two independent browser clients playing Tic-Tac-Toe through the same authoritative relay session. Every move is server-validated, turns are enforced, and heartbeats keep connections alive. Perfect for building cheat-resistant turn-based multiplayer (board games, card games, strategy titles).',
   path: '/examples/live-demo',
-  eyebrow: 'Web Demo',
+  eyebrow: 'Live Demo',
   breadcrumbLabel: 'Live Tic-Tac-Toe Demo',
   toc: [
     { href: '#overview', label: 'Overview' },

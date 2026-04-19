@@ -21,10 +21,6 @@ const TicTacToeLiveDemoClient = dynamic(
   },
 );
 
-interface TicTacToeLiveDemoProps {
-  isConfigured: boolean;
-}
-
-export function TicTacToeLiveDemo({ isConfigured }: TicTacToeLiveDemoProps) {
-  return <TicTacToeLiveDemoClient isConfigured={isConfigured} />;
+export function TicTacToeLiveDemo() {
+  return <TicTacToeLiveDemoClient />;
 }

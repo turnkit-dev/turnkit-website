@@ -55,7 +55,7 @@ const featureRows = [
   {
     feature: 'Pricing for Turn-Based Use',
     customBackend: 'High effort',
-    perMatchServers: 'Expensive at scale',
+    perMatchServers: 'Very expensive',
     basicRelays: 'Cheap at low CCU, expensive at high and risky',
     turnKit: 'Cheapest predictable tiers',
   }
@@ -71,7 +71,7 @@ const pricingRows = [
 ];
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Turn-Based Game Server Comparison 2026 - Authoritative Relay vs Custom vs Per-Match',
+  title: 'Turn-Based Game Server Comparison 2026',
   description: comparisonDescription,
   path: '/turn-based-game-server-comparison-2026',
   type: 'article',

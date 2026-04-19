@@ -14,10 +14,6 @@ import {
 
 type DemoSeatKey = 'playerA' | 'playerB';
 
-interface TicTacToeLiveDemoClientProps {
-  isConfigured: boolean;
-}
-
 interface DemoSeatState {
   key: DemoSeatKey;
   title: string;
@@ -219,7 +215,7 @@ function DemoBoard({
   );
 }
 
-export function TicTacToeLiveDemoClient({ isConfigured }: TicTacToeLiveDemoClientProps) {
+export function TicTacToeLiveDemoClient() {
   const [board, setBoard] = useState<string[]>(() => createEmptyBoard());
   const [phase, setPhase] = useState<'idle' | 'queueing' | 'live' | 'ended' | 'error'>('idle');
   const [status, setStatus] = useState('Queue two browser clients and let the relay drive the match.');
@@ -492,12 +488,6 @@ export function TicTacToeLiveDemoClient({ isConfigured }: TicTacToeLiveDemoClien
   });
 
   const startDemo = useEvent(async () => {
-    if (!isConfigured) {
-      setPhase('error');
-      setStatus('This page needs demo credentials on the server before it can queue players.');
-      return;
-    }
-
     disconnectAllClients();
     resetRuntimeState();
     replaceBoard(createEmptyBoard());
@@ -611,7 +601,7 @@ export function TicTacToeLiveDemoClient({ isConfigured }: TicTacToeLiveDemoClien
               <button
                 type="button"
                 onClick={() => void startDemo()}
-                disabled={!isConfigured || phase === 'queueing'}
+                disabled={phase === 'queueing'}
                 className="inline-flex items-center rounded-[4px] bg-accent px-3.5 py-2 text-[12px] font-medium text-white transition hover:bg-[#3AADF5] disabled:cursor-not-allowed disabled:bg-[rgba(47,156,235,0.35)] sm:px-4 sm:text-[13px]"
               >
                 {phase === 'queueing' ? 'Starting match...' : 'Start live match'}
@@ -624,13 +614,6 @@ export function TicTacToeLiveDemoClient({ isConfigured }: TicTacToeLiveDemoClien
                 Reset
               </button>
             </div>
-
-            {!isConfigured ? (
-              <div className="rounded-[8px] border border-[rgba(240,164,41,0.3)] bg-[rgba(240,164,41,0.08)] px-4 py-3 text-[13px] leading-[1.7] text-text">
-                Set <code>TURNKIT_DEMO_TICTACTOE_CLIENT_KEY</code> and <code>TURNKIT_DEMO_TICTACTOE_RELAY_SLUG</code> on the server to enable
-                this route.
-              </div>
-            ) : null}
 
             <div className="rounded-[8px] border border-border2 bg-[rgba(8,12,16,0.55)] p-3 sm:p-4">
               <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.12em] text-accent">Match Status</div>
