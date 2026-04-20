@@ -6,20 +6,20 @@ import { restQuickstartPageMeta } from '@/content/docs-content';
 import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'REST API Quickstart - TurnKit Docs',
+  title: 'Quickstart Other Engines - TurnKit Docs',
   description: restQuickstartPageMeta.description,
   alternates: {
     canonical: absoluteUrl(restQuickstartPageMeta.path),
   },
   openGraph: {
-    title: 'REST API Quickstart - TurnKit Docs',
+    title: 'Quickstart Other Engines - TurnKit Docs',
     description: restQuickstartPageMeta.description,
     url: absoluteUrl(restQuickstartPageMeta.path),
     type: 'article',
   },
   twitter: {
     card: 'summary',
-    title: 'REST API Quickstart - TurnKit Docs',
+    title: 'Quickstart Other Engines - TurnKit Docs',
     description: restQuickstartPageMeta.description,
   },
 };

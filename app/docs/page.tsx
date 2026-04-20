@@ -45,7 +45,7 @@ export default function DocsIndexPage() {
           href="/docs/unity-client"
         />
         <DocsCard
-          title="REST API Quickstart"
+          title="Quickstart other engines"
           description="Create a game, generate your client key, and connect over REST or WebSocket."
           href="/docs/quickstart/rest-api"
         />

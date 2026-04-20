@@ -26,7 +26,7 @@ export const docsNavSections: DocsNavSection[] = [
     title: 'Getting Started',
     links: [
       { href: '/docs/quickstart/unity', label: 'Unity Quickstart' },
-      { href: '/docs/quickstart/rest-api', label: 'REST API Quickstart' },
+      { href: '/docs/quickstart/rest-api', label: 'Quickstart Other Engines' },
     ],
   },
   {
@@ -216,11 +216,11 @@ export const unityQuickstartPageMeta: DocsPageMeta = {
 };
 
 export const restQuickstartPageMeta: DocsPageMeta = {
-  title: 'REST API Quickstart',
+  title: 'Quickstart Other Engines',
   description: 'Generate a client key and use TurnKit REST and WebSocket APIs to launch your first multiplayer flow in minutes.',
   path: '/docs/quickstart/rest-api',
   eyebrow: 'Getting Started',
-  breadcrumbLabel: 'REST API Quickstart',
+  breadcrumbLabel: 'Quickstart Other Engines',
   toc: [
     { href: '#next-steps', label: 'Next Steps' },
   ],
