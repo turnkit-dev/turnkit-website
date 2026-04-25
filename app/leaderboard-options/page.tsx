@@ -155,7 +155,13 @@ export default function LeaderboardOptionsPage() {
           </Link>
           .
         </p>
-        <p>Watching for the Asset Store release? Check back on turnkit.dev or join the Discord.</p>
+        <p>
+          Deploy in 60 seconds via the{' '}
+          <Link href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688" className="text-accent transition hover:text-text">
+            RankDrop Unity Asset (30% Launch Discount currently) 
+          </Link>
+          .
+        </p>
         <p>
           Prefer hosted from day one? Go to{' '}
           <Link href="/pricing" className="text-accent transition hover:text-text">
