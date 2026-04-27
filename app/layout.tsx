@@ -36,9 +36,6 @@ export const metadata: Metadata = {
     path: '/',
     keywords: ['Unity turn-based multiplayer', 'Godot turn-based multiplayer', 'multiplayer backend for indie games'],
   }),
-  icons: {
-    icon: '/assets/logo.png',
-  },
 };
 
 export const viewport: Viewport = {
