@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "TurnKit API",
-    "description": "TurnKit game backend — multi-tenant leaderboard, matchmaking, relay and player store for indie games.",
+    "description": "TurnKit game backend.",
     "version": "1.0.0"
   },
   "servers": [

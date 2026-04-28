@@ -1,17 +1,18 @@
 import Link from 'next/link';
-import { docsNavSections, type DocsPageMeta } from '@/content/docs-content';
+import { docsNavSections, type DocsNavSection, type DocsPageMeta } from '@/content/docs-content';
 
 export interface DocsShellProps {
   meta: DocsPageMeta;
   children: React.ReactNode;
+  sections?: DocsNavSection[];
 }
 
-export function DocsShell({ meta, children }: DocsShellProps) {
+export function DocsShell({ meta, children, sections = docsNavSections }: DocsShellProps) {
   return (
     <div className="mx-auto flex w-full max-w-[1400px] px-0">
       <aside className="hidden w-[260px] shrink-0 md:block">
         <div className="shell-left-offset fixed top-[60px] h-[calc(100vh-60px)] w-[260px] overflow-y-auto border-r border-border bg-bg px-6 py-8">
-          <DocsSidebar currentPath={meta.path} />
+          <DocsSidebar currentPath={meta.path} sections={sections} />
         </div>
       </aside>
       <main className="min-w-0 flex-1 px-5 py-8 md:max-w-[900px] md:px-[clamp(24px,5vw,64px)] md:py-12">
@@ -51,12 +52,13 @@ export function DocsShell({ meta, children }: DocsShellProps) {
 interface DocsSidebarProps {
   currentPath: string;
   mobile?: boolean;
+  sections?: DocsNavSection[];
 }
 
-export function DocsSidebar({ currentPath, mobile = false }: DocsSidebarProps) {
+export function DocsSidebar({ currentPath, mobile = false, sections = docsNavSections }: DocsSidebarProps) {
   return (
     <div>
-      {docsNavSections.map((section) => (
+      {sections.map((section) => (
         <div key={section.title} className="mb-8">
           <div className={`mb-3 text-[11px] font-medium uppercase tracking-[0.1em] ${mobile ? 'text-[#8B949E]' : 'text-faint'}`}>
             {section.title}

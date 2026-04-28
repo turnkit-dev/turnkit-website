@@ -55,6 +55,7 @@ export const landingContent: LandingContent = {
   navLinks: [
     { href: '/examples', label: 'Examples' },
     { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
+    { href: '/blog', label: 'Blog' },
     { href: '/docs', label: 'Docs' },
   ],
   heroTitle: ['Turn-Based Multiplayer API & Authoritative Server', 'for Unity, Godot and other Engines'],
@@ -80,7 +81,7 @@ export const landingContent: LandingContent = {
       icon: '◐',
       title: 'Hand Hiding',
       description:
-        'Server-side data masking. Clients receive item IDs, createBy, but item data (slug) is empty if list not visible to them. Use server-managed lists (Spawn, Move, Shuffle) to control hidden state like hands, decks.',
+        'Server-side data masking with managed lists for hidden hands, decks, and other private state.',
     },
     {
       icon: '⬡',
@@ -92,7 +93,7 @@ export const landingContent: LandingContent = {
       icon: '✓',
       title: 'Player Voting',
       description:
-        'Clients automatically validate each move using your game logic and submit a pass/fail vote. The server enforces the outcome based on config(votes required, votes to fail). Even if one client is compromised, honest clients can reject invalid moves.',
+        'Clients validate moves in the background and vote pass/fail. The server applies consensus so honest players can reject invalid moves.',
     },
   ],
   configRows: [
@@ -162,6 +163,7 @@ export const landingContent: LandingContent = {
   footerLinks: [
     { href: '/examples', label: 'Examples' },
     { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
+    { href: '/blog', label: 'Blog' },
     { href: '/docs', label: 'Docs' },
     { href: 'https://discord.gg/SqMVU5xex3', label: 'Discord', external: true },
     { href: '/terms', label: 'Terms' },

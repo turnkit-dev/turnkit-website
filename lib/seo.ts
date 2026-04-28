@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const siteName = 'TurnKit';
 export const siteUrl = 'https://turnkit.dev';
-export const defaultOgImage = '/assets/og-card.png';
+export const defaultOgImage = '/assets/og-card.png?v=2026-04-27';
 export const defaultOgImageAlt = 'TurnKit branding and multiplayer backend messaging';
 export const siteLocale = 'en_US';
 export const siteDescription =

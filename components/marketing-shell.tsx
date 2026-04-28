@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { MobileMenu } from '@/components/mobile-menu';
@@ -51,7 +50,7 @@ export async function MarketingShell({ children, footerLayout = 'centered' }: Ma
     <>
       <nav className="fixed left-0 top-0 z-50 flex h-[60px] w-full items-center justify-between border-b border-border bg-[rgba(8,12,16,0.85)] px-3 sm:px-[clamp(16px,4vw,64px)] backdrop-blur-xl">
         <Link href="/" className="flex min-w-0 shrink items-center gap-1.5 font-display text-[16px] font-extrabold tracking-[-0.02em] text-text sm:gap-2.5 sm:text-[18px]">
-          <Image
+          <img
             src="/assets/logo.png"
             alt="TurnKit turn-based multiplayer backend logo"
             width={32}

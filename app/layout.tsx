@@ -81,7 +81,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Cloud',
     description:
-      'Backend infrastructure for turn-based multiplayer games. Authoritative relay that enforces turns, hides player data, and prevents cheating. Works with Unity, Godot, or any engine.',
+      'Authoritative backend for turn-based multiplayer. Enforces turns, hides private data, and prevents cheating in Unity, Godot, or any engine.',
     url: siteUrl,
     offers: {
       '@type': 'AggregateOffer',
