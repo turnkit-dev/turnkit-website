@@ -16,7 +16,7 @@ import {
   unityQuickstartPageMeta,
   websocketPageMeta,
 } from '@/content/docs-content';
-import { blogIndexPageMeta, hybridApproachPageMeta } from '@/content/blog-content';
+import { blogIndexPageMeta, hybridApproachPageMeta, selfHostedLeaderboardsPageMeta } from '@/content/blog-content';
 import { lastContentUpdate, siteUrl } from '@/lib/seo';
 
 const routes = [
@@ -24,6 +24,7 @@ const routes = [
   { path: '/turn-based-game-server-comparison-2026', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: blogIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: hybridApproachPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: selfHostedLeaderboardsPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: docsIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: unityQuickstartPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
