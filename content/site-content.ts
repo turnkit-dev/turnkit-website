@@ -169,5 +169,6 @@ export const landingContent: LandingContent = {
     { href: '/terms', label: 'Terms' },
     { href: '/privacy', label: 'Privacy' },
     { href: '/refunds', label: 'Refunds' },
+    { href: '/rankdrop-license', label: 'RankDrop License' },
   ],
 };

@@ -44,6 +44,7 @@ const routes = [
   { path: websocketPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.1, changeFrequency: 'yearly' as const },
   { path: '/refunds', priority: 0.1, changeFrequency: 'yearly' as const },
+  { path: '/rankdrop-license', priority: 0.1, changeFrequency: 'yearly' as const },
   { path: '/terms', priority: 0.1, changeFrequency: 'yearly' as const },
 ];
 
