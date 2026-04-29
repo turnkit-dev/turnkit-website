@@ -25,7 +25,7 @@ const quickDecisionRows = [
   [
     'Indie dev who wants to ship fast',
     <strong key="best-choice-asset" className="text-text">
-      RankDrop Unity Asset (coming soon)
+      RankDrop Asset for Unity or Godot
     </strong>,
     '60-second setup inside Unity Editor and also full control, zero cost and you manage everything',
   ],
@@ -88,7 +88,7 @@ export default function LeaderboardOptionsPage() {
 
       <SectionTitle id="detailed-comparison">Detailed Comparison</SectionTitle>
       <ComparisonTable
-        headers={['Feature', 'Open Source RankDrop', 'RankDrop Unity Asset (soon)', 'TurnKit Hosted SaaS']}
+        headers={['Feature', 'Open Source RankDrop', 'RankDrop Asset For Unity/Godot', 'TurnKit Hosted SaaS']}
         rows={detailedComparisonRows.map(
           (row) =>
             row.map((cell) => cell as React.ReactNode) as [
@@ -114,7 +114,7 @@ export default function LeaderboardOptionsPage() {
         </InfoCard>
         <InfoCard title="RankDrop Unity Asset">
           <p className="text-[14px] leading-[1.7] text-muted">
-            This is the middle ground. You get the same RankDrop core with a polished Unity Editor setup flow, so you avoid manual
+            This is the middle ground. You get the same RankDrop core with a polished Unity/Godot Editor setup flow, so you avoid manual
             Docker and server config while keeping a high level of control.
           </p>
           <p className="mt-3 text-[14px] leading-[1.7] text-muted">
