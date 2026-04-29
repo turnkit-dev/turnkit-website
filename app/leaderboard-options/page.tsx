@@ -157,9 +157,23 @@ export default function LeaderboardOptionsPage() {
         </p>
         <p>
           Deploy in 60 seconds via the{' '}
-          <Link href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688" className="text-accent transition hover:text-text">
-            RankDrop Unity Asset (30% Launch Discount currently) 
-          </Link>
+          <a
+            href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent transition hover:text-text"
+          >
+            RankDrop Unity Asset Store page
+          </a>
+          {' '}or the{' '}
+          <a
+            href="https://brainzy.itch.io/godot-rankdrop-leaderboards-in-60-seconds-no-monthly-costs-and-own-your-data"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent transition hover:text-text"
+          >
+            Godot RankDrop page
+          </a>
           .
         </p>
         <p>

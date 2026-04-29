@@ -34,6 +34,11 @@ export default function BlogIndexPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <BlogCard
+          title="Self-Hosted Leaderboards in 60 Seconds (Unity & Godot)"
+          description="A quick overview of RankDrop, free infrastructure, PostgreSQL ownership, and the 60-second Unity setup flow."
+          href="/blog/self-hosted-leaderboards-unity-godot"
+        />
+        <BlogCard
           title="Making a Multiplayer Turn Based Game with a Hybrid Approach"
           description="A practical hybrid model that keeps server authority for generic features and leaves game-specific rules in the client."
           href="/blog/turn-based-multiplayer-hybrid-approach"

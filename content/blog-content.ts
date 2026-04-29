@@ -4,6 +4,7 @@ export const blogNavSections: DocsNavSection[] = [
   {
     title: 'Featured',
     links: [
+      { href: '/blog/self-hosted-leaderboards-unity-godot', label: 'Self-Hosted Leaderboards in 60 Seconds' },
       { href: '/blog/turn-based-multiplayer-hybrid-approach', label: 'Turn-Based Multiplayer Hybrid Approach' },
     ],
   },
@@ -41,5 +42,25 @@ export const hybridApproachPageMeta: DocsPageMeta = {
     { href: '#consensus', label: 'Client Voting Consensus' },
     { href: '#demo', label: 'Live Demo' },
     { href: '#tradeoffs', label: 'Tradeoffs' },
+  ],
+};
+
+export const selfHostedLeaderboardsPageMeta: DocsPageMeta = {
+  title: 'Self-Hosted Leaderboards in 60 Seconds (Unity & Godot)',
+  description:
+    'RankDrop is a self-hosted leaderboard backend for Unity and Godot that runs on your own infrastructure with PostgreSQL and no monthly costs.',
+  path: '/blog/self-hosted-leaderboards-unity-godot',
+  eyebrow: 'Blog',
+  breadcrumbLabel: 'Self-Hosted Leaderboards',
+  toc: [
+    { href: '#top', label: 'Top' },
+    { href: '#what-this-is', label: 'What This Is' },
+    { href: '#setup', label: '60-Second Setup' },
+    { href: '#solves', label: 'What It Solves' },
+    { href: '#features', label: 'Features' },
+    { href: '#how-it-looks', label: 'How It Looks' },
+    { href: '#who-this-is-for', label: 'Who This Is For' },
+    { href: '#options', label: 'Options' },
+    { href: '#try-it', label: 'Try It' },
   ],
 };
