@@ -23,7 +23,7 @@ import { buildMetadata } from '@/lib/seo';
 
 const sections = [
   { href: '#client-keys', label: 'Client Keys' },
-  { href: '#auth-security', label: 'Player Authentication Mode' },
+  { href: '#auth-security', label: 'Player Authentication' },
   { href: '#leaderboards', label: 'Leaderboards' },
   { href: '#relay-configs', label: 'Relay Configs' },
   { href: '#usage-billing', label: 'Usage & Billing' },
@@ -191,10 +191,11 @@ export default async function GameDashboardPage({
         </div>
       </SectionCard>
 
-      <SectionCard id="auth-security" title="Player Authentication Mode">
+      <SectionCard id="auth-security" title="Player Authentication">
         <AuthSecurityForm
           gameId={game.id}
-          mode={game.auth.mode}
+          policy={game.auth.policy}
+          methods={game.auth.methods}
           hasSecret={game.auth.hasSecret}
           signedSecret={game.auth.signedSecret}
           smtp={game.auth.smtp}

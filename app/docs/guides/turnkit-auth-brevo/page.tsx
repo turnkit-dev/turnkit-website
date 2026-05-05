@@ -6,20 +6,20 @@ import { turnkitAuthBrevoPageMeta } from '@/content/docs-content';
 import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'TurnKit Auth with Brevo - TurnKit Docs',
+  title: 'EMAIL_OTP with Brevo - TurnKit Docs',
   description: turnkitAuthBrevoPageMeta.description,
   alternates: {
     canonical: absoluteUrl(turnkitAuthBrevoPageMeta.path),
   },
   openGraph: {
-    title: 'TurnKit Auth with Brevo - TurnKit Docs',
+    title: 'EMAIL_OTP with Brevo - TurnKit Docs',
     description: turnkitAuthBrevoPageMeta.description,
     url: absoluteUrl(turnkitAuthBrevoPageMeta.path),
     type: 'article',
   },
   twitter: {
     card: 'summary',
-    title: 'TurnKit Auth with Brevo - TurnKit Docs',
+    title: 'EMAIL_OTP with Brevo - TurnKit Docs',
     description: turnkitAuthBrevoPageMeta.description,
   },
 };
@@ -37,7 +37,7 @@ export default function TurnkitAuthBrevoPage() {
   return (
     <DocsShell meta={turnkitAuthBrevoPageMeta}>
       <p className="mb-8 max-w-[760px] text-base leading-[1.7] text-muted">
-        Use Brevo SMTP with <strong className="text-text">TURNKIT_AUTH</strong> to let players sign in with email OTP. This is the
+        Use Brevo SMTP with <strong className="text-text">EMAIL_OTP</strong> to let players sign in with email OTP. This is the
         fastest setup if you want TurnKit to handle auth for you.
       </p>
 
@@ -78,20 +78,21 @@ export default function TurnkitAuthBrevoPage() {
         </ol>
       </div>
 
-      <SectionTitle id="configure-turnkit-auth">Configure TurnKit Auth</SectionTitle>
+      <SectionTitle id="configure-turnkit-auth">Configure EMAIL_OTP</SectionTitle>
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
         In your game dashboard, open{' '}
         <Link href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
-          Player Authentication Mode
+          Player Authentication
         </Link>{' '}
-        and switch it to <strong className="text-text">TURNKIT_AUTH</strong>.
+        and set policy to <strong className="text-text">AUTH_REQUIRED</strong> with <strong className="text-text">EMAIL_OTP</strong>{' '}
+        enabled.
       </p>
       <div className="mb-6 rounded-[6px] border border-border bg-surface p-5">
         <h3 className="mb-3 text-sm font-semibold text-text">Client flow</h3>
         <ol className="list-decimal space-y-2 pl-5 text-[13px] leading-[1.7] text-muted">
           <li>Fill the SMTP fields below and press SAVE.</li>
           <li>
-            Client calls <InlineCode code="/v1/client/auth/otp/request" /> and <InlineCode code="/v1/client/auth/otp/verify" />.
+            Client calls <InlineCode code="/v1/client/auth/email-otp/request" /> and <InlineCode code="/v1/client/auth/email-otp/verify" />.
           </li>
           <li>
             Use the returned player JWT in <InlineCode code="Authorization: Bearer <player-jwt>" /> for normal client calls.
@@ -123,8 +124,8 @@ export default function TurnkitAuthBrevoPage() {
       <div className="mb-10 rounded-[6px] border border-border bg-surface p-5 text-[14px] leading-[1.7] text-muted">
         <strong className="text-text">Current API behavior:</strong> send OTP requests as JSON with{' '}
         <InlineCode code="Content-Type: application/json" />. Default limits are 5 requests per 10 minutes for{' '}
-        <InlineCode code="/v1/client/auth/otp/request" /> and 10 requests per 10 minutes for{' '}
-        <InlineCode code="/v1/client/auth/otp/verify" />.
+        <InlineCode code="/v1/client/auth/email-otp/request" /> and 10 requests per 10 minutes for{' '}
+        <InlineCode code="/v1/client/auth/email-otp/verify" />.
       </div>
 
       <SectionTitle id="sender-note">Sender Note</SectionTitle>

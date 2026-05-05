@@ -46,7 +46,7 @@ export default function UnityClientDocsPage() {
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
         Before using Relay operations, authenticate the player and connect to a match. Identity setup differs by auth mode, so check{' '}
         <Link href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
-          Player Authentication Modes
+          Player Authentication
         </Link>{' '}
         before wiring your login flow.
       </p>

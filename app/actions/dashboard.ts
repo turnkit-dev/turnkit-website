@@ -17,14 +17,16 @@ import {
   updateAuthSettings,
   updateBillingAutoUpgrade,
   updateRelayConfig,
-  type AuthMode,
   type FailAction,
   type LeaderboardResetFrequency,
   type LeaderboardScoreStrategy,
   type LeaderboardSortOrder,
+  type PlayerAuthMethod,
+  type PlayerAuthPolicy,
   type SetupMode,
   type TurnEnforcement,
   type VotingMode,
+  type OnTurnTimeout,
 } from '@/lib/dashboard';
 import { initialDashboardActionState, type DashboardActionState } from '@/lib/dashboard-action-state';
 import { BackendAuthError, buildSignInPath } from '@/lib/backend-auth';
@@ -98,8 +100,17 @@ function readRelayConfigInput(formData: FormData) {
     matchTimeoutMinutes: readInt(formData, 'matchTimeoutMinutes'),
     turnTimeoutSeconds: readInt(formData, 'turnTimeoutSeconds'),
     waitReconnectSeconds: readInt(formData, 'waitReconnectSeconds'),
+    reconnectMoveHistorySize: readInt(formData, 'reconnectMoveHistorySize'),
+    onTurnTimeout: readRequiredString(formData, 'onTurnTimeout') as OnTurnTimeout,
+    revealPrivateListsOnTimeout: readBoolean(formData, 'revealPrivateListsOnTimeout'),
     lists: readRelayLists(formData),
   };
+}
+
+function validatePlayerAuthConfig(policy: PlayerAuthPolicy, methods: PlayerAuthMethod[]) {
+  if (policy === 'AUTH_REQUIRED' && methods.length === 0) {
+    throw new Error('AUTH_REQUIRED must enable at least one auth method');
+  }
 }
 
 function refreshGamePaths(gameId: string) {
@@ -192,8 +203,10 @@ export async function deleteClientKeyAction(_previousState: DashboardActionState
 export async function updateAuthSettingsAction(_previousState: DashboardActionState, formData: FormData) {
   try {
     const gameId = readGameId(formData);
-    const mode = (readString(formData, 'mode') || 'OPEN') as AuthMode;
-    await updateAuthSettings(gameId, mode, {
+    const policy = (readString(formData, 'policy') || 'NO_AUTH') as PlayerAuthPolicy;
+    const methods = formData.getAll('methods').map((value) => String(value)) as PlayerAuthMethod[];
+    validatePlayerAuthConfig(policy, methods);
+    await updateAuthSettings(gameId, policy, methods, {
       host: readString(formData, 'host'),
       port: readString(formData, 'port'),
       username: readString(formData, 'username'),
@@ -233,6 +246,7 @@ export async function createLeaderboardAction(_previousState: DashboardActionSta
       displayName: readRequiredString(formData, 'displayName'),
       sortOrder: readRequiredString(formData, 'sortOrder') as LeaderboardSortOrder,
       scoreStrategy: readRequiredString(formData, 'scoreStrategy') as LeaderboardScoreStrategy,
+      clientSubmitEnabled: readBoolean(formData, 'clientSubmitEnabled'),
       minScore,
       maxScore,
       resetFrequency: readRequiredString(formData, 'resetFrequency') as LeaderboardResetFrequency,

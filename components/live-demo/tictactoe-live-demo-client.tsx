@@ -429,8 +429,15 @@ export function TicTacToeLiveDemoClient() {
       case 'MOVE_MADE':
         handleMoveMade(key, message as TurnKitMoveMadeMessage);
         return;
-      case 'TURN_CHANGED':
+      case 'TURN_STARTED':
         handleTurnChanged(key, message as TurnKitTurnChangedMessage);
+        return;
+      case 'MOVE_REQUESTED_FOR_PLAYER':
+        appendLog(seats[key].title, 'delegated move requested by relay timeout flow.');
+        setStatus('Relay requested delegated move for timed-out player.');
+        return;
+      case 'PRIVATE_LISTS_REVEALED':
+        appendLog(seats[key].title, 'private lists revealed for timed-out slot.');
         return;
       case 'VOTE_FAILED':
         handleVoteFailed(message as TurnKitVoteFailedMessage);
@@ -692,3 +699,4 @@ export function TicTacToeLiveDemoClient() {
     </div>
   );
 }
+

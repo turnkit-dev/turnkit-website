@@ -48,7 +48,7 @@ export interface TurnKitMoveMadeMessage {
 }
 
 export interface TurnKitTurnChangedMessage {
-  type: 'TURN_CHANGED';
+  type: 'TURN_STARTED';
   activePlayerId?: string;
   yourTurn?: boolean;
   moveNumber?: number;
@@ -59,6 +59,17 @@ export interface TurnKitVoteFailedMessage {
   moveNumber?: number;
   reason?: string;
   failAction?: string;
+}
+
+export interface TurnKitMoveRequestedForPlayerMessage {
+  type: 'MOVE_REQUESTED_FOR_PLAYER';
+  delegateFor?: string;
+  delegateForSlot?: number;
+}
+
+export interface TurnKitPrivateListsRevealedMessage {
+  type: 'PRIVATE_LISTS_REVEALED';
+  playerSlot?: number;
 }
 
 export interface TurnKitGameEndedMessage {
@@ -78,6 +89,8 @@ export type TurnKitRelayServerMessage =
   | TurnKitMatchStartedMessage
   | TurnKitMoveMadeMessage
   | TurnKitTurnChangedMessage
+  | TurnKitMoveRequestedForPlayerMessage
+  | TurnKitPrivateListsRevealedMessage
   | TurnKitVoteFailedMessage
   | TurnKitGameEndedMessage
   | ({ type: 'PONG' })
@@ -86,7 +99,7 @@ export type TurnKitRelayServerMessage =
   | ({ type: string } & Record<string, unknown>);
 
 type TurnKitRelayClientCommand =
-  | { type: 'MOVE'; json?: unknown; shouldEndMyTurn?: boolean; actions?: unknown[] }
+  | { type: 'MOVE'; json?: unknown; shouldEndMyTurn?: boolean; actions?: unknown[]; delegated?: boolean; delegateFor?: string | number }
   | { type: 'VOTE'; moveNumber: number; isValid: boolean }
   | { type: 'PING' }
   | { type: 'RECONNECT'; lastMoveNumber: number }
@@ -236,3 +249,4 @@ export function createRelayClient(options: CreateRelayClientOptions) {
     onPong: options.onPong,
   });
 }
+

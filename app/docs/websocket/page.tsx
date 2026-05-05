@@ -52,8 +52,12 @@ export default function WebsocketDocsPage() {
       <SectionTitle id="handshake">Handshake</SectionTitle>
       <ul className="mb-5 list-disc space-y-2 pl-6 text-muted">
         <li>
-          <InlineCode code="POST /v1/client/relay/queue" /> returns <InlineCode code="relayToken" /> alongside <InlineCode code="sessionId" /> and{' '}
-          <InlineCode code="slot" />.
+          Join Relay over <InlineCode code="POST /v1/client/relay/queue" /> first. That response returns{' '}
+          <InlineCode code="relayToken" />, <InlineCode code="sessionId" />, <InlineCode code="slot" />, and <InlineCode code="status" />.
+        </li>
+        <li>
+          Queue join defaults to <InlineCode code="fillPolicy=REQUIRE_ALL_PLAYERS" />. For delegated fills, send{' '}
+          <InlineCode code="fillPolicy=ALLOW_DELEGATED_SLOTS" /> with <InlineCode code="delegatedFillAfterSeconds" />.
         </li>
         <li>
           Use that <InlineCode code="relayToken" /> when opening <InlineCode code="/v1/client/relay/ws" />.
@@ -62,6 +66,79 @@ export default function WebsocketDocsPage() {
           Authenticate with either <InlineCode code="Authorization: Bearer <relayToken>" /> or <InlineCode code="?token=<relayToken>" />.
         </li>
       </ul>
+
+      <div className="mb-6 overflow-x-auto rounded-[6px] border border-border bg-surface">
+        <table className="w-full border-collapse text-[13px]">
+          <thead>
+            <tr>
+              <th className="border-b border-border bg-surface2 px-4 py-3 text-left font-medium text-text">Player auth policy</th>
+              <th className="border-b border-border bg-surface2 px-4 py-3 text-left font-medium text-text">Queue call</th>
+              <th className="border-b border-border bg-surface2 px-4 py-3 text-left font-medium text-text">WebSocket call</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="border-b border-border px-4 py-3 align-top text-muted">
+                <InlineCode code="NO_AUTH" />
+              </td>
+              <td className="border-b border-border px-4 py-3 align-top text-muted">
+                <InlineCode code="Authorization: Bearer <client-key>" /> plus <InlineCode code="X-Player-Id" />
+              </td>
+              <td className="border-b border-border px-4 py-3 align-top text-muted">
+                <InlineCode code="relayToken" />
+              </td>
+            </tr>
+            <tr>
+              <td className="px-4 py-3 align-top text-muted">
+                <InlineCode code="AUTH_REQUIRED" />
+              </td>
+              <td className="px-4 py-3 align-top text-muted">
+                Exchange auth first, then queue with <InlineCode code="Authorization: Bearer <player-jwt>" />
+              </td>
+              <td className="px-4 py-3 align-top text-muted">
+                <InlineCode code="relayToken" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <Notice>
+        Relay queue auth now depends on your configured player auth policy. Only the WebSocket hop itself uses the short-lived{' '}
+        <InlineCode code="relayToken" />. See{' '}
+        <a href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
+          Player Authentication
+        </a>{' '}
+        for the email OTP, backend proof, and UGS exchange flows.
+      </Notice>
+
+      <CodeBlock
+        className="mb-6"
+        language="http"
+        code={`POST /v1/client/relay/queue
+Authorization: Bearer <client-key>
+X-Player-Id: player-123
+Content-Type: application/json
+
+{
+  "slug": "tic-tac-toe",
+  "fillPolicy": "REQUIRE_ALL_PLAYERS"
+}`}
+      />
+
+      <CodeBlock
+        className="mb-6"
+        language="http"
+        code={`POST /v1/client/relay/queue
+Authorization: Bearer <player-jwt>
+Content-Type: application/json
+
+{
+  "slug": "tic-tac-toe",
+  "fillPolicy": "ALLOW_DELEGATED_SLOTS",
+  "delegatedFillAfterSeconds": 15
+}`}
+      />
 
       <CodeBlock
         className="mb-6"
@@ -99,8 +176,13 @@ export default function WebsocketDocsPage() {
         </InfoCard>
         <InfoCard title="Active Phase">
           <p className="text-[13px] text-muted">
-            When all players are present, each receives <InlineCode code="MATCH_STARTED" />. If turn enforcement is
+            Match starts when queue policy conditions are met, then each player receives <InlineCode code="MATCH_STARTED" />. If turn enforcement is
             round robin, the current player timer starts immediately.
+          </p>
+        </InfoCard>
+        <InfoCard title="Delegated Timeout State">
+          <p className="text-[13px] text-muted">
+            With <InlineCode code="onTurnTimeout=DELEGATE_MOVE" />, session enters <InlineCode code="WAITING_FOR_DELEGATED_MOVE" /> after timeout.
           </p>
         </InfoCard>
         <InfoCard title="Heartbeat">
@@ -110,7 +192,7 @@ export default function WebsocketDocsPage() {
         </InfoCard>
         <InfoCard title="Reconnect">
           <p className="text-[13px] text-muted">
-            Disconnected players enter a grace period defined by match config <InlineCode code="waitReconnectSeconds" />.
+            Reconnect accepts only move gaps allowed by <InlineCode code="reconnectMoveHistorySize" />.
           </p>
         </InfoCard>
       </div>
@@ -207,7 +289,8 @@ export default function WebsocketDocsPage() {
             'Full session snapshot for that player, including visible list contents, active player, seed, and current move number.',
           ],
           ['MOVE_MADE', 'Committed move delta broadcast to connected players.'],
-          ['TURN_CHANGED', 'Sent when the active player changes in round robin mode.'],
+          ['TURN_STARTED', 'Sent when the active player changes in round robin mode.'],
+          ['MOVE_REQUESTED_FOR_PLAYER', 'Timeout delegation request. Includes optional revealed private lists for other connected players.'],
           ['VOTE_FAILED', 'Sync vote failed. Includes failed move number and configured fail action.'],
           ['GAME_ENDED', 'Terminal state. Socket is closed after broadcast.'],
           ['PONG', 'Heartbeat acknowledgement.'],
@@ -227,6 +310,7 @@ export default function WebsocketDocsPage() {
     { "playerId": "p1", "slot": 0 },
     { "playerId": "p2", "slot": 1 }
   ],
+  "delegatedSlots": [],
   "yourTurn": true,
   "activePlayerId": "p1",
   "lists": [
@@ -242,7 +326,9 @@ export default function WebsocketDocsPage() {
     ]
   },
   "randomSeed": 918221,
-  "serverMoveNumber": 0
+  "serverMoveNumber": 0,
+  "serverNowUtcMs": 1714600000000,
+  "timerEndUtcMs": 1714600120000
 }`}
       />
 
@@ -278,17 +364,11 @@ export default function WebsocketDocsPage() {
           server only returns <InlineCode code="SYNC_COMPLETE" />.
         </li>
         <li>
-          If the client is behind but still within the last 10 moves, the server replays missed <InlineCode code="MOVE_MADE" /> messages.
+          Reconnect is accepted only when move gap is either <InlineCode code="0" /> or between <InlineCode code="1" /> and{' '}
+          <InlineCode code="reconnectMoveHistorySize" /> inclusive.
         </li>
         <li>
-          If the client is further behind, the server sends a fresh <InlineCode code="MATCH_STARTED" /> snapshot instead.
-        </li>
-        <li>
-          After reconnect sync, the player enters a 2 second sync window. Moves from that player during that window are rejected with <InlineCode code="SYNC_WINDOW" />.
-        </li>
-        <li>
-          If the reconnect token is too old, the server returns <InlineCode code="RECONNECT_EXPIRED" /> and the client must start a fresh
-          join flow.
+          If gap exceeds <InlineCode code="reconnectMoveHistorySize" />, reconnect is rejected with <InlineCode code="RECONNECT_MOVE_GAP_TOO_LARGE" />.
         </li>
       </ul>
       <CodeBlock className="mb-6" language="json" code={`{ "type": "RECONNECT", "lastMoveNumber": 12 }`} />
@@ -303,6 +383,8 @@ export default function WebsocketDocsPage() {
           ['PAYLOAD_TOO_LARGE', 'MOVE.json exceeded 1024 bytes.'],
           ['INVALID_JSON', 'The optional json payload could not be serialized.'],
           ['ACTION_FAILED', 'An action was invalid for the current authoritative state.'],
+          ['DELEGATED_MOVE_REQUIRED', 'Session is waiting for delegated move; non-delegated move was rejected.'],
+          ['RECONNECT_MOVE_GAP_TOO_LARGE', 'Reconnect move gap exceeded configured reconnectMoveHistorySize.'],
           ['RECONNECT_EXPIRED', 'Saved reconnect state is no longer valid and the match cannot be resumed.'],
           ['STALE_SOCKET', 'Message or disconnect came from a superseded socket.'],
           ['SUPERSEDED_CONNECTION', 'An older socket was closed because a newer one connected.'],
@@ -321,6 +403,10 @@ export default function WebsocketDocsPage() {
 
       <SectionTitle id="client-guidance">Client Guidance</SectionTitle>
       <ul className="list-disc space-y-2 pl-6 text-muted">
+        <li>
+          Treat Relay as a two-stage auth flow: queue with your current client credential, then open the socket with the returned{' '}
+          <InlineCode code="relayToken" />.
+        </li>
         <li>
           Send <InlineCode code="PING" /> on an interval shorter than 15 seconds.
         </li>

@@ -87,6 +87,10 @@ export default function ClientReconnectionDocsPage() {
           <li>
             <InlineCode code="playerId" /> and <InlineCode code="slug" /> for identity and metadata
           </li>
+          <li>
+            If the game uses <InlineCode code="AUTH_REQUIRED" />, persist or refresh the player JWT you need before calling the queue or
+            resume flow again.
+          </li>
         </ul>
       </div>
 
@@ -143,6 +147,7 @@ else
               Save at minimum <InlineCode code="relayToken" /> and <InlineCode code="lastMoveNumber" /> plus <InlineCode code="playerId" /> and{' '}
               <InlineCode code="slug" /> if needed.
             </li>
+            <li>If player auth is required, make sure a valid player JWT is available again before rejoining normal client APIs.</li>
             <li>On restart, reconnect with the token and resume from the saved last move number.</li>
             <li>If resume succeeds, process missed moves normally.</li>
             <li>

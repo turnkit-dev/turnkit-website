@@ -36,7 +36,7 @@ export interface TurnKitMoveMadeMessage {
 }
 
 export interface TurnKitTurnChangedMessage {
-  type: 'TURN_CHANGED';
+  type: 'TURN_STARTED';
   activePlayerId?: string;
   yourTurn?: boolean;
   moveNumber?: number;
@@ -114,3 +114,4 @@ export type TurnKitRelayClientCommand =
   | TurnKitRelayPingCommand
   | TurnKitRelayReconnectCommand
   | TurnKitRelayEndGameCommand;
+

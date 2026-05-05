@@ -19,12 +19,14 @@ import { CopyButton, Field, Modal, PendingButton, SectionButton, showDashboardTo
 import { UpgradeSubscriptionModal } from '@/components/upgrade-subscription-modal';
 import { initialDashboardActionState } from '@/lib/dashboard-action-state';
 import type {
-  AuthMode,
   FailAction,
   LeaderboardRecord,
   LeaderboardResetFrequency,
   LeaderboardScoreStrategy,
   LeaderboardSortOrder,
+  OnTurnTimeout,
+  PlayerAuthMethod,
+  PlayerAuthPolicy,
   RelayConfigInput,
   RelayConfigRecord,
   RelayListConfigRecord,
@@ -35,24 +37,35 @@ import type {
 
 export function AuthSecurityForm({
   gameId,
-  mode,
+  policy,
+  methods,
   hasSecret,
   signedSecret,
   smtp,
 }: {
   gameId: string;
-  mode: AuthMode;
+  policy: PlayerAuthPolicy;
+  methods: PlayerAuthMethod[];
   hasSecret: boolean;
   signedSecret: string;
   smtp: SmtpSettings;
 }) {
-  const [selectedMode, setSelectedMode] = useState<AuthMode>(mode);
+  const [selectedPolicy, setSelectedPolicy] = useState<PlayerAuthPolicy>(policy);
+  const [selectedMethods, setSelectedMethods] = useState<PlayerAuthMethod[]>(methods);
   const [showSecret, setShowSecret] = useState(false);
   const [revealOpen, setRevealOpen] = useState(false);
   const [revealedSecret, setRevealedSecret] = useState('');
   const [settingsState, settingsAction] = useActionState(updateAuthSettingsAction, initialDashboardActionState);
   const [secretState, secretAction] = useActionState(rotateSignedSecretAction, initialDashboardActionState);
   const maskedSecret = useMemo(() => (hasSecret ? 'stored on server' : 'not generated yet'), [hasSecret]);
+  const hasYourBackend = selectedMethods.includes('YOUR_BACKEND');
+  const hasEmailOtp = selectedMethods.includes('EMAIL_OTP');
+  const hasUgs = selectedMethods.includes('UGS');
+  const authRequiredWithoutMethod = selectedPolicy === 'AUTH_REQUIRED' && selectedMethods.length === 0;
+
+  function toggleMethod(method: PlayerAuthMethod) {
+    setSelectedMethods((current) => (current.includes(method) ? current.filter((value) => value !== method) : [...current, method]));
+  }
 
   useDashboardActionFeedback(settingsState);
   useDashboardActionFeedback(secretState, {
@@ -68,39 +81,92 @@ export function AuthSecurityForm({
         <input type="hidden" name="gameId" value={gameId} />
         <div className="space-y-3">
           <label className="flex gap-3 rounded border border-border2 bg-bg px-4 py-3">
-            <input type="radio" name="mode" value="OPEN" checked={selectedMode === 'OPEN'} onChange={() => setSelectedMode('OPEN')} className="mt-0.5" />
+            <input
+              type="radio"
+              name="policy"
+              value="NO_AUTH"
+              checked={selectedPolicy === 'NO_AUTH'}
+              onChange={() => setSelectedPolicy('NO_AUTH')}
+              className="mt-0.5"
+            />
             <div>
-              <div className="text-[13px] text-text">OPEN</div>
-              <div className="mt-1 text-[12px] text-muted">No authentication required. Anyone can join using only the client key. It is default starting mode for faster prototyping.</div>
+              <div className="text-[13px] text-text">NO_AUTH</div>
+              <div className="mt-1 text-[12px] text-muted">No player JWT is required. Clients use <span className="font-mono">X-Player-Id</span> on runtime requests.</div>
               <div className="mt-1 text-[12px] text-amber">Not recommended for production.</div>
-            </div>
-          </label>
-          <label className="flex gap-3 rounded border border-border2 bg-bg px-4 py-3">
-            <input type="radio" name="mode" value="SIGNED" checked={selectedMode === 'SIGNED'} onChange={() => setSelectedMode('SIGNED')} className="mt-0.5" />
-            <div>
-              <div className="text-[13px] text-text">SIGNED</div>
-              <div className="mt-1 text-[12px] text-muted">Your backend signs the player ID using a secret key. TurnKit only verifies the signature. Best if you already have your own auth system.</div>
             </div>
           </label>
           <label className="flex gap-3 rounded border border-border2 bg-bg px-4 py-3">
             <input
               type="radio"
-              name="mode"
-              value="TURNKIT_AUTH"
-              checked={selectedMode === 'TURNKIT_AUTH'}
-              onChange={() => setSelectedMode('TURNKIT_AUTH')}
+              name="policy"
+              value="AUTH_REQUIRED"
+              checked={selectedPolicy === 'AUTH_REQUIRED'}
+              onChange={() => setSelectedPolicy('AUTH_REQUIRED')}
               className="mt-0.5"
             />
             <div>
-              <div className="text-[13px] text-text">TURNKIT_AUTH</div>
-              <div className="mt-1 text-[12px] text-muted">TurnKit handles login via email + OTP using your SMTP settings. Best if you want TurnKit to manage player authentication.</div>
+              <div className="text-[13px] text-text">AUTH_REQUIRED</div>
+              <div className="mt-1 text-[12px] text-muted">Protected client endpoints require a player JWT. Enable at least one auth method below.</div>
             </div>
           </label>
         </div>
 
-        {selectedMode === 'SIGNED' ? (
+        <div className="rounded border border-border2 bg-bg p-4">
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Enabled Methods</div>
+          <div className="space-y-3">
+            <label className="flex gap-3 rounded border border-border2 bg-surface px-4 py-3">
+              <input
+                type="checkbox"
+                name="methods"
+                value="YOUR_BACKEND"
+                checked={hasYourBackend}
+                onChange={() => toggleMethod('YOUR_BACKEND')}
+                className="mt-0.5"
+              />
+              <div>
+                <div className="text-[13px] text-text">YOUR_BACKEND</div>
+                <div className="mt-1 text-[12px] text-muted">Your backend signs player proof payloads, and TurnKit exchanges them for a player JWT.</div>
+              </div>
+            </label>
+            <label className="flex gap-3 rounded border border-border2 bg-surface px-4 py-3">
+              <input
+                type="checkbox"
+                name="methods"
+                value="EMAIL_OTP"
+                checked={hasEmailOtp}
+                onChange={() => toggleMethod('EMAIL_OTP')}
+                className="mt-0.5"
+              />
+              <div>
+                <div className="text-[13px] text-text">EMAIL_OTP</div>
+                <div className="mt-1 text-[12px] text-muted">TurnKit sends login codes over email using your per-game SMTP settings.</div>
+              </div>
+            </label>
+            <label className="flex gap-3 rounded border border-border2 bg-surface px-4 py-3">
+              <input
+                type="checkbox"
+                name="methods"
+                value="UGS"
+                checked={hasUgs}
+                onChange={() => toggleMethod('UGS')}
+                className="mt-0.5"
+              />
+              <div>
+                <div className="text-[13px] text-text">UGS</div>
+                <div className="mt-1 text-[12px] text-muted">Exchange a Unity Authentication JWT for a TurnKit player JWT using the client key.</div>
+                <div className="mt-1 text-[12px] text-muted">Requires backend UGS verification to be configured before AUTH_REQUIRED can enable it.</div>
+              </div>
+            </label>
+          </div>
+          {authRequiredWithoutMethod ? <div className="mt-3 text-[12px] text-danger">AUTH_REQUIRED must enable at least one method.</div> : null}
+          {selectedPolicy === 'NO_AUTH' && selectedMethods.length > 0 ? (
+            <div className="mt-3 text-[12px] text-muted">Methods stay saved while NO_AUTH is active, so you can re-enable AUTH_REQUIRED later without losing config.</div>
+          ) : null}
+        </div>
+
+        {hasYourBackend ? (
           <div className="rounded border border-border2 bg-bg p-4">
-            <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">Secret</div>
+            <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.08em] text-faint">YOUR_BACKEND Secret</div>
             <div className="flex flex-wrap items-center gap-3">
               <div className="rounded-[3px] border border-border2 px-3 py-2 font-mono text-[13px] text-text">
                 {showSecret ? (signedSecret || 'Returned only when generated or rotated') : maskedSecret}
@@ -117,7 +183,7 @@ export function AuthSecurityForm({
           </div>
         ) : null}
 
-        {selectedMode === 'TURNKIT_AUTH' ? (
+        {hasEmailOtp ? (
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="SMTP Host" name="host" defaultValue={smtp.host} />
             <Field label="Port" name="port" defaultValue={smtp.port} />
@@ -141,10 +207,14 @@ export function AuthSecurityForm({
           <p className="text-[13px] text-muted">
             More details in{' '}
             <Link href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
-              Player Authentication Modes Docs
+              Player Authentication Docs
             </Link>
           </p>
-          <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel="Saving...">
+          <PendingButton
+            className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+            disabled={authRequiredWithoutMethod}
+            pendingLabel="Saving..."
+          >
             Save Changes
           </PendingButton>
         </div>
@@ -251,6 +321,10 @@ export function NewLeaderboardModal({ gameId }: { gameId: string }) {
             </label>
           </div>
           <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
+            <input type="checkbox" name="clientSubmitEnabled" />
+            Allow client score submission
+          </label>
+          <label className="flex items-center gap-3 rounded border border-border2 bg-bg px-4 py-3 text-[13px] text-text">
             <input type="checkbox" name="archiveOnReset" />
             Archive scores on automatic reset
           </label>
@@ -311,6 +385,7 @@ export function ViewLeaderboardButton({ gameId, leaderboard }: { gameId: string;
             <LeaderboardSetting label="Score Mode" value={formatLeaderboardMode(leaderboard)} />
             <LeaderboardSetting label="Min Score" value={String(leaderboard.minScore)} />
             <LeaderboardSetting label="Max Score" value={String(leaderboard.maxScore)} />
+            <LeaderboardSetting label="Client Submit Enabled" value={leaderboard.clientSubmitEnabled ? 'Yes' : 'No'} />
             <LeaderboardSetting label="Reset Frequency" value={leaderboard.resetFrequency} />
             <LeaderboardSetting label="Archive On Reset" value={leaderboard.archiveOnReset ? 'Yes' : 'No'} />
             <LeaderboardSetting label="Next Reset" value={formatDateTime(leaderboard.nextResetAt)} />
@@ -395,6 +470,7 @@ export function DeleteLeaderboardButton({ gameId, leaderboardId }: { gameId: str
 const turnEnforcementOptions: TurnEnforcement[] = ['ROUND_ROBIN', 'FREE'];
 const votingModeOptions: VotingMode[] = ['SYNC', 'ASYNC'];
 const failActionOptions: FailAction[] = ['SKIP_TURN', 'END_GAME'];
+const onTurnTimeoutOptions: OnTurnTimeout[] = ['CHANGE_TO_NEXT_PLAYER', 'DELEGATE_MOVE'];
 
 function createDefaultRelayForm(): RelayConfigInput {
   return {
@@ -410,6 +486,9 @@ function createDefaultRelayForm(): RelayConfigInput {
     matchTimeoutMinutes: 10,
     turnTimeoutSeconds: 60,
     waitReconnectSeconds: 45,
+    reconnectMoveHistorySize: 0,
+    onTurnTimeout: 'CHANGE_TO_NEXT_PLAYER',
+    revealPrivateListsOnTimeout: false,
     lists: [],
   };
 }
@@ -431,6 +510,9 @@ function buildRelayForm(relayConfig?: RelayConfigRecord): RelayConfigInput {
     matchTimeoutMinutes: relayConfig.matchTimeoutMinutes,
     turnTimeoutSeconds: relayConfig.turnTimeoutSeconds,
     waitReconnectSeconds: relayConfig.waitReconnectSeconds,
+    reconnectMoveHistorySize: relayConfig.reconnectMoveHistorySize,
+    onTurnTimeout: relayConfig.onTurnTimeout,
+    revealPrivateListsOnTimeout: relayConfig.revealPrivateListsOnTimeout,
     lists: relayConfig.lists.map((list) => ({
       id: list.id,
       name: list.name,
@@ -537,6 +619,7 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
   const [state, formAction] = useActionState(isEdit ? updateRelayConfigAction : createRelayConfigAction, initialDashboardActionState);
   const [form, setForm] = useState<RelayConfigInput>(() => buildRelayForm(relayConfig));
   const [openLists, setOpenLists] = useState<Record<number, boolean>>({});
+  const timeoutRevealInvalid = form.revealPrivateListsOnTimeout && form.onTurnTimeout !== 'DELEGATE_MOVE';
 
   function resetForm() {
     setForm(buildRelayForm(relayConfig));
@@ -701,6 +784,9 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
           <input type="hidden" name="matchTimeoutMinutes" value={form.matchTimeoutMinutes} />
           <input type="hidden" name="turnTimeoutSeconds" value={form.turnTimeoutSeconds} />
           <input type="hidden" name="waitReconnectSeconds" value={form.waitReconnectSeconds} />
+          <input type="hidden" name="reconnectMoveHistorySize" value={form.reconnectMoveHistorySize} />
+          <input type="hidden" name="onTurnTimeout" value={form.onTurnTimeout} />
+          <input type="hidden" name="revealPrivateListsOnTimeout" value={String(form.revealPrivateListsOnTimeout)} />
           <input type="hidden" name="lists" value={JSON.stringify(form.lists)} />
 
           <div className="rounded border border-border2 bg-bg p-4">
@@ -747,7 +833,41 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
                 value={form.waitReconnectSeconds}
                 onChange={(value) => updateForm({ waitReconnectSeconds: Math.max(1, Math.trunc(value || 1)) })}
               />
+              <NumberField
+                label="Reconnect Move History Size"
+                min={0}
+                max={20}
+                value={form.reconnectMoveHistorySize}
+                onChange={(value) => updateForm({ reconnectMoveHistorySize: Math.max(0, Math.min(20, Math.trunc(value || 0))) })}
+              />
+              <label className="block">
+                <FieldLabel>On Turn Timeout</FieldLabel>
+                <select
+                  value={form.onTurnTimeout}
+                  onChange={(event) => updateForm({ onTurnTimeout: event.target.value as OnTurnTimeout })}
+                  className="w-full rounded-[3px] border border-border2 bg-bg px-3 py-2.5 text-[14px] text-text outline-none transition focus:border-accent"
+                >
+                  {onTurnTimeoutOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="flex items-center gap-3 rounded border border-border2 bg-surface px-4 py-3 text-[13px] text-text">
+                <input
+                  type="checkbox"
+                  checked={form.revealPrivateListsOnTimeout}
+                  onChange={(event) => updateForm({ revealPrivateListsOnTimeout: event.target.checked })}
+                />
+                Reveal private lists on timeout
+              </label>
             </div>
+            {timeoutRevealInvalid ? (
+              <div className="mt-4 rounded border border-[rgba(248,113,113,0.32)] bg-[rgba(248,113,113,0.08)] px-4 py-3 text-[12px] text-danger">
+                revealPrivateListsOnTimeout=true requires onTurnTimeout=DELEGATE_MOVE.
+              </div>
+            ) : null}
           </div>
 
           <div className="rounded border border-border2 bg-bg p-4">
@@ -896,7 +1016,11 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
           </div>
 
           <div className="flex justify-end">
-            <PendingButton className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]" pendingLabel={isEdit ? 'Saving...' : 'Creating...'}>
+            <PendingButton
+              className="rounded-[3px] bg-accent px-4 py-2.5 text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              pendingLabel={isEdit ? 'Saving...' : 'Creating...'}
+              disabled={timeoutRevealInvalid}
+            >
               {isEdit ? 'Save Relay Config' : 'Create Relay Config'}
             </PendingButton>
           </div>

@@ -31,7 +31,7 @@
     },
     {
       "name": "Player Auth",
-      "description": "TurnKit player authentication for SIGNED and TURNKIT_AUTH modes"
+      "description": "TurnKit player authentication for YOUR_BACKEND, EMAIL_OTP, and UGS methods"
     }
   ],
   "paths": {
@@ -389,71 +389,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/dev/game-keys/{gameKeyId}/player-id/mode": {
-      "put": {
-        "tags": [
-          "Player ID Auth"
-        ],
-        "summary": "Set player ID mode for a game key",
-        "operationId": "setMode",
-        "parameters": [
-          {
-            "name": "gameKeyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetModeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
           },
           "403": {
             "description": "Forbidden",
@@ -1754,7 +1689,7 @@
         "tags": [
           "Relay Queue"
         ],
-        "summary": "Join matchmaking queue for a relay config. Returns sessionId to connect WebSocket.",
+        "summary": "Join matchmaking queue for a relay config. Supports strict or delegated slot fill behavior.",
         "operationId": "join",
         "requestBody": {
           "content": {
@@ -1849,212 +1784,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/client/auth/signed/exchange": {
-      "post": {
-        "tags": [
-          "Player Auth"
-        ],
-        "summary": "Verify a signed player proof and receive a player JWT.",
-        "operationId": "exchangeSigned",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SignedExchangeRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SignedExchangeResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/client/auth/otp/verify": {
-      "post": {
-        "tags": [
-          "Player Auth"
-        ],
-        "summary": "Verify OTP and receive a player JWT. Token valid for 14 days.",
-        "operationId": "verifyOtp",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OtpVerifyRequestDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/OtpVerifyResponseDto"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/client/auth/otp/request": {
-      "post": {
-        "tags": [
-          "Player Auth"
-        ],
-        "summary": "Request an OTP for a player email. Rate limited: 3 per 10 minutes.",
-        "operationId": "requestOtp",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OtpRequestDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
           },
           "403": {
             "description": "Forbidden",
@@ -3168,6 +2897,318 @@
           }
         }
       }
+    },
+    "/v1/dev/game-keys/{gameKeyId}/player-id/config": {
+      "put": {
+        "tags": [
+          "Player ID Auth"
+        ],
+        "summary": "Set player auth policy and enabled methods for a game key",
+        "operationId": "setConfig",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/your-backend/exchange": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Verify a YOUR_BACKEND proof and receive a player JWT.",
+        "operationId": "exchangeYourBackend",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignedExchangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedExchangeResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/ugs/exchange": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Verify a Unity Authentication token and receive a player JWT.",
+        "operationId": "exchangeUgs",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UgsExchangeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedExchangeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/email-otp/request": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Request an OTP for a player email. Rate limited: 5 per 10 minutes.",
+        "operationId": "requestEmailOtp",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/auth/email-otp/verify": {
+      "post": {
+        "tags": [
+          "Player Auth"
+        ],
+        "summary": "Verify OTP and receive a player JWT. Token valid for 14 days.",
+        "operationId": "verifyEmailOtp",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpVerifyResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3439,22 +3480,6 @@
           "host",
           "password",
           "username"
-        ]
-      },
-      "SetModeRequest": {
-        "type": "object",
-        "properties": {
-          "mode": {
-            "type": "string",
-            "enum": [
-              "OPEN",
-              "SIGNED",
-              "TURNKIT_AUTH"
-            ]
-          }
-        },
-        "required": [
-          "mode"
         ]
       },
       "CreateRequest": {
@@ -3784,20 +3809,19 @@
           "autoUpgrade": {
             "type": "boolean"
           },
-          "playerIdMode": {
-            "type": "string",
-            "enum": [
-              "OPEN",
-              "SIGNED",
-              "TURNKIT_AUTH"
-            ]
-          },
           "player_id_secret_hash": {
             "type": "string"
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "playerAuthPolicy": {
+            "type": "string",
+            "enum": [
+              "NO_AUTH",
+              "AUTH_REQUIRED"
+            ]
           }
         }
       },
@@ -4249,6 +4273,20 @@
                 "$ref": "#/components/schemas/Item"
               }
             }
+          },
+          "fillPolicy": {
+            "type": "string",
+            "description": "Queue fill behavior. REQUIRE_ALL_PLAYERS keeps legacy behavior. ALLOW_DELEGATED_SLOTS can start with delegated slots after delegatedFillAfterSeconds.",
+            "enum": [
+              "REQUIRE_ALL_PLAYERS",
+              "ALLOW_DELEGATED_SLOTS"
+            ]
+          },
+          "delegatedFillAfterSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0,
+            "description": "Seconds to wait before delegated slot fill when fillPolicy=ALLOW_DELEGATED_SLOTS."
           }
         },
         "required": [
@@ -4377,6 +4415,21 @@
             "type": "string"
           }
         }
+      },
+      "UgsExchangeRequest": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serverProof": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "idToken"
+        ]
       },
       "OtpVerifyRequestDto": {
         "type": "object",
@@ -4524,12 +4577,11 @@
           "autoUpgrade": {
             "type": "boolean"
           },
-          "playerIdMode": {
+          "playerAuthPolicy": {
             "type": "string",
             "enum": [
-              "OPEN",
-              "SIGNED",
-              "TURNKIT_AUTH"
+              "NO_AUTH",
+              "AUTH_REQUIRED"
             ]
           }
         }
@@ -4556,13 +4608,23 @@
       "AuthSection": {
         "type": "object",
         "properties": {
-          "mode": {
+          "policy": {
             "type": "string",
             "enum": [
-              "OPEN",
-              "SIGNED",
-              "TURNKIT_AUTH"
+              "NO_AUTH",
+              "AUTH_REQUIRED"
             ]
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "YOUR_BACKEND",
+                "EMAIL_OTP",
+                "UGS"
+              ]
+            }
           },
           "hasSecret": {
             "type": "boolean"
@@ -5097,6 +5159,33 @@
             "example": "Sword-Level5"
           }
         }
+      },
+      "SetPolicyRequest": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "type": "string",
+            "enum": [
+              "NO_AUTH",
+              "AUTH_REQUIRED"
+            ]
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "YOUR_BACKEND",
+                "EMAIL_OTP",
+                "UGS"
+              ]
+            }
+          }
+        },
+        "required": [
+          "policy",
+          "methods"
+        ]
       }
     },
     "securitySchemes": {

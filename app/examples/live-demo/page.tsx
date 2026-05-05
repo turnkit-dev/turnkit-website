@@ -97,7 +97,7 @@ export async function startTicTacToe(apiBaseUrl, render) {
       relay: new TurnKitRelay(apiBaseUrl, session.relayToken, {
         message: (msg) => {
           if (msg.type === "MATCH_STARTED") seat.yourTurn = !!msg.yourTurn;
-          if (msg.type === "TURN_CHANGED") seat.yourTurn = !!msg.yourTurn;
+          if (msg.type === "TURN_STARTED") seat.yourTurn = !!msg.yourTurn;
           if (msg.type === "MOVE_MADE") applyMove(msg);
           render({ board, seats });
         },
@@ -151,7 +151,11 @@ export default function LiveDemoExamplePage() {
           <section id="notes" className="border-t border-border py-[clamp(32px,5vw,48px)]">
             <h2 className="mb-4 font-display text-[clamp(22px,3vw,30px)] font-bold tracking-[-0.02em] text-text">Notes</h2>
             <div className="max-w-[760px] space-y-4 text-[15px] leading-[1.7] text-muted">
-              <p>Queues via <InlineCode code="/api/demos/tictactoe/session" /> (server keeps the token).</p>
+              <p>
+                Queues via <InlineCode code="/api/demos/tictactoe/session" />. The website demo currently keeps the queue step on the
+                server, uses <InlineCode code="NO_AUTH" /> with <InlineCode code="X-Player-Id" />, and only returns the short-lived{' '}
+                <InlineCode code="relayToken" /> to the browser.
+              </p>
               <p>WebSocket uses <InlineCode code="?token=" /> because browsers cannot send custom headers.</p>
               <p>
                 See{' '}
@@ -167,3 +171,4 @@ export default function LiveDemoExamplePage() {
     </MarketingShell>
   );
 }
+

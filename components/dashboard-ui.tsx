@@ -65,17 +65,19 @@ export function useDashboardActionFeedback(
 export function PendingButton({
   children,
   className,
+  disabled = false,
   pendingLabel,
   type = 'submit',
 }: {
   children: ReactNode;
   className: string;
+  disabled?: boolean;
   pendingLabel: string;
   type?: 'button' | 'submit';
 }) {
   const { pending } = useFormStatus();
   return (
-    <button type={type} disabled={pending} className={`${className} disabled:cursor-not-allowed disabled:opacity-60`}>
+    <button type={type} disabled={pending || disabled} className={`${className} disabled:cursor-not-allowed disabled:opacity-60`}>
       {pending ? pendingLabel : children}
     </button>
   );

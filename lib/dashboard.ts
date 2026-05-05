@@ -1,10 +1,12 @@
 import { backendFetch } from '@/lib/backend-auth';
 
 export type SetupMode = 'quick' | 'manual';
-export type AuthMode = 'OPEN' | 'SIGNED' | 'TURNKIT_AUTH';
+export type PlayerAuthPolicy = 'NO_AUTH' | 'AUTH_REQUIRED';
+export type PlayerAuthMethod = 'YOUR_BACKEND' | 'EMAIL_OTP' | 'UGS';
 export type TurnEnforcement = 'ROUND_ROBIN' | 'FREE';
 export type VotingMode = 'SYNC' | 'ASYNC';
 export type FailAction = 'SKIP_TURN' | 'END_GAME';
+export type OnTurnTimeout = 'CHANGE_TO_NEXT_PLAYER' | 'DELEGATE_MOVE';
 export type LeaderboardSortOrder = 'ASC' | 'DESC';
 export type LeaderboardScoreStrategy = 'BEST_ONLY' | 'MULTIPLE_ENTRIES' | 'CUMULATIVE';
 export type LeaderboardResetFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
@@ -30,6 +32,9 @@ export interface RelayConfigInput {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  reconnectMoveHistorySize: number;
+  onTurnTimeout: OnTurnTimeout;
+  revealPrivateListsOnTimeout: boolean;
   lists: RelayListConfigRecord[];
 }
 
@@ -77,6 +82,7 @@ export interface LeaderboardRecord {
   displayName: string;
   sortOrder: LeaderboardSortOrder;
   scoreStrategy: LeaderboardScoreStrategy;
+  clientSubmitEnabled: boolean;
   resetFrequency: LeaderboardResetFrequency;
   minScore: number;
   maxScore: number;
@@ -90,6 +96,7 @@ export interface LeaderboardCreateInput {
   displayName: string;
   sortOrder: LeaderboardSortOrder;
   scoreStrategy: LeaderboardScoreStrategy;
+  clientSubmitEnabled?: boolean;
   minScore: number;
   maxScore: number;
   resetFrequency: LeaderboardResetFrequency;
@@ -110,6 +117,9 @@ export interface RelayConfigRecord {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  reconnectMoveHistorySize: number;
+  onTurnTimeout: OnTurnTimeout;
+  revealPrivateListsOnTimeout: boolean;
   lists: RelayListConfigRecord[];
   createdAt: string;
   updatedAt: string;
@@ -135,10 +145,11 @@ export interface GameDashboard {
   createdAt: string;
   status: string;
   autoUpgrade: boolean;
-  playerIdMode: AuthMode;
+  playerAuthPolicy: PlayerAuthPolicy;
   clientKeys: ClientKeyRecord[];
   auth: {
-    mode: AuthMode;
+    policy: PlayerAuthPolicy;
+    methods: PlayerAuthMethod[];
     hasSecret: boolean;
     signedSecret: string;
     smtpConfigured: boolean;
@@ -155,7 +166,7 @@ interface ApiGameKeyListItem {
   name: string;
   status: string;
   autoUpgrade: boolean;
-  playerIdMode: AuthMode;
+  playerAuthPolicy: PlayerAuthPolicy;
   createdAt: string;
 }
 
@@ -166,7 +177,7 @@ interface ApiDashboardResponse {
     status: string;
     createdAt: string;
     autoUpgrade: boolean;
-    playerIdMode: AuthMode;
+    playerAuthPolicy: PlayerAuthPolicy;
   };
   clientKeys: Array<{
     id: string;
@@ -175,7 +186,8 @@ interface ApiDashboardResponse {
     createdAt: string;
   }>;
   auth: {
-    mode: AuthMode;
+    policy: PlayerAuthPolicy;
+    methods: PlayerAuthMethod[];
     hasSecret: boolean;
     smtpConfigured: boolean;
     smtp: null | {
@@ -192,6 +204,7 @@ interface ApiDashboardResponse {
     displayName: string;
     sortOrder: LeaderboardSortOrder;
     scoreStrategy: LeaderboardScoreStrategy;
+    clientSubmitEnabled?: boolean;
     resetFrequency: LeaderboardResetFrequency;
     minScore?: number;
     maxScore?: number;
@@ -240,6 +253,9 @@ interface ApiRelayConfigResponse {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  reconnectMoveHistorySize?: number;
+  onTurnTimeout?: OnTurnTimeout;
+  revealPrivateListsOnTimeout?: boolean;
   lists: ApiRelayListResponse[];
   createdAt?: string;
   updatedAt?: string;
@@ -289,6 +305,9 @@ function mapRelayConfig(item: ApiRelayConfigResponse): RelayConfigRecord {
     matchTimeoutMinutes: item.matchTimeoutMinutes,
     turnTimeoutSeconds: item.turnTimeoutSeconds,
     waitReconnectSeconds: item.waitReconnectSeconds,
+    reconnectMoveHistorySize: Math.max(0, Math.min(20, Math.trunc(item.reconnectMoveHistorySize ?? 0))),
+    onTurnTimeout: item.onTurnTimeout ?? 'CHANGE_TO_NEXT_PLAYER',
+    revealPrivateListsOnTimeout: item.revealPrivateListsOnTimeout ?? false,
     lists: item.lists.map((list) => ({
       id: list.id,
       name: list.name,
@@ -310,7 +329,7 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
     createdAt: response.game.createdAt,
     status: response.game.status,
     autoUpgrade: response.game.autoUpgrade,
-    playerIdMode: response.game.playerIdMode,
+    playerAuthPolicy: response.game.playerAuthPolicy,
     clientKeys: response.clientKeys.map((item) => ({
       id: item.id,
       displayName: item.displayName,
@@ -318,7 +337,8 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
       createdAt: item.createdAt,
     })),
     auth: {
-      mode: response.auth.mode,
+      policy: response.auth.policy,
+      methods: response.auth.methods ?? [],
       hasSecret: response.auth.hasSecret,
       signedSecret: '',
       smtpConfigured: response.auth.smtpConfigured,
@@ -337,6 +357,7 @@ function mapDashboardResponse(response: ApiDashboardResponse, relayConfigs: ApiR
       displayName: item.displayName,
       sortOrder: item.sortOrder,
       scoreStrategy: item.scoreStrategy,
+      clientSubmitEnabled: item.clientSubmitEnabled ?? false,
       resetFrequency: item.resetFrequency,
       minScore: item.minScore ?? 0,
       maxScore: item.maxScore ?? 1000000,
@@ -409,6 +430,9 @@ function normalizeRelayConfigInput(input: RelayConfigInput) {
 
   const maxPlayers = Math.min(8, Math.max(2, Math.trunc(input.maxPlayers)));
   const votingCap = Math.min(3, maxPlayers);
+  if (input.revealPrivateListsOnTimeout && input.onTurnTimeout !== 'DELEGATE_MOVE') {
+    throw new Error('revealPrivateListsOnTimeout=true requires onTurnTimeout=DELEGATE_MOVE');
+  }
 
   return {
     slug: normalizedSlug,
@@ -423,6 +447,9 @@ function normalizeRelayConfigInput(input: RelayConfigInput) {
     matchTimeoutMinutes: Math.max(1, Math.trunc(input.matchTimeoutMinutes)),
     turnTimeoutSeconds: Math.max(1, Math.trunc(input.turnTimeoutSeconds)),
     waitReconnectSeconds: Math.max(1, Math.trunc(input.waitReconnectSeconds)),
+    reconnectMoveHistorySize: Math.max(0, Math.min(20, Math.trunc(input.reconnectMoveHistorySize))),
+    onTurnTimeout: input.onTurnTimeout,
+    revealPrivateListsOnTimeout: Boolean(input.revealPrivateListsOnTimeout),
     lists: sanitizeRelayLists(input.lists ?? [], maxPlayers),
   } satisfies RelayConfigInput;
 }
@@ -538,13 +565,15 @@ export async function deleteClientKey(gameId: string, clientKeyId: string) {
   await apiFetch(`/v1/dev/game-keys/${gameId}/client-keys/${clientKeyId}`, { method: 'DELETE' });
 }
 
-export async function updateAuthSettings(gameId: string, mode: AuthMode, smtp: SmtpSettings) {
-  await apiFetch(`/v1/dev/game-keys/${gameId}/player-id/mode`, {
+export async function updateAuthSettings(gameId: string, policy: PlayerAuthPolicy, methods: PlayerAuthMethod[], smtp: SmtpSettings) {
+  const uniqueMethods = [...new Set(methods)];
+
+  await apiFetch(`/v1/dev/game-keys/${gameId}/player-id/config`, {
     method: 'PUT',
-    body: JSON.stringify({ mode }),
+    body: JSON.stringify({ policy, methods: uniqueMethods }),
   });
 
-  if (mode === 'TURNKIT_AUTH') {
+  if (uniqueMethods.includes('EMAIL_OTP')) {
     await apiFetch(`/v1/dev/game-keys/${gameId}/player-id/smtp`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -586,6 +615,7 @@ export async function createLeaderboard(gameId: string, input: LeaderboardCreate
       displayName,
       sortOrder: input.sortOrder,
       scoreStrategy: input.scoreStrategy,
+      ...(input.clientSubmitEnabled ? { clientSubmitEnabled: true } : {}),
       minScore: input.minScore,
       maxScore: input.maxScore,
       resetFrequency: input.resetFrequency,

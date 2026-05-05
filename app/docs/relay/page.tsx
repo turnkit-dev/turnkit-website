@@ -67,7 +67,8 @@ export default function RelayDocsPage() {
       <div className="mb-8 grid gap-4 md:grid-cols-2">
         <InfoCard title="1. Connect Players">
           <p className="text-[13px] leading-[1.6] text-muted">
-            Clients join a relay session, receive a relay token, and connect to the match WebSocket. The protocol details live in{' '}
+            Clients finish player auth if required, join a relay session over REST, receive a relay token, and then connect to the match
+            WebSocket. The protocol details live in{' '}
             <Link href="/docs/websocket#handshake" className="text-accent transition hover:text-text">
               the handshake reference
             </Link>
@@ -196,6 +197,10 @@ export default function RelayDocsPage() {
         , the{' '}
         <Link href="/docs/websocket" className="text-accent transition hover:text-text">
           WebSocket protocol docs
+        </Link>
+        , and{' '}
+        <Link href="/docs/player-authentication-modes" className="text-accent transition hover:text-text">
+          Player Authentication
         </Link>
         .
       </p>

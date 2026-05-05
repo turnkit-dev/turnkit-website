@@ -40,7 +40,7 @@ export const docsNavSections: DocsNavSection[] = [
     title: 'Features',
     links: [
       { href: '/docs/relay-stats-and-leaderboards', label: 'Relay Stats & Leaderboards' },
-      { href: '/docs/player-authentication-modes', label: 'Player Authentication Modes' },
+      { href: '/docs/player-authentication-modes', label: 'Player Authentication' },
     ],
   },
   {
@@ -48,7 +48,7 @@ export const docsNavSections: DocsNavSection[] = [
     links: [
       { href: '/docs/client-reconnection', label: 'Client Reconnection' },
       { href: '/docs/guides/free-unity-leaderboards', label: 'Free Unity Leaderboards' },
-      { href: '/docs/guides/turnkit-auth-brevo', label: 'TurnKit Auth with Brevo' },
+      { href: '/docs/guides/turnkit-auth-brevo', label: 'EMAIL_OTP with Brevo' },
     ],
   },
   {
@@ -157,17 +157,18 @@ export const relayIntegrationsPageMeta: DocsPageMeta = {
 };
 
 export const playerAuthenticationModesPageMeta: DocsPageMeta = {
-  title: 'Player Authentication Modes',
+  title: 'Player Authentication',
   description:
-    'Pick the right TurnKit auth mode fast, from open setup to signed backend control, and launch player login cleanly.',
+    'Pick the right TurnKit player auth policy and methods, from no-auth prototyping to backend, email OTP, or Unity UGS login.',
   path: '/docs/player-authentication-modes',
   eyebrow: 'Features',
-  breadcrumbLabel: 'Player Authentication Modes',
+  breadcrumbLabel: 'Player Authentication',
   toc: [
     { href: '#quick-comparison', label: 'Quick Comparison' },
-    { href: '#open-mode', label: 'OPEN Mode' },
-    { href: '#turnkit-auth-mode', label: 'TURNKIT_AUTH Mode' },
-    { href: '#signed-mode', label: 'SIGNED Mode' },
+    { href: '#no-auth-policy', label: 'NO_AUTH Policy' },
+    { href: '#email-otp-method', label: 'EMAIL_OTP Method' },
+    { href: '#your-backend-method', label: 'YOUR_BACKEND Method' },
+    { href: '#ugs-method', label: 'UGS Method' },
   ],
 };
 
@@ -227,12 +228,12 @@ export const restQuickstartPageMeta: DocsPageMeta = {
 };
 
 export const turnkitAuthBrevoPageMeta: DocsPageMeta = {
-  title: 'TurnKit Auth with Brevo',
+  title: 'EMAIL_OTP with Brevo',
   description:
-    'Set up email OTP with Brevo and TurnKit Auth so players can sign in quickly without building auth infrastructure.',
+    'Set up EMAIL_OTP with Brevo so players can sign in quickly without building auth infrastructure.',
   path: '/docs/guides/turnkit-auth-brevo',
   eyebrow: 'Guides',
-  breadcrumbLabel: 'TurnKit Auth with Brevo',
+  breadcrumbLabel: 'EMAIL_OTP with Brevo',
   toc: [
     { href: '#create-brevo-account', label: 'Create Brevo Account' },
     { href: '#copy-smtp-credentials', label: 'Copy SMTP Credentials' },
