@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { TicTacToeLiveDemo } from '@/components/live-demo/tictactoe-live-demo';
 import { buildMetadata } from '@/lib/seo';
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 const liveDemoDescription =
   'Watch a lightweight authoritative relay in action. Two browser clients play Tic-Tac-Toe with server-validated moves, enforced turns, and a server-issued relay token for the browser WebSocket.';
