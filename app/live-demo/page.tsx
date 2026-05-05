@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { TicTacToeLiveDemo } from '@/components/live-demo/tictactoe-live-demo';
 import { buildMetadata } from '@/lib/seo';
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 const liveDemoDescription =
-  'Watch a lightweight authoritative relay in action. Two browser clients play Tic-Tac-Toe with server-validated moves and enforced turns in under 60 lines of code.';
+  'Watch a lightweight authoritative relay in action. Two browser clients play Tic-Tac-Toe with server-validated moves, enforced turns, and a server-issued relay token for the browser WebSocket.';
 
 export const metadata: Metadata = buildMetadata({
   title: 'TurnKit Live Demo: Authoritative Relay for Turn-Based Multiplayer',
@@ -31,7 +31,7 @@ export default function LiveDemoPage() {
           </h1>
           <p className="mt-4 max-w-none text-[14px] leading-[1.75] text-muted sm:mt-5 sm:text-[15px]">
             <strong className="font-semibold text-text">Watch a lightweight authoritative relay in action.</strong> Two browser clients
-            play Tic-Tac-Toe with server-validated moves, enforced turns in under 60 lines of code.
+            play Tic-Tac-Toe with server-validated moves, enforced turns, and a server-issued relay token for the browser socket.
           </p>
           <p className="mt-4 text-[14px] text-muted">
             <Link
