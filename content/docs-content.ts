@@ -62,6 +62,7 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'Resources',
     links: [
+      { href: '/blog', label: 'Blog' },
       { href: '/leaderboard-options', label: 'Leaderboard Options for Unity Games' },
       { href: '/examples', label: 'Code Examples' },
       { href: '/examples/live-demo', label: 'Live Tic-Tac-Toe Demo' },
@@ -180,7 +181,7 @@ export const apiPageMeta: DocsPageMeta = {
   breadcrumbLabel: 'REST API',
   toc: [
     { href: '#overview', label: 'Overview' },
-    { href: '#reference', label: 'Reference' },
+    { href: '#reference', label: 'Reference' }
   ],
 };
 
@@ -290,7 +291,7 @@ export const leaderboardOptionsPageMeta: DocsPageMeta = {
 export const liveDemoExamplePageMeta: DocsPageMeta = {
   title: 'TurnKit Live Demo: Authoritative Relay for Turn-Based Games',
   description:
-    'Experience TurnKit in action — two independent browser clients playing Tic-Tac-Toe through the same authoritative relay session. Every move is server-validated, turns are enforced, and heartbeats keep connections alive. Perfect for building cheat-resistant turn-based multiplayer (board games, card games, strategy titles).',
+    'Two browser clients play Tic-Tac-Toe through TurnKit Relay with enforced turns, server validation, reconnects, and hidden state.',
   path: '/examples/live-demo',
   eyebrow: 'Live Demo',
   breadcrumbLabel: 'Live Tic-Tac-Toe Demo',

@@ -25,7 +25,7 @@ const quickDecisionRows = [
   [
     'Indie dev who wants to ship fast',
     <strong key="best-choice-asset" className="text-text">
-      RankDrop Unity Asset (coming soon)
+      RankDrop Asset for Unity or Godot
     </strong>,
     '60-second setup inside Unity Editor and also full control, zero cost and you manage everything',
   ],
@@ -88,7 +88,7 @@ export default function LeaderboardOptionsPage() {
 
       <SectionTitle id="detailed-comparison">Detailed Comparison</SectionTitle>
       <ComparisonTable
-        headers={['Feature', 'Open Source RankDrop', 'RankDrop Unity Asset (soon)', 'TurnKit Hosted SaaS']}
+        headers={['Feature', 'Open Source RankDrop', 'RankDrop Asset For Unity/Godot', 'TurnKit Hosted SaaS']}
         rows={detailedComparisonRows.map(
           (row) =>
             row.map((cell) => cell as React.ReactNode) as [
@@ -114,7 +114,7 @@ export default function LeaderboardOptionsPage() {
         </InfoCard>
         <InfoCard title="RankDrop Unity Asset">
           <p className="text-[14px] leading-[1.7] text-muted">
-            This is the middle ground. You get the same RankDrop core with a polished Unity Editor setup flow, so you avoid manual
+            This is the middle ground. You get the same RankDrop core with a polished Unity/Godot Editor setup flow, so you avoid manual
             Docker and server config while keeping a high level of control.
           </p>
           <p className="mt-3 text-[14px] leading-[1.7] text-muted">
@@ -156,10 +156,24 @@ export default function LeaderboardOptionsPage() {
           .
         </p>
         <p>
-          Deploy in 60 seconds via the {' '}
-          <Link href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688">
-            RankDrop Unity Asset (Self-Hosted)
-          </Link>
+          Deploy in 60 seconds via the{' '}
+          <a
+            href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent transition hover:text-text"
+          >
+            RankDrop Unity Asset Store page
+          </a>
+          {' '}or the{' '}
+          <a
+            href="https://brainzy.itch.io/godot-rankdrop-leaderboards-in-60-seconds-no-monthly-costs-and-own-your-data"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent transition hover:text-text"
+          >
+            Godot RankDrop page
+          </a>
           .
         </p>
         <p>

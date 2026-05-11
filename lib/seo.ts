@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 
 export const siteName = 'TurnKit';
 export const siteUrl = 'https://turnkit.dev';
-export const defaultOgImage = '/assets/og-card.png';
+export const defaultOgImage = '/assets/og-card.png?v=2026-04-27';
 export const defaultOgImageAlt = 'TurnKit branding and multiplayer backend messaging';
 export const siteLocale = 'en_US';
 export const siteDescription =
-  "Ship your turn-based Unity or Godot multiplayer faster with TurnKit's authoritative relay and leaderboards. Start free.";
+  'Ship turn-based multiplayer faster in Unity or Godot with an authoritative relay, leaderboards, and built-in anti-cheat. Start free.';
 export const lastContentUpdate = '2026-04-17T00:00:00.000Z';
 
 const baseKeywords = [

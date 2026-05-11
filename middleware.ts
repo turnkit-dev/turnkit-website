@@ -10,7 +10,7 @@ import {
 } from '@/lib/backend-auth';
 import { getTurnKitDemoBrowserApiBaseUrl, getTurnKitPublicApiBaseUrl, getTurnKitServerApiBaseUrl } from '@/lib/turnkit-demo-config';
 
-function buildContentSecurityPolicy(nonce: string) {
+function buildContentSecurityPolicy(nonce: string | null) {
   const connectSources = new Set<string>([
     "'self'",
     'https://cloud.umami.is',
@@ -35,7 +35,7 @@ function buildContentSecurityPolicy(nonce: string) {
 
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' https://cloud.umami.is`,
+    nonce ? `script-src 'self' 'nonce-${nonce}' https://cloud.umami.is` : "script-src 'self' 'unsafe-inline' https://cloud.umami.is",
     "script-src-attr 'none'",
     "style-src 'self'",
     "style-src-attr 'none'",
@@ -65,9 +65,11 @@ function applySecurityHeaders(response: NextResponse, contentSecurityPolicy: str
   return response;
 }
 
-function createForwardedResponse(request: NextRequest, nonce: string, contentSecurityPolicy: string) {
+function createForwardedResponse(request: NextRequest, nonce: string | null, contentSecurityPolicy: string) {
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
+  if (nonce) {
+    requestHeaders.set('x-nonce', nonce);
+  }
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
@@ -93,7 +95,7 @@ function buildSignInUrl(request: NextRequest) {
   return url;
 }
 
-async function refreshBackendSessionIfPossible(request: NextRequest, nonce: string, contentSecurityPolicy: string) {
+async function refreshBackendSessionIfPossible(request: NextRequest, nonce: string | null, contentSecurityPolicy: string) {
   const cookieHeader = request.headers.get('cookie') ?? undefined;
   if (!cookieHeader) {
     return null;
@@ -107,7 +109,8 @@ async function refreshBackendSessionIfPossible(request: NextRequest, nonce: stri
 }
 
 export async function middleware(request: NextRequest) {
-  const nonce = crypto.randomUUID().replace(/-/g, '');
+  const isLiveDemoPath = request.nextUrl.pathname === '/live-demo';
+  const nonce = isLiveDemoPath ? null : crypto.randomUUID().replace(/-/g, '');
   const contentSecurityPolicy = buildContentSecurityPolicy(nonce);
 
   if (!isProtectedPath(request)) {

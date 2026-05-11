@@ -16,11 +16,15 @@ import {
   unityQuickstartPageMeta,
   websocketPageMeta,
 } from '@/content/docs-content';
+import { blogIndexPageMeta, hybridApproachPageMeta, selfHostedLeaderboardsPageMeta } from '@/content/blog-content';
 import { lastContentUpdate, siteUrl } from '@/lib/seo';
 
 const routes = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
   { path: '/turn-based-game-server-comparison-2026', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: blogIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: hybridApproachPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: selfHostedLeaderboardsPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: docsIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: unityQuickstartPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
@@ -41,6 +45,7 @@ const routes = [
   { path: websocketPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.1, changeFrequency: 'yearly' as const },
   { path: '/refunds', priority: 0.1, changeFrequency: 'yearly' as const },
+  { path: '/rankdrop-license', priority: 0.1, changeFrequency: 'yearly' as const },
   { path: '/terms', priority: 0.1, changeFrequency: 'yearly' as const },
 ];
 
