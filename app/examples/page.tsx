@@ -436,6 +436,11 @@ export default function ExamplesPage() {
                   Live Tic-Tac-Toe Demo (Web)
                 </Link>
               </li>
+              <li>
+                <Link href="/turn-based-game-server-comparison-2026" className="text-accent transition hover:text-text">
+                  2026 Turn-Based Server Comparison
+                </Link>
+              </li>
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link

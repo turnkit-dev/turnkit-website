@@ -92,14 +92,14 @@ export default function HybridApproachBlogPage() {
 
         <p id="demo" className="scroll-mt-20">
           You can try it yourself with the {' '}
-          <Link href="https://turnkit.dev/live-demo" className="text-accent transition hover:text-text" target="_blank" rel="noopener noreferrer">
+          <Link href="/live-demo" className="text-accent transition hover:text-text">
             live demo.
           </Link>
         </p>
 
         <p>
           Or check the {' '}
-          <Link href="https://turnkit.dev/docs" className="text-accent transition hover:text-text" target="_blank" rel="noopener noreferrer">
+          <Link href="/docs" className="text-accent transition hover:text-text">
             docs.
           </Link>
         </p>

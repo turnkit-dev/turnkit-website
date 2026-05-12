@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { DocsSidebar } from '@/components/docs-shell';
 import { JsonLd } from '@/components/json-ld';
 import { MarketingShell } from '@/components/marketing-shell';
@@ -71,7 +72,7 @@ const pricingRows = [
 ];
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Turn-Based Game Server Comparison 2026',
+  title: 'Best Turn-Based Game Server 2026',
   description: comparisonDescription,
   path: '/turn-based-game-server-comparison-2026',
   type: 'article',
@@ -118,6 +119,21 @@ export default function TurnBasedGameServerComparisonPage() {
               <br />
               Honest Comparison
             </h1>
+            <p className="max-w-[720px] text-[15px] leading-[1.8] text-muted">
+              Build faster from production patterns in{' '}
+              <Link href="/examples" className="text-accent transition hover:text-text">
+                Unity examples
+              </Link>
+              , verify implementation details in the{' '}
+              <Link href="/docs/relay" className="text-accent transition hover:text-text">
+                Relay docs
+              </Link>
+              , then confirm operating cost on{' '}
+              <Link href="/pricing" className="text-accent transition hover:text-text">
+                pricing
+              </Link>
+              .
+            </p>
           </section>
 
           <section id="tldr" className="border-t border-border py-[clamp(32px,5vw,48px)]">
@@ -255,6 +271,21 @@ export default function TurnBasedGameServerComparisonPage() {
                 Because of these trust limits, TurnKit is <strong className="font-medium">not recommended for games involving real money</strong>.
               </div>
             </div>
+            <p className="mt-6 text-[14px] leading-[1.8] text-muted">
+              Implementation path:{' '}
+              <Link href="/docs/quickstart/unity" className="text-accent transition hover:text-text">
+                Unity quickstart
+              </Link>
+              ,{' '}
+              <Link href="/examples/live-demo" className="text-accent transition hover:text-text">
+                live demo walkthrough
+              </Link>
+              ,{' '}
+              <Link href="/docs/websocket" className="text-accent transition hover:text-text">
+                WebSocket protocol
+              </Link>
+              .
+            </p>
           </section>
         </main>
         <aside className="hidden w-[220px] shrink-0 xl:block">
