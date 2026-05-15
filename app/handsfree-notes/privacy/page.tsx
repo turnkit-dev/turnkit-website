@@ -1,25 +1,26 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const privacyDescription =
-  'Hands Free Notes - Offline privacy policy: local storage, offline transcription, AdMob ads, Google Play billing, and Crashlytics crash diagnostics.';
+  'com.handsfree.notes privacy policy: local storage, offline transcription, AdMob ads, Google Play billing, and Crashlytics crash diagnostics.';
 
 export const metadata: Metadata = {
-  title: 'Hands Free Notes - Offline Privacy Policy',
+  title: 'com.handsfree.notes Privacy Policy',
   description: privacyDescription,
   alternates: {
     canonical: absoluteUrl('/handsfree-notes/privacy'),
   },
   openGraph: {
-    title: 'Hands Free Notes - Offline Privacy Policy',
+    title: 'com.handsfree.notes Privacy Policy',
     description: privacyDescription,
     url: absoluteUrl('/handsfree-notes/privacy'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Hands Free Notes - Offline Privacy Policy',
+    title: 'com.handsfree.notes Privacy Policy',
     description: privacyDescription,
   },
 };
@@ -28,16 +29,16 @@ export default function HandsFreeNotesPrivacyPage() {
   return (
     <LegalPage
       eyebrow="Legal"
-      title="Hands Free Notes - Offline Privacy Policy"
+      title="com.handsfree.notes Privacy Policy"
       updatedLabel="Last updated: May 15, 2026"
     >
       <p>
-        Hands Free Notes - Offline (&quot;the app&quot;) is provided by NN Game Studio. This Privacy Policy explains how the app
+        com.handsfree.notes (&quot;the app&quot;) is provided by NN Game Studio. This Privacy Policy explains how the app
         handles information and data.
       </p>
 
       <h2>1. Data Storage and Processing</h2>
-      <p>Hands Free Notes - Offline is designed as an offline application.</p>
+      <p>com.handsfree.notes is designed as an offline application.</p>
       <p>
         Voice recordings, transcripts, and notes created in the app are stored locally on your device. The app does not upload
         your recordings, transcripts, or notes to our servers.
@@ -107,6 +108,11 @@ export default function HandsFreeNotesPrivacyPage() {
         Email: support@turnkit.dev
         <br />
         Country: Serbia
+      </p>
+
+      <h2>Related Legal Page</h2>
+      <p>
+        Read the <Link href="/handsfree-notes/terms">com.handsfree.notes Terms of Service</Link>.
       </p>
     </LegalPage>
   );

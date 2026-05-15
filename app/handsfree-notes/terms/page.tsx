@@ -1,25 +1,26 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const termsDescription =
-  'Hands Free Notes - Offline terms: license, lawful use, purchases, rewarded ads, disclaimers, liability limits, and governing law.';
+  'com.handsfree.notes terms: license, lawful use, purchases, rewarded ads, disclaimers, liability limits, and governing law.';
 
 export const metadata: Metadata = {
-  title: 'Hands Free Notes - Offline Terms of Service',
+  title: 'com.handsfree.notes Terms of Service',
   description: termsDescription,
   alternates: {
     canonical: absoluteUrl('/handsfree-notes/terms'),
   },
   openGraph: {
-    title: 'Hands Free Notes - Offline Terms of Service',
+    title: 'com.handsfree.notes Terms of Service',
     description: termsDescription,
     url: absoluteUrl('/handsfree-notes/terms'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Hands Free Notes - Offline Terms of Service',
+    title: 'com.handsfree.notes Terms of Service',
     description: termsDescription,
   },
 };
@@ -28,10 +29,10 @@ export default function HandsFreeNotesTermsPage() {
   return (
     <LegalPage
       eyebrow="Legal"
-      title="Hands Free Notes - Offline Terms of Service"
+      title="com.handsfree.notes Terms of Service"
       updatedLabel="Last updated: May 15, 2026"
     >
-      <p>These Terms govern your use of Hands Free Notes - Offline.</p>
+      <p>These Terms govern your use of com.handsfree.notes.</p>
 
       <h2>1. Acceptance</h2>
       <p>By using the app, you agree to these Terms and the Privacy Policy.</p>
@@ -90,6 +91,11 @@ export default function HandsFreeNotesTermsPage() {
         Email: support@turnkit.dev
         <br />
         Country: Serbia
+      </p>
+
+      <h2>Related Legal Page</h2>
+      <p>
+        Read the <Link href="/handsfree-notes/privacy">com.handsfree.notes Privacy Policy</Link>.
       </p>
     </LegalPage>
   );
