@@ -43,10 +43,17 @@ const routes = [
   { path: playerAuthenticationModesPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: turnkitAuthBrevoPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: websocketPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
-  { path: '/privacy', priority: 0.1, changeFrequency: 'yearly' as const },
-  { path: '/refunds', priority: 0.1, changeFrequency: 'yearly' as const },
-  { path: '/rankdrop-license', priority: 0.1, changeFrequency: 'yearly' as const },
-  { path: '/terms', priority: 0.1, changeFrequency: 'yearly' as const },
+  { path: '/other-projects', priority: 0.5, changeFrequency: 'monthly' as const },
+  { path: '/rankdrop', priority: 0.4, changeFrequency: 'monthly' as const },
+  { path: '/handsfree-notes', priority: 0.4, changeFrequency: 'monthly' as const },
+  { path: '/zumba-space-marble-blast', priority: 0.4, changeFrequency: 'monthly' as const },
+  { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/refunds', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/rankdrop-license', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/terms', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/handsfree-notes/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/handsfree-notes/terms', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/handsfree-notes/delete-data', priority: 0.2, changeFrequency: 'yearly' as const },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

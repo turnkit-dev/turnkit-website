@@ -162,6 +162,7 @@ export const landingContent: LandingContent = {
   ],
   footerLinks: [
     { href: '/examples', label: 'Examples' },
+    { href: '/other-projects', label: 'Other Projects' },
     { href: '/turn-based-game-server-comparison-2026', label: 'Comparison' },
     { href: '/blog', label: 'Blog' },
     { href: '/docs', label: 'Docs' },
@@ -169,6 +170,5 @@ export const landingContent: LandingContent = {
     { href: '/terms', label: 'Terms' },
     { href: '/privacy', label: 'Privacy' },
     { href: '/refunds', label: 'Refunds' },
-    { href: '/rankdrop-license', label: 'RankDrop License' },
   ],
 };
