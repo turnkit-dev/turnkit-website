@@ -31,7 +31,7 @@ export default function OtherProjectsPage() {
       <main className="mx-auto w-full max-w-[960px] px-[clamp(24px,5vw,48px)] pt-[96px] pb-12">
         <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.1em] text-accent">Other Projects</div>
         <h1 className="mb-8 font-display text-[clamp(30px,5vw,46px)] font-bold leading-[1.12] tracking-[-0.03em] text-text">
-          Tools by TurnKit
+          Other Projects
         </h1>
 
         <div className="flex flex-col gap-5">
