@@ -383,13 +383,20 @@ namespace TurnKit.Example
 `;
 
 const examplesDescription =
-  'Browse real TurnKit Unity snippets and full game scripts, then copy the patterns to ship your own multiplayer faster.';
+  'TurnKit Unity multiplayer examples: authoritative relay code, anti-cheat voting, matchmaking, hidden data lists, and leaderboard integration for turn-based games.';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Examples - TurnKit',
+  title: 'Unity Multiplayer Code Examples (Relay + Leaderboards) - TurnKit',
   description: examplesDescription,
   path: '/examples',
-  keywords: ['Unity multiplayer example', 'TurnKit example code', 'authoritative multiplayer sample'],
+  keywords: [
+    'Unity multiplayer example',
+    'Unity turn based multiplayer code',
+    'authoritative relay example',
+    'anti cheat voting example',
+    'Unity leaderboard integration example',
+    'TurnKit example code',
+  ],
 });
 
 export default function ExamplesPage() {
@@ -429,6 +436,11 @@ export default function ExamplesPage() {
             <p className="max-w-[620px] text-base leading-[1.7] text-muted">
               Start with one queue call, one score submit, and one move payload. Then see the full Unity TicTacToe controller that handles
               matching, turn flow, vote validation, and game end state without a custom backend.
+            </p>
+            <p className="mt-4 max-w-[700px] text-[15px] leading-[1.8] text-muted">
+              These Unity multiplayer examples focus on production concerns: authoritative move validation, player ownership rules, hidden hand
+              mechanics, and server-synced leaderboard writes. Use these snippets as a baseline for turn-based PvP, async matches, and social
+              board games where cheating resistance and predictable backend behavior matter.
             </p>
             <ul className="mt-4 list-disc pl-5 text-[15px] leading-[1.7] text-muted">
               <li>
