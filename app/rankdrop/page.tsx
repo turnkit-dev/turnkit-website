@@ -44,6 +44,12 @@ export default function RankDropPage() {
 
         <div className="mb-10 flex flex-col gap-3 text-[14px] text-text">
           <a
+            href="/rankdrop-license"
+            className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+          >
+            RankDrop License
+          </a>
+          <a
             href="https://assetstore.unity.com/packages/tools/integration/rankdrop-leaderboards-in-60-seconds-366688"
             target="_blank"
             rel="noopener noreferrer"

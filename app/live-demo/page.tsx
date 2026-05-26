@@ -6,7 +6,7 @@ import { buildMetadata } from '@/lib/seo';
 export const dynamic = 'force-static';
 
 const liveDemoDescription =
-  'Watch a lightweight authoritative relay in action. Two browser clients play Tic-Tac-Toe with server-validated moves, enforced turns, and a server-issued relay token for the browser WebSocket.';
+  'Watch a lightweight authoritative relay in action. Two browser clients play Tic-Tac-Toe with validated moves, enforced turns, and a server-issued relay token.';
 
 export const metadata: Metadata = buildMetadata({
   title: 'TurnKit Live Demo: Authoritative Relay for Turn-Based Multiplayer',

@@ -4,7 +4,7 @@ import { MarketingShell } from '@/components/marketing-shell';
 import { absoluteUrl } from '@/lib/seo';
 
 const otherProjectsDescription =
-  'Other projects by TurnKit, including RankDrop and Hands Free Notes.';
+  'Explore other projects by TurnKit: RankDrop leaderboards, Hands Free Notes, Hands Free Appointments, and Zumba Space Marble Blast, plus collaboration and freelance availability.';
 
 export const metadata: Metadata = {
   title: 'Other Projects - TurnKit',
@@ -81,6 +81,29 @@ export default function OtherProjectsPage() {
               </Link>
               <a
                 href="https://play.google.com/store/apps/details?id=com.handsfree.notes"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Hands Free Appointments</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Voice-first calendar app. Speak appointments naturally and sync directly with Google Calendar.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/handsfree-appointments"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.handsfree.appointments"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"

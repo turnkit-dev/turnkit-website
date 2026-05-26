@@ -383,7 +383,7 @@ namespace TurnKit.Example
 `;
 
 const examplesDescription =
-  'TurnKit Unity multiplayer examples: authoritative relay code, anti-cheat voting, matchmaking, hidden data lists, and leaderboard integration for turn-based games.';
+  'TurnKit Unity multiplayer examples: authoritative relay code, anti-cheat voting, matchmaking, hidden lists, and leaderboard integration.';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Unity Multiplayer Code Examples (Relay + Leaderboards) - TurnKit',
