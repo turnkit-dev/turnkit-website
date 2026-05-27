@@ -100,8 +100,53 @@ export default function HandsFreeAppointmentsPrivacyPage() {
 
       <h2>Related Legal Page</h2>
       <p>
-        Read the <Link href="/handsfree-appointments/terms">com.handsfree.appointments Terms of Service</Link>.
+        Read the{' '}
+        <Link
+          href="/handsfree-appointments/terms"
+          className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+        >
+          com.handsfree.appointments Terms of Service
+        </Link>
+        .
       </p>
+
+      <h2>Links</h2>
+      <ul>
+        <li>
+          <a
+            href="https://play.google.com/store/apps/details?id=com.handsfree.appointments"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+          >
+            Download on Google Play
+          </a>
+        </li>
+        <li>
+          <Link
+            href="/handsfree-appointments"
+            className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+          >
+            Hands Free Appointments
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/handsfree-appointments/terms"
+            className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+          >
+            Terms of Service
+          </Link>
+        </li>
+        <li>
+          <Link
+            href="/other-projects"
+            className="text-[#7fc4ff] underline decoration-[rgba(127,196,255,0.45)] underline-offset-[0.18em] transition hover:text-[#b2ddff]"
+          >
+            Other Projects
+          </Link>
+        </li>
+      </ul>
     </LegalPage>
   );
 }
