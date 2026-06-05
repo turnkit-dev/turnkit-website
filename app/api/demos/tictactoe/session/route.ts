@@ -44,6 +44,7 @@ export async function POST() {
     },
     body: JSON.stringify({
       slug: config.relaySlug,
+      fillPolicy: 'REQUIRE_ALL_PLAYERS',
     }),
     cache: 'no-store',
   });

@@ -25,7 +25,9 @@ export interface TurnKitMatchStartedMessage {
   players: TurnKitRelayPlayer[];
   yourTurn?: boolean;
   activePlayerId?: string;
+  activePlayer?: string;
   serverMoveNumber?: number;
+  move?: number;
 }
 
 export interface TurnKitMoveMadeMessage {
@@ -41,8 +43,10 @@ export interface TurnKitMoveMadeMessage {
 export interface TurnKitTurnChangedMessage {
   type: 'TURN_STARTED' | 'TURN_CHANGED';
   activePlayerId?: string;
+  activePlayer?: string;
   yourTurn?: boolean;
   moveNumber?: number;
+  move?: number;
 }
 
 export interface TurnKitVoteFailedMessage {
@@ -72,6 +76,7 @@ export interface TurnKitErrorMessage {
   code?: string;
   message?: string;
   serverMoveNumber?: number;
+  move?: number;
 }
 
 export type TurnKitRelayServerMessage =

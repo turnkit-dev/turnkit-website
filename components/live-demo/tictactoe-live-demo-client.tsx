@@ -127,6 +127,15 @@ function readMovePayload(message: TurnKitMoveMadeMessage) {
   return message.json ?? message.payload ?? message.data ?? null;
 }
 
+function readActivePlayerId(message: TurnKitMatchStartedMessage | TurnKitTurnChangedMessage) {
+  return message.activePlayerId ?? message.activePlayer ?? null;
+}
+
+function readServerMoveNumber(message: TurnKitMatchStartedMessage | TurnKitTurnChangedMessage) {
+  const moveNumber = 'serverMoveNumber' in message ? message.serverMoveNumber : undefined;
+  return moveNumber ?? message.move ?? null;
+}
+
 function readActingPlayerId(message: TurnKitMoveMadeMessage) {
   return message.actingPlayerId ?? message.playerId ?? null;
 }
@@ -325,8 +334,9 @@ export function TicTacToeLiveDemoClient() {
       lastError: null,
     }));
 
-    if (typeof message.serverMoveNumber === 'number') {
-      setServerMoveNumber(message.serverMoveNumber);
+    const moveNumber = readServerMoveNumber(message);
+    if (typeof moveNumber === 'number') {
+      setServerMoveNumber(moveNumber);
     }
 
     appendLog(seats[key].title, 'Match started.');
@@ -338,8 +348,9 @@ export function TicTacToeLiveDemoClient() {
       winnerRef.current = null;
     }
 
-    if (message.activePlayerId) {
-      syncTurnFlags(message.activePlayerId);
+    const activePlayerId = readActivePlayerId(message);
+    if (activePlayerId) {
+      syncTurnFlags(activePlayerId);
     }
   });
 
@@ -400,18 +411,23 @@ export function TicTacToeLiveDemoClient() {
   });
 
   const handleTurnChanged = useEvent((key: DemoSeatKey, message: TurnKitTurnChangedMessage) => {
-    if (message.activePlayerId) {
-      syncTurnFlags(message.activePlayerId);
+    const activePlayerId = readActivePlayerId(message);
+    if (activePlayerId) {
+      syncTurnFlags(activePlayerId);
+    }
+    const moveNumber = readServerMoveNumber(message);
+    if (typeof moveNumber === 'number') {
+      setServerMoveNumber(moveNumber);
     }
     updateSeat(key, (seat) => ({
       ...seat,
-      yourTurn: typeof message.yourTurn === 'boolean' ? message.yourTurn : seat.playerId !== '' && seat.playerId === message.activePlayerId,
+      yourTurn: typeof message.yourTurn === 'boolean' ? message.yourTurn : seat.playerId !== '' && seat.playerId === activePlayerId,
       status:
         typeof message.yourTurn === 'boolean'
           ? message.yourTurn
             ? 'Your turn'
             : 'Waiting for opponent'
-          : seat.playerId !== '' && seat.playerId === message.activePlayerId
+          : seat.playerId !== '' && seat.playerId === activePlayerId
             ? 'Your turn'
             : 'Waiting for opponent',
     }));
