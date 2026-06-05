@@ -45,7 +45,7 @@ export class TurnKitRelay {
   }
 
   ping() { this.send("PING"); }
-  move(json) { this.send("MOVE", { json, shouldEndMyTurn: true }); }
+  move(json) { this.send("MOVE", { json, payload: json, endTurn: true, shouldEndMyTurn: true }); }
   vote(moveNumber, isValid) { this.send("VOTE", { moveNumber, isValid }); }
   endGame() { this.send("END_GAME"); }
 }`;
@@ -77,7 +77,8 @@ export async function startTicTacToe(apiBaseUrl, render) {
   const moveValidity = new Map();
 
   const applyMove = (msg) => {
-    const index = readCellIndex(msg.json);
+    const payload = msg.json ?? msg.payload ?? msg.data;
+    const index = readCellIndex(payload);
     const valid = moveValidity.has(msg.moveNumber) ? moveValidity.get(msg.moveNumber) : isMoveValid(board, index);
     moveValidity.set(msg.moveNumber, valid);
     seats.forEach((seat) => seat.relay.vote(msg.moveNumber, valid));

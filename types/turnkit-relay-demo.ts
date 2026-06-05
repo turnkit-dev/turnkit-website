@@ -31,12 +31,15 @@ export interface TurnKitMatchStartedMessage {
 export interface TurnKitMoveMadeMessage {
   type: 'MOVE_MADE';
   actingPlayerId?: string;
+  playerId?: string;
   moveNumber: number;
   json?: unknown;
+  payload?: unknown;
+  data?: unknown;
 }
 
 export interface TurnKitTurnChangedMessage {
-  type: 'TURN_STARTED';
+  type: 'TURN_STARTED' | 'TURN_CHANGED';
   activePlayerId?: string;
   yourTurn?: boolean;
   moveNumber?: number;
@@ -85,7 +88,10 @@ export type TurnKitRelayServerMessage =
 export interface TurnKitRelayMoveCommand {
   type: 'MOVE';
   json?: unknown;
+  payload?: unknown;
+  data?: unknown;
   shouldEndMyTurn?: boolean;
+  endTurn?: boolean;
   actions?: unknown[];
 }
 

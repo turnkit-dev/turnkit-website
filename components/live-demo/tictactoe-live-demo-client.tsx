@@ -123,6 +123,14 @@ function readCellIndex(payload: unknown) {
   return null;
 }
 
+function readMovePayload(message: TurnKitMoveMadeMessage) {
+  return message.json ?? message.payload ?? message.data ?? null;
+}
+
+function readActingPlayerId(message: TurnKitMoveMadeMessage) {
+  return message.actingPlayerId ?? message.playerId ?? null;
+}
+
 function readErrorMessage(error: unknown) {
   if (error instanceof Error) {
     return error.message;
@@ -336,7 +344,7 @@ export function TicTacToeLiveDemoClient() {
   });
 
   const handleMoveMade = useEvent((key: DemoSeatKey, message: TurnKitMoveMadeMessage) => {
-    const cellIndex = readCellIndex(message.json);
+    const cellIndex = readCellIndex(readMovePayload(message));
     const cachedValidity = moveValidityRef.current.get(message.moveNumber);
     const isLegalMove = cachedValidity ?? isMoveValidForBoard(boardRef.current, winnerRef.current, cellIndex);
 
@@ -387,7 +395,7 @@ export function TicTacToeLiveDemoClient() {
 
     const actingSeat = seatOrder
       .map((seatKey) => seats[seatKey])
-      .find((seat) => seat.playerId !== '' && seat.playerId === message.actingPlayerId);
+      .find((seat) => seat.playerId !== '' && seat.playerId === readActingPlayerId(message));
     appendLog(actingSeat?.title || 'Relay', `claimed cell ${cellIndex + 1}`);
   });
 
