@@ -1,9 +1,19 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MarketingShell } from '@/components/marketing-shell';
 import { PricingGrid } from '@/components/pricing-grid';
 import { CodeBlock } from '@/components/code-block';
 import { landingContent } from '@/content/site-content';
 import { WaitlistForm } from '@/components/waitlist-form';
+import { buildMetadata } from '@/lib/seo';
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Turn-Based Multiplayer API & Authoritative Server for Unity, Godot and other Engines',
+  description:
+    'Ship turn-based multiplayer faster in Unity or Godot with an authoritative relay, leaderboards, and built-in anti-cheat. Start free.',
+  path: '/',
+  keywords: ['turn-based multiplayer api', 'authoritative relay', 'unity turn-based multiplayer'],
+});
 
 const homeSections = [
   { href: '#top', label: 'Top' },
