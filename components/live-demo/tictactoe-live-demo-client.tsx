@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createRelayClient,
   queueOpenRelaySession,
+  type TurnKitRelayDemoDebugInfo,
   type TurnKitGameEndedMessage,
   type TurnKitMatchStartedMessage,
   type TurnKitMoveMadeMessage,
@@ -244,6 +245,13 @@ export function TicTacToeLiveDemoClient() {
   });
   const [seats, setSeats] = useState<Record<DemoSeatKey, DemoSeatState>>(() => initialSeats());
   const [logs, setLogs] = useState<string[]>([]);
+  const [debugInfo, setDebugInfo] = useState<{
+    buildVersion: string;
+    queueResponses: Partial<Record<DemoSeatKey, TurnKitRelayDemoDebugInfo>>;
+  }>({
+    buildVersion: '2026-06-05-live-demo-ui-debug',
+    queueResponses: {},
+  });
 
   const clientsRef = useRef<Partial<Record<DemoSeatKey, ReturnType<typeof createRelayClient>>>>({});
   const boardRef = useRef<string[]>(createEmptyBoard());
@@ -530,6 +538,10 @@ export function TicTacToeLiveDemoClient() {
     setWinner(null);
     setServerMoveNumber(0);
     setLogs([]);
+    setDebugInfo({
+      buildVersion: '2026-06-05-live-demo-ui-debug',
+      queueResponses: {},
+    });
     setPhase('queueing');
     setStatus('Queueing two clients into the relay config.');
 
@@ -537,13 +549,14 @@ export function TicTacToeLiveDemoClient() {
       const queueResponses = await Promise.all(
         seatOrder.map(async (key) => ({
           key,
-          session: await queueOpenRelaySession(),
+          result: await queueOpenRelaySession(),
         })),
       );
 
       setSeats((current) => {
         const next = { ...current };
-        for (const { key, session } of queueResponses) {
+        for (const { key, result } of queueResponses) {
+          const session = result.session;
           next[key] = {
             ...next[key],
             connected: false,
@@ -557,10 +570,16 @@ export function TicTacToeLiveDemoClient() {
         return next;
       });
 
+      setDebugInfo({
+        buildVersion: '2026-06-05-live-demo-ui-debug',
+        queueResponses: Object.fromEntries(queueResponses.map(({ key, result }) => [key, result.debug ?? {}])),
+      });
+
       appendLog('Relay', 'Queued both browser clients.');
       setStatus('Queued. Opening both WebSocket clients and starting pulse loop.');
 
-      for (const { key, session } of queueResponses) {
+      for (const { key, result } of queueResponses) {
+        const session = result.session;
         const client = createRelayClient({
           apiBaseUrl: session.apiBaseUrl,
           relayToken: session.relayToken,
@@ -653,6 +672,22 @@ export function TicTacToeLiveDemoClient() {
                 <span className="rounded-[999px] border border-border2 bg-surface2 px-2.5 py-1">Phase: {phase}</span>
                 <span className="rounded-[999px] border border-border2 bg-surface2 px-2.5 py-1">Server move: {serverMoveNumber}</span>
                 <span className="rounded-[999px] border border-border2 bg-surface2 px-2.5 py-1">Winner: {winner ?? 'None'}</span>
+                <span className="rounded-[999px] border border-border2 bg-surface2 px-2.5 py-1">UI build: {debugInfo.buildVersion}</span>
+              </div>
+            </div>
+
+            <div className="rounded-[8px] border border-border2 bg-[rgba(8,12,16,0.55)] p-3 sm:p-4">
+              <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-accent">Queue Debug</div>
+              <div className="space-y-2 text-[11px] leading-[1.6] text-muted sm:text-[12px]">
+                {seatOrder.map((key) => {
+                  const debug = debugInfo.queueResponses[key];
+                  return (
+                    <p key={key}>
+                      {seats[key].title}: version={debug?.version ?? 'n/a'}, fillPolicy={debug?.forwardedBody?.fillPolicy ?? 'n/a'}, slot=
+                      {debug?.upstream?.slot ?? 'n/a'}, upstreamSession={debug?.upstream?.sessionId ?? 'n/a'}
+                    </p>
+                  );
+                })}
               </div>
             </div>
 
