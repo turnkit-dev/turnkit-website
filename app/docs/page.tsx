@@ -64,6 +64,11 @@ export default function DocsIndexPage() {
           description="Connect Relay match results to leaderboards, webhooks, Discord bots, and backend workflows."
           href="/docs/relay-stats-and-leaderboards"
         />
+        <DocsCard
+          title="2026 Server Comparison"
+          description="Compare TurnKit against custom backends, per-match servers, and basic relays."
+          href="/turn-based-game-server-comparison-2026"
+        />
       </div>
 
       <h2 id="guides" className="mb-5 mt-12 scroll-mt-20 font-display text-2xl font-semibold tracking-[-0.01em] text-text">

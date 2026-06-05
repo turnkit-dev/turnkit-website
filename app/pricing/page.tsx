@@ -18,13 +18,21 @@ const pricingSections = [
 ];
 
 const pricingDescription =
-  'Compare TurnKit pricing, start free, and choose the lowest-cost authoritative backend plan before your next spike.';
+  'TurnKit pricing for turn-based multiplayer games: compare Relay and Leaderboards plans, CCU limits, burst protection, and auto-upgrade behavior.';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Pricing - TurnKit',
+  title: 'Turn-Based Multiplayer Backend Pricing (Unity/Godot) - TurnKit',
   description: pricingDescription,
   path: '/pricing',
-  keywords: ['game backend pricing', 'Unity multiplayer pricing', 'leaderboards pricing'],
+  keywords: [
+    'game backend pricing',
+    'turn based multiplayer pricing',
+    'CCU pricing model',
+    'Unity multiplayer pricing',
+    'Godot multiplayer pricing',
+    'authoritative backend pricing',
+    'leaderboards pricing',
+  ],
 });
 
 export default function PricingPage() {
@@ -63,6 +71,11 @@ export default function PricingPage() {
             </h1>
             <p className="max-w-[560px] text-base leading-[1.6] text-muted">
               Start free, scale when your game grows, and keep Relay and Leaderboards on the same simple CCU model.
+            </p>
+            <p className="mt-4 max-w-[720px] text-[15px] leading-[1.8] text-muted">
+              This page breaks down multiplayer backend pricing for indie and mid-size studios shipping turn-based games. Review exact CCU
+              behavior, monthly tier boundaries, over-limit handling, and upgrade paths so you can forecast cost before launch and avoid
+              surprise infrastructure bills.
             </p>
           </section>
 
