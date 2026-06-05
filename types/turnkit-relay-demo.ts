@@ -35,6 +35,7 @@ export interface TurnKitMoveMadeMessage {
   actingPlayerId?: string;
   playerId?: string;
   moveNumber: number;
+  move?: number;
   json?: unknown;
   payload?: unknown;
   data?: unknown;
@@ -92,12 +93,12 @@ export type TurnKitRelayServerMessage =
 
 export interface TurnKitRelayMoveCommand {
   type: 'MOVE';
-  json?: unknown;
   payload?: unknown;
-  data?: unknown;
-  shouldEndMyTurn?: boolean;
   endTurn?: boolean;
   actions?: unknown[];
+  intendedMoveNumber?: number;
+  passTo?: string | number;
+  isAfk?: boolean;
 }
 
 export interface TurnKitRelayVoteCommand {

@@ -45,7 +45,7 @@ export class TurnKitRelay {
   }
 
   ping() { this.send("PING"); }
-  move(json) { this.send("MOVE", { json, payload: json, endTurn: true, shouldEndMyTurn: true }); }
+  move(json) { this.send("MOVE", { payload: json, endTurn: true }); }
   vote(moveNumber, isValid) { this.send("VOTE", { moveNumber, isValid }); }
   endGame() { this.send("END_GAME"); }
 }`;

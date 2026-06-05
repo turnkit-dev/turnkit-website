@@ -78,6 +78,7 @@ export interface TurnKitMoveMadeMessage {
   actingPlayerId?: string;
   playerId?: string;
   moveNumber: number;
+  move?: number;
   json?: unknown;
   payload?: unknown;
   data?: unknown;
@@ -140,14 +141,14 @@ export type TurnKitRelayServerMessage =
 type TurnKitRelayClientCommand =
   | {
       type: 'MOVE';
-      json?: unknown;
       payload?: unknown;
-      data?: unknown;
-      shouldEndMyTurn?: boolean;
       endTurn?: boolean;
       actions?: unknown[];
       delegated?: boolean;
       delegateFor?: string | number;
+      intendedMoveNumber?: number;
+      passTo?: string | number;
+      isAfk?: boolean;
     }
   | { type: 'VOTE'; moveNumber: number; isValid: boolean }
   | { type: 'PING' }
@@ -230,10 +231,7 @@ class TurnKitRelayBrowserClient {
   sendMove(json: unknown, shouldEndMyTurn = true) {
     this.send({
       type: 'MOVE',
-      json,
       payload: json,
-      data: json,
-      shouldEndMyTurn,
       endTurn: shouldEndMyTurn,
     });
   }

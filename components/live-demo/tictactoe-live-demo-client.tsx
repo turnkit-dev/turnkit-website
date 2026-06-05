@@ -141,6 +141,10 @@ function readActingPlayerId(message: TurnKitMoveMadeMessage) {
   return message.actingPlayerId ?? message.playerId ?? null;
 }
 
+function readCommittedMoveNumber(message: TurnKitMoveMadeMessage) {
+  return message.moveNumber ?? message.move ?? null;
+}
+
 function readErrorMessage(error: unknown) {
   if (error instanceof Error) {
     return error.message;
@@ -363,34 +367,43 @@ export function TicTacToeLiveDemoClient() {
   });
 
   const handleMoveMade = useEvent((key: DemoSeatKey, message: TurnKitMoveMadeMessage) => {
+    const moveNumber = readCommittedMoveNumber(message);
     const cellIndex = readCellIndex(readMovePayload(message));
-    const cachedValidity = moveValidityRef.current.get(message.moveNumber);
+    const cachedValidity = typeof moveNumber === 'number' ? moveValidityRef.current.get(moveNumber) : undefined;
     const isLegalMove = cachedValidity ?? isMoveValidForBoard(boardRef.current, winnerRef.current, cellIndex);
 
-    moveValidityRef.current.set(message.moveNumber, isLegalMove);
+    if (typeof moveNumber === 'number') {
+      moveValidityRef.current.set(moveNumber, isLegalMove);
+    }
 
-    if (!votedMovesRef.current[key].has(message.moveNumber)) {
-      votedMovesRef.current[key].add(message.moveNumber);
+    if (typeof moveNumber === 'number' && !votedMovesRef.current[key].has(moveNumber)) {
+      votedMovesRef.current[key].add(moveNumber);
       try {
-        clientsRef.current[key]?.vote(message.moveNumber, isLegalMove);
+        clientsRef.current[key]?.vote(moveNumber, isLegalMove);
       } catch {
-        appendLog(seats[key].title, `failed to vote on move ${message.moveNumber}.`);
+        appendLog(seats[key].title, `failed to vote on move ${moveNumber}.`);
       }
     }
 
-    if (processedMovesRef.current.has(message.moveNumber)) {
+    if (typeof moveNumber !== 'number') {
+      setStatus('Relay sent MOVE_MADE without a move number.');
+      appendLog('Relay', 'MOVE_MADE missing move number.');
       return;
     }
-    processedMovesRef.current.add(message.moveNumber);
-    setServerMoveNumber(message.moveNumber);
+
+    if (processedMovesRef.current.has(moveNumber)) {
+      return;
+    }
+    processedMovesRef.current.add(moveNumber);
+    setServerMoveNumber(moveNumber);
 
     if (!isLegalMove || cellIndex === null) {
       setStatus('An invalid move was detected. Waiting for relay vote resolution.');
-      appendLog('Relay', `Move ${message.moveNumber} flagged invalid.`);
+      appendLog('Relay', `Move ${moveNumber} flagged invalid.`);
       return;
     }
 
-    const symbol = message.moveNumber % 2 === 0 ? 'O' : 'X';
+    const symbol = moveNumber % 2 === 0 ? 'O' : 'X';
     const nextBoard = [...boardRef.current];
     nextBoard[cellIndex] = symbol;
     replaceBoard(nextBoard);
@@ -405,7 +418,7 @@ export function TicTacToeLiveDemoClient() {
       return;
     }
 
-    if (message.moveNumber >= boardSize) {
+    if (moveNumber >= boardSize) {
       setStatus('Draw. Finalizing the match on both relay clients.');
       setPhase('ended');
       closeMatchForEveryone('Board filled with no winner.');
