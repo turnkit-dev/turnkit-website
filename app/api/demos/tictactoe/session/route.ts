@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getTicTacToeDemoPublicConfig, getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
 import type { TurnKitRelayDemoSessionResponse, TurnKitRelayQueueResponse } from '@/types/turnkit-relay-demo';
 
+const demoDebugVersion = '2026-06-05-live-demo-queue-debug';
+
 function createDemoPlayerId() {
   return `web-demo-${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`;
 }
@@ -24,15 +26,27 @@ export async function POST() {
   const config = getTicTacToeDemoServerConfig();
   const publicConfig = getTicTacToeDemoPublicConfig();
   const playerId = createDemoPlayerId();
+  const queueBody = {
+    slug: config.relaySlug,
+    fillPolicy: 'REQUIRE_ALL_PLAYERS',
+  } as const;
 
   if (!config.isReady) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         ok: false,
         error: 'Live demo is not configured yet. Set TURNKIT_DEMO_TICTACTOE_CLIENT_KEY and TURNKIT_DEMO_TICTACTOE_RELAY_SLUG.',
+        debug: {
+          version: demoDebugVersion,
+          apiBaseUrl: config.apiBaseUrl,
+          relaySlug: config.relaySlug,
+          forwardedBody: queueBody,
+        },
       },
       { status: 503 },
     );
+    response.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
+    return response;
   }
 
   const response = await fetch(`${config.apiBaseUrl}/v1/client/relay/queue`, {
@@ -42,21 +56,29 @@ export async function POST() {
       'Content-Type': 'application/json',
       'X-Player-Id': playerId,
     },
-    body: JSON.stringify({
-      slug: config.relaySlug,
-      fillPolicy: 'REQUIRE_ALL_PLAYERS',
-    }),
+    body: JSON.stringify(queueBody),
     cache: 'no-store',
   });
 
   if (!response.ok) {
-    return NextResponse.json(
+    const error = await readBackendError(response);
+    const errorResponse = NextResponse.json(
       {
         ok: false,
-        error: await readBackendError(response),
+        error,
+        debug: {
+          version: demoDebugVersion,
+          apiBaseUrl: config.apiBaseUrl,
+          relaySlug: config.relaySlug,
+          playerId,
+          forwardedBody: queueBody,
+          upstreamStatus: response.status,
+        },
       },
       { status: response.status },
     );
+    errorResponse.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
+    return errorResponse;
   }
 
   const payload = (await response.json()) as TurnKitRelayQueueResponse;
@@ -66,8 +88,22 @@ export async function POST() {
     playerId,
   };
 
-  return NextResponse.json({
+  const successResponse = NextResponse.json({
     ok: true,
     session,
+    debug: {
+      version: demoDebugVersion,
+      apiBaseUrl: config.apiBaseUrl,
+      relaySlug: config.relaySlug,
+      playerId,
+      forwardedBody: queueBody,
+      upstream: {
+        sessionId: payload.sessionId,
+        slot: payload.slot,
+        status: payload.status,
+      },
+    },
   });
+  successResponse.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
+  return successResponse;
 }
