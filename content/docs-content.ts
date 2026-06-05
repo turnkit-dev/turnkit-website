@@ -34,6 +34,7 @@ export const docsNavSections: DocsNavSection[] = [
     links: [
       { href: '/docs/relay', label: 'Turn Relay' },
       { href: '/docs/leaderboards', label: 'Leaderboards' },
+      { href: '/docs/player-store', label: 'Player Store' },
     ],
   },
   {
@@ -120,6 +121,7 @@ export const relayPageMeta: DocsPageMeta = {
     { href: '#intro', label: 'Intro' },
     { href: '#how-it-works', label: 'How It Works' },
     { href: '#key-features', label: 'Key Features' },
+    { href: '#queue-and-mutations', label: 'Queue Rules & Mutations' },
     { href: '#private-data', label: 'Hand Hiding' },
     { href: '#flexibility', label: 'Flexibility' },
   ],
@@ -154,6 +156,23 @@ export const relayIntegrationsPageMeta: DocsPageMeta = {
     { href: '#setting-up-tracked-stats', label: 'Setting Up Tracked Stats' },
     { href: '#adding-webhooks', label: 'Adding Webhooks' },
     { href: '#example-webhook-payload', label: 'Example Webhook Payload' },
+  ],
+};
+
+export const playerStorePageMeta: DocsPageMeta = {
+  title: 'Player Store',
+  description:
+    'Define typed player variables once, then read and write currency, inventory tags, and progression values from Unity and backend APIs.',
+  path: '/docs/player-store',
+  eyebrow: 'Modules',
+  breadcrumbLabel: 'Player Store',
+  toc: [
+    { href: '#intro', label: 'Intro' },
+    { href: '#definitions', label: 'Store Definitions' },
+    { href: '#values', label: 'Read & Write Values' },
+    { href: '#client-transactions', label: 'Client Transactions' },
+    { href: '#unity-usage', label: 'Unity Usage' },
+    { href: '#rules', label: 'Rules & Errors' },
   ],
 };
 

@@ -157,7 +157,7 @@ export const landingContent: LandingContent = {
     {
       name: 'PlayerStore',
       description: 'Inventory, currencies, stats, and in-game shop.',
-      status: 'coming_soon',
+      status: 'available',
     }
   ],
   footerLinks: [

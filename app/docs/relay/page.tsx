@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DocsShell } from '@/components/docs-shell';
-import { InlineCode } from '@/components/code-block';
+import { CodeBlock, InlineCode } from '@/components/code-block';
 import { relayPageMeta } from '@/content/docs-content';
 import { absoluteUrl } from '@/lib/seo';
 
@@ -146,6 +146,79 @@ export default function RelayDocsPage() {
             Supported operations include spawn, move between lists, remove, shuffle, and targeted selection by top, bottom, random,
             item ID, or <InlineCode code="slug" />.
           </p>
+        </InfoCard>
+      </div>
+
+      <SectionTitle id="queue-and-mutations">Queue Rules &amp; Player Store Mutations</SectionTitle>
+      <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
+        Relay config now supports pre-match queue checks and automatic player store updates at match start/end.
+      </p>
+      <CodeBlock
+        className="mb-8"
+        language="json"
+        code={`{
+  "queueRequirements": [
+    {
+      "name": "has_energy",
+      "combinator": "AND",
+      "conditions": [
+        { "source": "STORE", "key": "energy", "operator": "GTE", "value": 5 }
+      ]
+    }
+  ],
+  "playerStoreMutations": [
+    {
+      "mutationId": "spend_energy_on_start",
+      "phase": "ON_MATCH_START",
+      "target": "ACTING_PLAYER",
+      "storeKey": "energy",
+      "operation": "SUB",
+      "value": 1,
+      "combinator": "AND",
+      "conditions": []
+    },
+    {
+      "mutationId": "unlock_badge",
+      "phase": "ON_MATCH_END",
+      "target": "WINNER",
+      "storeKey": "unlocks",
+      "operation": "LIST_ADD",
+      "value": "ranked_win_badge",
+      "combinator": "AND",
+      "conditions": []
+    }
+  ]
+}`}
+      />
+      <div className="mb-8 grid gap-4 md:grid-cols-2">
+        <InfoCard title="Enum Values">
+          <ul className="list-disc space-y-2 pl-5 text-[13px] leading-[1.6] text-muted">
+            <li><InlineCode code="RuleCombinator" />: <InlineCode code="AND | OR" /></li>
+            <li><InlineCode code="ConditionSource" />: <InlineCode code="STORE" /></li>
+            <li><InlineCode code="ConditionOperator" />: <InlineCode code="EQ | NEQ | GT | GTE | LT | LTE | CONTAINS | NOT_CONTAINS" /></li>
+            <li><InlineCode code="RulePhase" />: <InlineCode code="ON_MATCH_START | ON_MATCH_END" /></li>
+            <li><InlineCode code="MutationTarget" />: <InlineCode code="ACTING_PLAYER | ALL_PLAYERS | WINNER | LOSER" /></li>
+            <li><InlineCode code="MutationOperation" />: <InlineCode code="SET | ADD | SUB | LIST_SET | LIST_ADD | LIST_REMOVE | LIST_CLEAR" /></li>
+          </ul>
+        </InfoCard>
+        <InfoCard title="Runtime & Limits">
+          <ul className="list-disc space-y-2 pl-5 text-[13px] leading-[1.6] text-muted">
+            <li>Queue requirement failure returns <InlineCode code="409 QUEUE_REQUIREMENT_FAILED" />.</li>
+            <li>Requirements are checked only when joining queue.</li>
+            <li><InlineCode code="ON_MATCH_START" /> runs once after match assembly.</li>
+            <li><InlineCode code="ON_MATCH_END" /> runs async and idempotent.</li>
+            <li>Max conditions per rule: <InlineCode code="20" />.</li>
+            <li>Max mutations per relay config: <InlineCode code="100" />.</li>
+          </ul>
+        </InfoCard>
+        <InfoCard title="Value Type Rules">
+          <ul className="list-disc space-y-2 pl-5 text-[13px] leading-[1.6] text-muted">
+            <li><InlineCode code="SET" /> supports STRING, NUMBER, STRING_LIST.</li>
+            <li><InlineCode code="ADD/SUB" /> support NUMBER only.</li>
+            <li><InlineCode code="LIST_*" /> operations support STRING_LIST only.</li>
+            <li><InlineCode code="LIST_CLEAR" /> requires <InlineCode code="value: null" />.</li>
+            <li><InlineCode code="LIST_ADD" /> ignores duplicate values.</li>
+          </ul>
         </InfoCard>
       </div>
 

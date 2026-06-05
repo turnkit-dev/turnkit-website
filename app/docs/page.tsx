@@ -60,6 +60,11 @@ export default function DocsIndexPage() {
           href="/docs/leaderboards"
         />
         <DocsCard
+          title="Player Store"
+          description="Define typed player keys and use shared value payloads from Unity and backend APIs."
+          href="/docs/player-store"
+        />
+        <DocsCard
           title="Relay Stats & Leaderboards"
           description="Connect Relay match results to leaderboards, webhooks, Discord bots, and backend workflows."
           href="/docs/relay-stats-and-leaderboards"

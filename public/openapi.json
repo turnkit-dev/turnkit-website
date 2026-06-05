@@ -32,6 +32,18 @@
     {
       "name": "Player Auth",
       "description": "TurnKit player authentication for YOUR_BACKEND, EMAIL_OTP, and UGS methods"
+    },
+    {
+      "name": "Dev - Player Store Definitions",
+      "description": "Create and manage player store key definitions per game key"
+    },
+    {
+      "name": "Client - Player Store",
+      "description": "Read and write player store values for the authenticated player"
+    },
+    {
+      "name": "Dev - Player Store",
+      "description": "Read and write player store values for a specific player"
     }
   ],
   "paths": {
@@ -3209,6 +3221,490 @@
           }
         }
       }
+    },
+    "/v1/dev/player-store-defs": {
+      "get": {
+        "tags": [
+          "Dev - Player Store Definitions"
+        ],
+        "summary": "List player store definitions",
+        "operationId": "listPlayerStoreDefinitions",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlayerStoreDefinitionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Dev - Player Store Definitions"
+        ],
+        "summary": "Create player store definition",
+        "description": "Definitions are create-only. Duplicate key returns STORE_KEY_ALREADY_DEFINED.",
+        "operationId": "createPlayerStoreDefinition",
+        "parameters": [
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerStoreDefinitionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStoreDefinitionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_STORE_KEY",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "STORE_KEY_ALREADY_DEFINED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/player-store-defs/{storeKey}": {
+      "delete": {
+        "tags": [
+          "Dev - Player Store Definitions"
+        ],
+        "summary": "Delete player store definition",
+        "description": "Deleting a definition cascades its values through FK constraints.",
+        "operationId": "deletePlayerStoreDefinition",
+        "parameters": [
+          {
+            "name": "storeKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "INVALID_STORE_KEY",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_KEY_NOT_DEFINED",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client/player-store/{storeKey}": {
+      "get": {
+        "tags": [
+          "Client - Player Store"
+        ],
+        "summary": "Get authenticated player store value",
+        "operationId": "getClientPlayerStoreValue",
+        "parameters": [
+          {
+            "name": "storeKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStoreValueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Client - Player Store"
+        ],
+        "summary": "Set authenticated player store value",
+        "operationId": "setClientPlayerStoreValue",
+        "parameters": [
+          {
+            "name": "storeKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerStoreValueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStoreValueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dev/player-store/{playerId}/{storeKey}": {
+      "get": {
+        "tags": [
+          "Dev - Player Store"
+        ],
+        "summary": "Get player store value for player",
+        "operationId": "getDevPlayerStoreValue",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStoreValueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Dev - Player Store"
+        ],
+        "summary": "Set player store value for player",
+        "operationId": "setDevPlayerStoreValue",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameKeyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlayerStoreValueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStoreValueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3252,7 +3748,7 @@
       },
       "UpdateRequest": {
         "type": "object",
-        "description": "Relay configuration update request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
+        "description": "Relay configuration update request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails. queueRequirements are evaluated at queue join; failure returns QUEUE_REQUIREMENT_FAILED. playerStoreMutations support ON_MATCH_START (once) and ON_MATCH_END (async, idempotent).",
         "properties": {
           "maxPlayers": {
             "type": "integer",
@@ -3321,6 +3817,19 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrackedStatRequest"
+            }
+          },
+          "queueRequirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueRequirement"
+            }
+          },
+          "playerStoreMutations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PlayerStoreMutation"
             }
           }
         },
@@ -3484,7 +3993,7 @@
       },
       "CreateRequest": {
         "type": "object",
-        "description": "Relay configuration request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails.",
+        "description": "Relay configuration request body. turnEnforcement: ROUND_ROBIN (players take turns in order) or FREE (any player can play anytime). votingMode: SYNC (synchronous voting) or ASYNC (asynchronous voting). failAction: SKIP_TURN (skip current player's turn) or END_GAME (end the game) when voting fails. queueRequirements are evaluated at queue join; failure returns QUEUE_REQUIREMENT_FAILED. playerStoreMutations support ON_MATCH_START (once) and ON_MATCH_END (async, idempotent).",
         "properties": {
           "slug": {
             "type": "string",
@@ -3557,6 +4066,19 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrackedStatRequest"
+            }
+          },
+          "queueRequirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueRequirement"
+            }
+          },
+          "playerStoreMutations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PlayerStoreMutation"
             }
           }
         },
@@ -3708,6 +4230,19 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TrackedStatDto"
+            }
+          },
+          "queueRequirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueRequirement"
+            }
+          },
+          "playerStoreMutations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PlayerStoreMutation"
             }
           }
         }
@@ -4717,6 +5252,19 @@
           "turnTimeoutSeconds": {
             "type": "integer",
             "format": "int32"
+          },
+          "queueRequirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueRequirement"
+            }
+          },
+          "playerStoreMutations": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PlayerStoreMutation"
+            }
           }
         }
       },
@@ -5185,6 +5733,237 @@
         "required": [
           "policy",
           "methods"
+        ]
+      },
+      "PlayerStoreValueType": {
+        "type": "string",
+        "enum": [
+          "STRING",
+          "NUMBER",
+          "STRING_LIST"
+        ]
+      },
+      "PlayerStoreDefinitionRequest": {
+        "type": "object",
+        "properties": {
+          "storeKey": {
+            "type": "string"
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/PlayerStoreValueType"
+          },
+          "clientWritable": {
+            "type": "boolean"
+          },
+          "clientReadable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "storeKey",
+          "valueType",
+          "clientWritable",
+          "clientReadable"
+        ]
+      },
+      "PlayerStoreDefinitionResponse": {
+        "type": "object",
+        "properties": {
+          "storeKey": {
+            "type": "string"
+          },
+          "valueType": {
+            "$ref": "#/components/schemas/PlayerStoreValueType"
+          },
+          "clientWritable": {
+            "type": "boolean"
+          },
+          "clientReadable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "storeKey",
+          "valueType",
+          "clientWritable",
+          "clientReadable"
+        ]
+      },
+      "PlayerStoreValue": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "PlayerStoreValueRequest": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/PlayerStoreValue"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      },
+      "PlayerStoreValueResponse": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/PlayerStoreValue"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      },
+      "RuleCombinator": {
+        "type": "string",
+        "enum": [
+          "AND",
+          "OR"
+        ]
+      },
+      "ConditionSource": {
+        "type": "string",
+        "enum": [
+          "STORE"
+        ]
+      },
+      "ConditionOperator": {
+        "type": "string",
+        "enum": [
+          "EQ",
+          "NEQ",
+          "GT",
+          "GTE",
+          "LT",
+          "LTE",
+          "CONTAINS",
+          "NOT_CONTAINS"
+        ]
+      },
+      "RuleCondition": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/ConditionSource"
+          },
+          "key": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ConditionOperator"
+          },
+          "value": {}
+        },
+        "required": [
+          "source",
+          "key",
+          "operator",
+          "value"
+        ]
+      },
+      "QueueRequirement": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "combinator": {
+            "$ref": "#/components/schemas/RuleCombinator"
+          },
+          "conditions": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/RuleCondition"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "combinator",
+          "conditions"
+        ]
+      },
+      "RulePhase": {
+        "type": "string",
+        "enum": [
+          "ON_MATCH_START",
+          "ON_MATCH_END"
+        ]
+      },
+      "MutationTarget": {
+        "type": "string",
+        "enum": [
+          "ACTING_PLAYER",
+          "ALL_PLAYERS",
+          "WINNER",
+          "LOSER"
+        ]
+      },
+      "MutationOperation": {
+        "type": "string",
+        "enum": [
+          "SET",
+          "ADD",
+          "SUB",
+          "LIST_SET",
+          "LIST_ADD",
+          "LIST_REMOVE",
+          "LIST_CLEAR"
+        ]
+      },
+      "PlayerStoreMutation": {
+        "type": "object",
+        "description": "Value rules: SET supports STRING|NUMBER|STRING_LIST. ADD/SUB support NUMBER only. LIST_* support STRING_LIST only. LIST_CLEAR requires null value.",
+        "properties": {
+          "mutationId": {
+            "type": "string"
+          },
+          "phase": {
+            "$ref": "#/components/schemas/RulePhase"
+          },
+          "target": {
+            "$ref": "#/components/schemas/MutationTarget"
+          },
+          "storeKey": {
+            "type": "string"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/MutationOperation"
+          },
+          "value": {},
+          "combinator": {
+            "$ref": "#/components/schemas/RuleCombinator"
+          },
+          "conditions": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/RuleCondition"
+            }
+          }
+        },
+        "required": [
+          "mutationId",
+          "phase",
+          "target",
+          "storeKey",
+          "operation",
+          "combinator",
+          "conditions"
         ]
       }
     },
