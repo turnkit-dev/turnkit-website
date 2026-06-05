@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 import { getTicTacToeDemoPublicConfig, getTicTacToeDemoServerConfig } from '@/lib/turnkit-demo-config';
 import type { TurnKitRelayDemoSessionResponse, TurnKitRelayQueueResponse } from '@/types/turnkit-relay-demo';
 
-const demoDebugVersion = '2026-06-05-live-demo-queue-debug';
-
 function createDemoPlayerId() {
   return `web-demo-${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}`;
 }
@@ -32,21 +30,13 @@ export async function POST() {
   } as const;
 
   if (!config.isReady) {
-    const response = NextResponse.json(
+    return NextResponse.json(
       {
         ok: false,
         error: 'Live demo is not configured yet. Set TURNKIT_DEMO_TICTACTOE_CLIENT_KEY and TURNKIT_DEMO_TICTACTOE_RELAY_SLUG.',
-        debug: {
-          version: demoDebugVersion,
-          apiBaseUrl: config.apiBaseUrl,
-          relaySlug: config.relaySlug,
-          forwardedBody: queueBody,
-        },
       },
       { status: 503 },
     );
-    response.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
-    return response;
   }
 
   const response = await fetch(`${config.apiBaseUrl}/v1/client/relay/queue`, {
@@ -61,24 +51,13 @@ export async function POST() {
   });
 
   if (!response.ok) {
-    const error = await readBackendError(response);
-    const errorResponse = NextResponse.json(
+    return NextResponse.json(
       {
         ok: false,
-        error,
-        debug: {
-          version: demoDebugVersion,
-          apiBaseUrl: config.apiBaseUrl,
-          relaySlug: config.relaySlug,
-          playerId,
-          forwardedBody: queueBody,
-          upstreamStatus: response.status,
-        },
+        error: await readBackendError(response),
       },
       { status: response.status },
     );
-    errorResponse.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
-    return errorResponse;
   }
 
   const payload = (await response.json()) as TurnKitRelayQueueResponse;
@@ -88,22 +67,8 @@ export async function POST() {
     playerId,
   };
 
-  const successResponse = NextResponse.json({
+  return NextResponse.json({
     ok: true,
     session,
-    debug: {
-      version: demoDebugVersion,
-      apiBaseUrl: config.apiBaseUrl,
-      relaySlug: config.relaySlug,
-      playerId,
-      forwardedBody: queueBody,
-      upstream: {
-        sessionId: payload.sessionId,
-        slot: payload.slot,
-        status: payload.status,
-      },
-    },
   });
-  successResponse.headers.set('X-TurnKit-Demo-Debug-Version', demoDebugVersion);
-  return successResponse;
 }

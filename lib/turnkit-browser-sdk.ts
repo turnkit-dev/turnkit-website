@@ -4,21 +4,6 @@ interface QueueOpenRelaySessionResponse {
   ok: boolean;
   session?: TurnKitRelayDemoSessionResponse;
   error?: string;
-  debug?: {
-    version?: string;
-    apiBaseUrl?: string;
-    relaySlug?: string;
-    playerId?: string;
-    forwardedBody?: {
-      slug?: string;
-      fillPolicy?: string;
-    };
-    upstream?: {
-      sessionId?: string;
-      slot?: number;
-      status?: string;
-    };
-  };
 }
 
 interface CreateRelayClientOptions {
@@ -39,22 +24,6 @@ export interface TurnKitRelayDemoSessionResponse {
   status: string;
   playerId: string;
   apiBaseUrl: string;
-}
-
-export interface TurnKitRelayDemoDebugInfo {
-  version?: string;
-  apiBaseUrl?: string;
-  relaySlug?: string;
-  playerId?: string;
-  forwardedBody?: {
-    slug?: string;
-    fillPolicy?: string;
-  };
-  upstream?: {
-    sessionId?: string;
-    slot?: number;
-    status?: string;
-  };
 }
 
 export interface TurnKitRelayPlayer {
@@ -284,10 +253,7 @@ export async function queueOpenRelaySession() {
     throw new Error(payload.error || 'Queue request failed.');
   }
 
-  return {
-    session: payload.session,
-    debug: payload.debug,
-  };
+  return payload.session;
 }
 
 export function createRelayClient(options: CreateRelayClientOptions) {
