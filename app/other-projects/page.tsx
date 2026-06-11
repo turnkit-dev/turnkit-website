@@ -91,6 +91,27 @@ export default function OtherProjectsPage() {
           </section>
 
           <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Hands Free Voice Tube</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">Voice control YouTube videos.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/handsfree-tube"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.handsfree.tube"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
             <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Hands Free Appointments</h2>
             <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
               Voice-first calendar app. Speak appointments naturally and sync directly with Google Calendar.

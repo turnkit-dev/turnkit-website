@@ -46,6 +46,7 @@ const routes = [
   { path: '/other-projects', priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/rankdrop', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-notes', priority: 0.4, changeFrequency: 'monthly' as const },
+  { path: '/handsfree-tube', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-appointments', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/zumba-space-marble-blast', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
@@ -57,6 +58,8 @@ const routes = [
   { path: '/handsfree-notes/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/handsfree-notes/terms', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/handsfree-notes/delete-data', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/handsfree-tube/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/handsfree-tube/terms', priority: 0.2, changeFrequency: 'yearly' as const },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
