@@ -4,7 +4,7 @@ import { MarketingShell } from '@/components/marketing-shell';
 import { absoluteUrl } from '@/lib/seo';
 
 const otherProjectsDescription =
-  'Explore other projects by TurnKit: RankDrop leaderboards, Hands Free Notes, Hands Free Appointments, and Zumba Space Marble Blast, plus collaboration and freelance availability.';
+  'Explore other projects by TurnKit: RankDrop leaderboards, Hands Free Cooking, Hands Free Notes, Hands Free Appointments, and Zumba Space Marble Blast, plus collaboration and freelance availability.';
 
 export const metadata: Metadata = {
   title: 'Other Projects - TurnKit',
@@ -35,6 +35,29 @@ export default function OtherProjectsPage() {
         </h1>
 
         <div className="flex flex-col gap-5">
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Hands Free Cooking Offline</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Offline hands-free recipe app for cooking with messy or dirty hands, with voice commands, starter recipes, and URL import.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/handsfree-cooking"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.handsfree.cooking"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
           <section className="rounded-[4px] border border-border bg-surface p-6">
             <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">RankDrop</h2>
             <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
