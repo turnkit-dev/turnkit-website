@@ -32,6 +32,8 @@ export interface RelayConfigInput {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  disconnectedTurnTimerSeconds: number;
+  afkTurnTimerSeconds: number;
   reconnectMoveHistorySize: number;
   onTurnTimeout: OnTurnTimeout;
   revealPrivateListsOnTimeout: boolean;
@@ -117,6 +119,8 @@ export interface RelayConfigRecord {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  disconnectedTurnTimerSeconds: number;
+  afkTurnTimerSeconds: number;
   reconnectMoveHistorySize: number;
   onTurnTimeout: OnTurnTimeout;
   revealPrivateListsOnTimeout: boolean;
@@ -253,6 +257,8 @@ interface ApiRelayConfigResponse {
   matchTimeoutMinutes: number;
   turnTimeoutSeconds: number;
   waitReconnectSeconds: number;
+  disconnectedTurnTimerSeconds?: number;
+  afkTurnTimerSeconds?: number;
   reconnectMoveHistorySize?: number;
   onTurnTimeout?: OnTurnTimeout;
   revealPrivateListsOnTimeout?: boolean;
@@ -305,6 +311,8 @@ function mapRelayConfig(item: ApiRelayConfigResponse): RelayConfigRecord {
     matchTimeoutMinutes: item.matchTimeoutMinutes,
     turnTimeoutSeconds: item.turnTimeoutSeconds,
     waitReconnectSeconds: item.waitReconnectSeconds,
+    disconnectedTurnTimerSeconds: Math.max(0, Math.trunc(item.disconnectedTurnTimerSeconds ?? 0)),
+    afkTurnTimerSeconds: Math.max(0, Math.trunc(item.afkTurnTimerSeconds ?? 0)),
     reconnectMoveHistorySize: Math.max(0, Math.min(20, Math.trunc(item.reconnectMoveHistorySize ?? 0))),
     onTurnTimeout: item.onTurnTimeout ?? 'CHANGE_TO_NEXT_PLAYER',
     revealPrivateListsOnTimeout: item.revealPrivateListsOnTimeout ?? false,
@@ -446,7 +454,9 @@ function normalizeRelayConfigInput(input: RelayConfigInput) {
     failAction: input.failAction,
     matchTimeoutMinutes: Math.max(1, Math.trunc(input.matchTimeoutMinutes)),
     turnTimeoutSeconds: Math.max(1, Math.trunc(input.turnTimeoutSeconds)),
-    waitReconnectSeconds: Math.max(1, Math.trunc(input.waitReconnectSeconds)),
+    waitReconnectSeconds: Math.max(0, Math.trunc(input.waitReconnectSeconds)),
+    disconnectedTurnTimerSeconds: Math.max(0, Math.trunc(input.disconnectedTurnTimerSeconds)),
+    afkTurnTimerSeconds: Math.max(0, Math.trunc(input.afkTurnTimerSeconds)),
     reconnectMoveHistorySize: Math.max(0, Math.min(20, Math.trunc(input.reconnectMoveHistorySize))),
     onTurnTimeout: input.onTurnTimeout,
     revealPrivateListsOnTimeout: Boolean(input.revealPrivateListsOnTimeout),

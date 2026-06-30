@@ -100,6 +100,8 @@ function readRelayConfigInput(formData: FormData) {
     matchTimeoutMinutes: readInt(formData, 'matchTimeoutMinutes'),
     turnTimeoutSeconds: readInt(formData, 'turnTimeoutSeconds'),
     waitReconnectSeconds: readInt(formData, 'waitReconnectSeconds'),
+    disconnectedTurnTimerSeconds: readInt(formData, 'disconnectedTurnTimerSeconds'),
+    afkTurnTimerSeconds: readInt(formData, 'afkTurnTimerSeconds'),
     reconnectMoveHistorySize: readInt(formData, 'reconnectMoveHistorySize'),
     onTurnTimeout: readRequiredString(formData, 'onTurnTimeout') as OnTurnTimeout,
     revealPrivateListsOnTimeout: readBoolean(formData, 'revealPrivateListsOnTimeout'),

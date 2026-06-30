@@ -486,6 +486,8 @@ function createDefaultRelayForm(): RelayConfigInput {
     matchTimeoutMinutes: 10,
     turnTimeoutSeconds: 60,
     waitReconnectSeconds: 45,
+    disconnectedTurnTimerSeconds: 0,
+    afkTurnTimerSeconds: 0,
     reconnectMoveHistorySize: 0,
     onTurnTimeout: 'CHANGE_TO_NEXT_PLAYER',
     revealPrivateListsOnTimeout: false,
@@ -510,6 +512,8 @@ function buildRelayForm(relayConfig?: RelayConfigRecord): RelayConfigInput {
     matchTimeoutMinutes: relayConfig.matchTimeoutMinutes,
     turnTimeoutSeconds: relayConfig.turnTimeoutSeconds,
     waitReconnectSeconds: relayConfig.waitReconnectSeconds,
+    disconnectedTurnTimerSeconds: relayConfig.disconnectedTurnTimerSeconds,
+    afkTurnTimerSeconds: relayConfig.afkTurnTimerSeconds,
     reconnectMoveHistorySize: relayConfig.reconnectMoveHistorySize,
     onTurnTimeout: relayConfig.onTurnTimeout,
     revealPrivateListsOnTimeout: relayConfig.revealPrivateListsOnTimeout,
@@ -784,6 +788,8 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
           <input type="hidden" name="matchTimeoutMinutes" value={form.matchTimeoutMinutes} />
           <input type="hidden" name="turnTimeoutSeconds" value={form.turnTimeoutSeconds} />
           <input type="hidden" name="waitReconnectSeconds" value={form.waitReconnectSeconds} />
+          <input type="hidden" name="disconnectedTurnTimerSeconds" value={form.disconnectedTurnTimerSeconds} />
+          <input type="hidden" name="afkTurnTimerSeconds" value={form.afkTurnTimerSeconds} />
           <input type="hidden" name="reconnectMoveHistorySize" value={form.reconnectMoveHistorySize} />
           <input type="hidden" name="onTurnTimeout" value={form.onTurnTimeout} />
           <input type="hidden" name="revealPrivateListsOnTimeout" value={String(form.revealPrivateListsOnTimeout)} />
@@ -829,9 +835,21 @@ export function RelayConfigModal({ gameId, relayConfig }: { gameId: string; rela
               <NumberField label="Turn Timeout (Seconds)" min={1} value={form.turnTimeoutSeconds} onChange={(value) => updateForm({ turnTimeoutSeconds: Math.max(1, Math.trunc(value || 1)) })} />
               <NumberField
                 label="Wait Reconnect (Seconds)"
-                min={1}
+                min={0}
                 value={form.waitReconnectSeconds}
-                onChange={(value) => updateForm({ waitReconnectSeconds: Math.max(1, Math.trunc(value || 1)) })}
+                onChange={(value) => updateForm({ waitReconnectSeconds: Math.max(0, Math.trunc(value || 0)) })}
+              />
+              <NumberField
+                label="Disconnected Turn Timer (Seconds)"
+                min={0}
+                value={form.disconnectedTurnTimerSeconds}
+                onChange={(value) => updateForm({ disconnectedTurnTimerSeconds: Math.max(0, Math.trunc(value || 0)) })}
+              />
+              <NumberField
+                label="AFK Turn Timer (Seconds)"
+                min={0}
+                value={form.afkTurnTimerSeconds}
+                onChange={(value) => updateForm({ afkTurnTimerSeconds: Math.max(0, Math.trunc(value || 0)) })}
               />
               <NumberField
                 label="Reconnect Move History Size"
