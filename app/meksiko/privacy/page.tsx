@@ -4,7 +4,7 @@ import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const privacyDescription =
-  'Meksiko privacy policy: local gameplay data, matchmaking and leaderboard services, optional ads, purchases, and crash diagnostics.';
+  'Meksiko privacy policy: local app data, optional ads, Google Play billing, and crash diagnostics.';
 
 export const metadata: Metadata = {
   title: 'Meksiko Privacy Policy',
@@ -30,62 +30,67 @@ const linkClassName =
 
 export default function MeksikoPrivacyPage() {
   return (
-    <LegalPage eyebrow="Legal" title="Meksiko Privacy Policy" updatedLabel="Last updated: July 3, 2026">
-      <p>Meksiko (&quot;the app&quot;) is provided by NN Game Studio. This Privacy Policy explains how the app handles information and data.</p>
-
-      <h2>1. Gameplay Data and Processing</h2>
-      <p>Meksiko uses online services to run multiplayer matches, matchmaking, bot fallback, rankings, and related gameplay features.</p>
+    <LegalPage eyebrow="Legal" title="Meksiko Privacy Policy" updatedLabel="Last updated: July 7, 2026">
       <p>
-        The app may process gameplay-related data such as player identifiers, match state, bids, tricks, scores, leaderboard positions,
-        and basic session metadata required to keep matches working correctly.
+        Meksiko (&quot;the app&quot;) is provided by NN Game Studio. This Privacy Policy explains how the app handles
+        information and data.
       </p>
-      <p>Some app data may also be stored locally on your device to support sign-in state, settings, and smoother gameplay.</p>
+
+      <h2>1. Data Storage and Processing</h2>
+      <p>Meksiko may store app-related data locally on your device.</p>
+      <p>
+        This may include gameplay progress, settings, basic app preferences, and other data needed for the app to function
+        properly.
+      </p>
 
       <h2>2. Permissions</h2>
       <p>The app may request the following permissions:</p>
       <ul>
-        <li>Internet/network access: used for online matches, leaderboards, and related app services.</li>
-        <li>Notification permission: used for match-related alerts and app functionality when supported by your device.</li>
+        <li>Internet access: used for app functionality, online features, and related services.</li>
+        <li>Notification permission: used for app alerts and functionality where supported by your device.</li>
       </ul>
-      <p>Permissions are optional where platform controls allow and can be managed through your device settings.</p>
+      <p>Permissions are optional and can be controlled through your device settings.</p>
 
       <h2>3. Advertising</h2>
-      <p>The app may use Google AdMob to display advertisements.</p>
-      <p>Ad services may collect certain device and usage information as described in their own privacy policies.</p>
+      <p>The app uses Google AdMob to display advertisements.</p>
+      <p>AdMob may collect certain device and usage information as described in Google&apos;s privacy policies.</p>
       <p>
         Learn more: <a href="https://policies.google.com/privacy" className={linkClassName}>Google Privacy Policy</a> and{' '}
         <a href="https://support.google.com/admob/answer/6128543" className={linkClassName}>Google Advertising Policies</a>
       </p>
 
       <h2>4. In-App Purchases</h2>
-      <p>The app may offer optional purchases or premium features through Google Play Billing.</p>
+      <p>The app may offer optional premium features through Google Play Billing.</p>
       <p>
-        Purchases are processed by Google Play and are subject to Google&apos;s terms and privacy policies. We do not receive or store
-        your payment card information.
+        Purchases are processed by Google Play and are subject to Google&apos;s terms and privacy policies. We do not receive
+        or store your payment information.
       </p>
 
       <h2>5. Data Collection</h2>
-      <p>We may process limited data needed to operate the app, including:</p>
+      <p>We do not create user accounts and do not directly collect personal information such as:</p>
       <ul>
-        <li>player identifiers and sign-in related account data</li>
-        <li>gameplay events, scores, leaderboard data, and match results</li>
-        <li>device and app technical data needed for stability, fraud prevention, and service reliability</li>
+        <li>names</li>
+        <li>email addresses</li>
+        <li>uploaded cloud content</li>
+        <li>remote backups</li>
       </ul>
       <p>
-        The app may use Firebase Crashlytics or similar diagnostics tools for crash reporting. These tools may collect technical crash data
-        such as device model, OS version, app version, timestamps, and stack traces to help identify and fix stability issues.
+        The app uses Firebase Crashlytics for crash diagnostics. Crashlytics may collect technical crash data such as device
+        model, OS version, app version, timestamps, and stack traces to help identify and fix app stability issues.
       </p>
+      <p>At this time, the app does not use cloud synchronization or external account systems.</p>
 
       <h2>6. Data Security</h2>
-      <p>We take reasonable steps to protect app data and service infrastructure.</p>
-      <p>No software or online service can guarantee complete security.</p>
+      <p>You are responsible for securing access to your device and backups.</p>
+      <p>While reasonable care is taken during development, no software can guarantee complete security.</p>
 
       <h2>7. Children&apos;s Privacy</h2>
       <p>The app is not directed toward children under 13.</p>
 
       <h2>8. Changes to This Policy</h2>
       <p>
-        This Privacy Policy may be updated from time to time. Updated versions will be posted with a revised &quot;Last updated&quot; date.
+        This Privacy Policy may be updated from time to time. Updated versions will be posted with a revised
+        &quot;Last updated&quot; date.
       </p>
 
       <h2>9. Contact</h2>
@@ -97,20 +102,11 @@ export default function MeksikoPrivacyPage() {
         Country: Serbia
       </p>
 
-      <h2>Related Legal Page</h2>
-      <p>
-        Read the{' '}
-        <Link href="/meksiko/terms" className={linkClassName}>
-          Meksiko Terms of Service
-        </Link>
-        .
-      </p>
-
       <h2>Links</h2>
       <ul>
         <li>
-          <Link href="/meksiko/terms" className={linkClassName}>
-            Terms of Service
+          <Link href="/meksiko" className={linkClassName}>
+            Meksiko
           </Link>
         </li>
         <li>
