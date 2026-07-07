@@ -49,6 +49,8 @@ const routes = [
   { path: '/handsfree-notes', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-tube', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-appointments', priority: 0.4, changeFrequency: 'monthly' as const },
+  { path: '/meksiko/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/meksiko/terms', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/zumba-space-marble-blast', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/refunds', priority: 0.2, changeFrequency: 'yearly' as const },
