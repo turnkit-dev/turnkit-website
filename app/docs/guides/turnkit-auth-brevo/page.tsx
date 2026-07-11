@@ -6,20 +6,21 @@ import { turnkitAuthBrevoPageMeta } from '@/content/docs-content';
 import { absoluteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'EMAIL_OTP with Brevo - TurnKit Docs',
-  description: turnkitAuthBrevoPageMeta.description,
+  title: 'TurnKit Email OTP with Brevo: Setup Guide',
+  description:
+    'Learn how to configure TurnKit EMAIL_OTP authentication with Brevo SMTP, verify player email addresses, and return secure player JWTs to your game client.',
   alternates: {
     canonical: absoluteUrl(turnkitAuthBrevoPageMeta.path),
   },
   openGraph: {
-    title: 'EMAIL_OTP with Brevo - TurnKit Docs',
+    title: 'TurnKit Email OTP with Brevo: Setup Guide',
     description: turnkitAuthBrevoPageMeta.description,
     url: absoluteUrl(turnkitAuthBrevoPageMeta.path),
     type: 'article',
   },
   twitter: {
     card: 'summary',
-    title: 'EMAIL_OTP with Brevo - TurnKit Docs',
+    title: 'TurnKit Email OTP with Brevo: Setup Guide',
     description: turnkitAuthBrevoPageMeta.description,
   },
 };

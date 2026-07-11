@@ -6,8 +6,9 @@ import { blogIndexPageMeta, blogNavSections } from '@/content/blog-content';
 import { buildBreadcrumbSchema, buildCollectionPageSchema, buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Blog - TurnKit',
-  description: blogIndexPageMeta.description,
+  title: 'TurnKit Blog: Multiplayer Game Backend Guides',
+  description:
+    'Read the TurnKit blog for practical guides on turn-based multiplayer architecture, authoritative game servers, leaderboards, and shipping Unity or Godot games faster.',
   path: blogIndexPageMeta.path,
   keywords: ['TurnKit blog', 'turn-based multiplayer blog', 'game backend blog'],
 });

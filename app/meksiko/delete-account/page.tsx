@@ -4,23 +4,23 @@ import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const deleteAccountDescription =
-  'How to delete your Meksiko account and associated server-side data from NN Game Studio.';
+  'Learn how to delete your Meksiko game account and associated server-side profile, balance, leaderboard, and gameplay data from NN Game Studio.';
 
 export const metadata: Metadata = {
-  title: 'Meksiko Account Deletion',
+  title: 'Delete Your Meksiko Game Account and Data',
   description: deleteAccountDescription,
   alternates: {
     canonical: absoluteUrl('/meksiko/delete-account'),
   },
   openGraph: {
-    title: 'Meksiko Account Deletion',
+    title: 'Delete Your Meksiko Game Account and Data',
     description: deleteAccountDescription,
     url: absoluteUrl('/meksiko/delete-account'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Meksiko Account Deletion',
+    title: 'Delete Your Meksiko Game Account and Data',
     description: deleteAccountDescription,
   },
 };

@@ -4,23 +4,23 @@ import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const description =
-  'Meksiko is a fun Balkan 3 player card game with bidding, trump cards, real players or bots, and monthly leaderboards.';
+  'Play Meksiko, a Balkan 3-player card game for Android with bidding, trump cards, real players or bots, fast matches, and monthly leaderboards.';
 
 export const metadata: Metadata = {
-  title: 'Meksiko',
+  title: 'Meksiko Card Game for Android | Balkan Multiplayer',
   description,
   alternates: {
     canonical: absoluteUrl('/meksiko'),
   },
   openGraph: {
-    title: 'Meksiko',
+    title: 'Meksiko Card Game for Android | Balkan Multiplayer',
     description,
     url: absoluteUrl('/meksiko'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Meksiko',
+    title: 'Meksiko Card Game for Android | Balkan Multiplayer',
     description,
   },
 };

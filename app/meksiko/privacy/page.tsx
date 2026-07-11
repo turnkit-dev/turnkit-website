@@ -4,23 +4,23 @@ import { LegalPage } from '@/components/legal-page';
 import { absoluteUrl } from '@/lib/seo';
 
 const privacyDescription =
-  'Meksiko privacy policy: local app data, optional ads, Google Play billing, and crash diagnostics.';
+  'Read the Meksiko privacy policy covering local gameplay data, permissions, Google AdMob advertising, Google Play purchases, and Crashlytics diagnostics.';
 
 export const metadata: Metadata = {
-  title: 'Meksiko Privacy Policy',
+  title: 'Meksiko Privacy Policy: Data, Ads and Purchases',
   description: privacyDescription,
   alternates: {
     canonical: absoluteUrl('/meksiko/privacy'),
   },
   openGraph: {
-    title: 'Meksiko Privacy Policy',
+    title: 'Meksiko Privacy Policy: Data, Ads and Purchases',
     description: privacyDescription,
     url: absoluteUrl('/meksiko/privacy'),
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Meksiko Privacy Policy',
+    title: 'Meksiko Privacy Policy: Data, Ads and Purchases',
     description: privacyDescription,
   },
 };
