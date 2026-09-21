@@ -36,6 +36,29 @@ export default function OtherProjectsPage() {
 
         <div className="flex flex-col gap-5">
           <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Marjapussi</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              The classic Finnish four-player card game with trick-taking, trump suits, marriages, and tactical teamwork.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/marjapussi"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.turnkit.marjapussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
             <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Meksiko</h2>
             <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">A fun Balkan 3 player card game.</p>
             <div className="mt-6 flex flex-wrap gap-3">
