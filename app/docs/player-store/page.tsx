@@ -180,6 +180,12 @@ var gold = await PlayerStore.Value(PlayerStoreDefs.Gold).Get();`}
         Next reference: <Link href="/docs/unity-client" className="text-accent transition hover:text-text">Unity Client API</Link> and{' '}
         <Link href="/docs/api" className="text-accent transition hover:text-text">REST API</Link>.
       </p>
+      <div className="mb-8 rounded-[6px] border border-border bg-surface p-5 text-[14px] leading-[1.7] text-muted">
+        <strong className="text-text">Player Store guides:</strong>{' '}
+        <Link href="/guides/daily-login-rewards" className="text-accent hover:text-text">daily login rewards</Link>,{' '}
+        <Link href="/guides/rewarded-ad-tokens" className="text-accent hover:text-text">rewarded ad token grants</Link>, and{' '}
+        <Link href="/guides/google-play-iap" className="text-accent hover:text-text">Google Play purchase grants</Link>.
+      </div>
 
       <SectionTitle id="rules">Rules &amp; Errors</SectionTitle>
       <div className="mb-8 grid gap-4 md:grid-cols-2">

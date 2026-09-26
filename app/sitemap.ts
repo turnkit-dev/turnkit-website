@@ -3,13 +3,18 @@ import {
   apiPageMeta,
   clientReconnectionPageMeta,
   docsIndexPageMeta,
+  dailyLoginRewardsPageMeta,
   freeUnityLeaderboardsPageMeta,
+  googlePlayIapPageMeta,
+  guidesIndexPageMeta,
   leaderboardsPageMeta,
   leaderboardOptionsPageMeta,
   liveDemoExamplePageMeta,
   playerAuthenticationModesPageMeta,
   relayPageMeta,
   relayIntegrationsPageMeta,
+  relayTokenRequirementsPageMeta,
+  rewardedAdTokensPageMeta,
   restQuickstartPageMeta,
   turnkitAuthBrevoPageMeta,
   unityClientPageMeta,
@@ -19,7 +24,16 @@ import {
 import { blogIndexPageMeta, hybridApproachPageMeta, selfHostedLeaderboardsPageMeta } from '@/content/blog-content';
 import { lastContentUpdate, siteUrl } from '@/lib/seo';
 
-const routes = [
+type SitemapRoute = {
+  path: string;
+  priority: number;
+  changeFrequency: 'weekly' | 'monthly' | 'yearly';
+  lastModified?: string;
+};
+
+const guideLastModified = '2026-09-26T00:00:00.000Z';
+
+const routes: SitemapRoute[] = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
   { path: '/turn-based-game-server-comparison-2026', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: blogIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
@@ -27,6 +41,7 @@ const routes = [
   { path: selfHostedLeaderboardsPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/pricing', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: docsIndexPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: guidesIndexPageMeta.path, priority: 0.8, changeFrequency: 'monthly' as const, lastModified: guideLastModified },
   { path: unityQuickstartPageMeta.path, priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/live-demo', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/examples', priority: 0.7, changeFrequency: 'monthly' as const },
@@ -40,6 +55,10 @@ const routes = [
   { path: unityClientPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
   { path: clientReconnectionPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
   { path: freeUnityLeaderboardsPageMeta.path, priority: 0.6, changeFrequency: 'monthly' as const },
+  { path: googlePlayIapPageMeta.path, priority: 0.7, changeFrequency: 'monthly' as const, lastModified: guideLastModified },
+  { path: relayTokenRequirementsPageMeta.path, priority: 0.7, changeFrequency: 'monthly' as const, lastModified: guideLastModified },
+  { path: dailyLoginRewardsPageMeta.path, priority: 0.7, changeFrequency: 'monthly' as const, lastModified: guideLastModified },
+  { path: rewardedAdTokensPageMeta.path, priority: 0.7, changeFrequency: 'monthly' as const, lastModified: guideLastModified },
   { path: playerAuthenticationModesPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: turnkitAuthBrevoPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: websocketPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
@@ -79,7 +98,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return routes.map((route) => ({
     url: `${siteUrl}${route.path}`,
-    lastModified,
+    lastModified: route.lastModified ? new Date(route.lastModified) : lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

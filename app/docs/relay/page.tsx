@@ -153,6 +153,12 @@ export default function RelayDocsPage() {
       <p className="mb-5 max-w-[760px] text-base leading-[1.7] text-muted">
         Relay config now supports pre-match queue checks and automatic player store updates at match start/end.
       </p>
+      <p className="mb-5 max-w-[760px] text-[14px] leading-[1.7] text-muted">
+        For a complete currency example, see{' '}
+        <Link href="/guides/relay-token-requirements" className="text-accent transition hover:text-text">
+          Require and Spend Tokens for Matchmaking
+        </Link>.
+      </p>
       <CodeBlock
         className="mb-8"
         language="json"

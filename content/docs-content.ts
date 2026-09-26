@@ -47,9 +47,14 @@ export const docsNavSections: DocsNavSection[] = [
   {
     title: 'Guides',
     links: [
+      { href: '/guides', label: 'All Guides' },
       { href: '/docs/client-reconnection', label: 'Client Reconnection' },
       { href: '/docs/guides/free-unity-leaderboards', label: 'Free Unity Leaderboards' },
       { href: '/docs/guides/turnkit-auth-brevo', label: 'EMAIL_OTP with Brevo' },
+      { href: '/guides/google-play-iap', label: 'Google Play IAP: Grant Gold Tokens' },
+      { href: '/guides/relay-token-requirements', label: 'Require and Spend Tokens for Matchmaking' },
+      { href: '/guides/daily-login-rewards', label: 'Daily Login Rewards' },
+      { href: '/guides/rewarded-ad-tokens', label: 'Rewarded Ads: Grant Tokens' },
     ],
   },
   {
@@ -289,6 +294,78 @@ export const freeUnityLeaderboardsPageMeta: DocsPageMeta = {
     { href: '#when-to-use-open-source', label: 'When to Use Open Source' },
     { href: '#faster-alternatives', label: 'Faster Alternatives' },
     { href: '#next-steps', label: 'Next Steps' },
+  ],
+};
+
+export const guidesIndexPageMeta: DocsPageMeta = {
+  title: 'TurnKit Guides',
+  description:
+    'Browse practical TurnKit guides for Unity authentication, Player Store rewards, Google Play purchases, matchmaking, and leaderboards.',
+  path: '/guides',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'All Guides',
+  toc: [{ href: '#all-guides', label: 'Browse Guides' }],
+};
+
+export const googlePlayIapPageMeta: DocsPageMeta = {
+  title: 'Google Play IAP: Grant Gold Tokens',
+  description:
+    'Configure TurnKit Player Store, verify Google Play one-time purchases, and grant gold tokens through a server-side transaction.',
+  path: '/guides/google-play-iap',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Google Play IAP',
+  toc: [
+    { href: '#define-gold-token', label: 'Define Gold Token' },
+    { href: '#grant-transaction', label: 'Create Grant Transaction' },
+    { href: '#play-console-product', label: 'Create Play Product' },
+    { href: '#verification-credentials', label: 'Verification Credentials' },
+    { href: '#purchase-mapping', label: 'Purchase Mapping' },
+    { href: '#verify-purchase', label: 'Verify Purchase' },
+    { href: '#test-purchase', label: 'Test Purchase' },
+  ],
+};
+
+export const relayTokenRequirementsPageMeta: DocsPageMeta = {
+  title: 'Require and Spend Tokens for Matchmaking',
+  description:
+    'Set a TurnKit Relay queue requirement that accepts normal or gold tokens, then spend the matching currency when a match starts.',
+  path: '/guides/relay-token-requirements',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Relay Token Requirements',
+  toc: [
+    { href: '#queue-requirement', label: 'Queue Requirement' },
+    { href: '#match-start-spending', label: 'Match-start Spending' },
+    { href: '#related-guides', label: 'Related Guides' },
+  ],
+};
+
+export const dailyLoginRewardsPageMeta: DocsPageMeta = {
+  title: 'Daily Login Rewards',
+  description:
+    'Build a secure daily login reward in TurnKit with a server-managed claim index, 24-hour cooldown, and Player Store transaction.',
+  path: '/guides/daily-login-rewards',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Daily Login Rewards',
+  toc: [
+    { href: '#define-reward-index', label: 'Define Reward Index' },
+    { href: '#create-login-transaction', label: 'Create Transaction' },
+    { href: '#claim-reward', label: 'Claim Reward' },
+    { href: '#related-guides', label: 'Related Guides' },
+  ],
+};
+
+export const rewardedAdTokensPageMeta: DocsPageMeta = {
+  title: 'Rewarded Ads: Grant Tokens',
+  description:
+    'Grant TurnKit Player Store tokens after a rewarded ad completes, using trusted server-side ad verification before executing the transaction.',
+  path: '/guides/rewarded-ad-tokens',
+  eyebrow: 'Guides',
+  breadcrumbLabel: 'Rewarded Ad Tokens',
+  toc: [
+    { href: '#create-reward-transaction', label: 'Create Reward Transaction' },
+    { href: '#validate-ad-completion', label: 'Validate Ad Completion' },
+    { href: '#claim-tokens', label: 'Grant Tokens' },
+    { href: '#related-guides', label: 'Related Guides' },
   ],
 };
 

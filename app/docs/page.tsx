@@ -65,6 +65,31 @@ export default function DocsIndexPage() {
           href="/docs/player-store"
         />
         <DocsCard
+          title="Google Play IAP: Grant Gold Tokens"
+          description="Verify Play purchases and map consumable products to secure Player Store grants."
+          href="/guides/google-play-iap"
+        />
+        <DocsCard
+          title="Require and Spend Tokens for Matchmaking"
+          description="Accept either of two currencies in the Relay queue and spend the matching balance at match start."
+          href="/guides/relay-token-requirements"
+        />
+        <DocsCard
+          title="Daily Login Rewards"
+          description="Use a 24-hour Player Store cooldown to limit claims and grant a daily token reward."
+          href="/guides/daily-login-rewards"
+        />
+        <DocsCard
+          title="Rewarded Ads: Grant Tokens"
+          description="Validate rewarded ad completion before granting tokens through a fixed server transaction."
+          href="/guides/rewarded-ad-tokens"
+        />
+        <DocsCard
+          title="Browse All Guides"
+          description="Explore practical setup guides for TurnKit features and Unity integrations."
+          href="/guides"
+        />
+        <DocsCard
           title="Relay Stats & Leaderboards"
           description="Connect Relay match results to leaderboards, webhooks, Discord bots, and backend workflows."
           href="/docs/relay-stats-and-leaderboards"
