@@ -32,6 +32,7 @@ type SitemapRoute = {
 };
 
 const guideLastModified = '2026-09-26T00:00:00.000Z';
+const skaervindselLastModified = '2026-09-27T00:00:00.000Z';
 
 const routes: SitemapRoute[] = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
@@ -74,6 +75,9 @@ const routes: SitemapRoute[] = [
   { path: '/meksiko', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/meksiko/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/meksiko/delete-account', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/skaervindsel', priority: 0.4, changeFrequency: 'monthly' as const, lastModified: skaervindselLastModified },
+  { path: '/skaervindsel/privacy', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: skaervindselLastModified },
+  { path: '/skaervindsel/delete-account', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: skaervindselLastModified },
   { path: '/amerikaner', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/amerikaner/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/amerikaner/delete-account', priority: 0.2, changeFrequency: 'yearly' as const },
