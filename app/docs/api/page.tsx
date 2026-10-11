@@ -8,6 +8,8 @@ import openApiSpec from '@/public/openapi.json';
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_TURNKIT_API_BASE_URL ?? 'https://api.turnkit.dev';
 const rawSpecPath = '/openapi.json';
+const endpointGroups = buildEndpointGroups(openApiSpec);
+const endpointCount = endpointGroups.reduce((count, group) => count + group.endpoints.length, 0);
 
 export const metadata: Metadata = buildMetadata({
   title: 'REST API - TurnKit Docs',
@@ -29,8 +31,6 @@ export default function ApiDocsPage() {
     { name: 'Documentation', path: '/docs' },
     { name: 'REST API', path: apiPageMeta.path },
   ]);
-  const endpointGroups = buildEndpointGroups(openApiSpec);
-
   return (
     <DocsShell meta={apiPageMeta}>
       <JsonLd id="api-reference-article-schema" data={articleSchema} />
@@ -66,7 +66,7 @@ export default function ApiDocsPage() {
           <div className="grid gap-4 md:grid-cols-3">
             <MetaStat label="OpenAPI" value={openApiSpec.openapi} />
             <MetaStat label="Version" value={openApiSpec.info.version} />
-            <MetaStat label="Endpoints" value={String(endpointGroups.reduce((count, group) => count + group.endpoints.length, 0))} />
+            <MetaStat label="Endpoints" value={String(endpointCount)} />
           </div>
           {openApiSpec.info.description ? <p className="mt-4 text-[14px] leading-[1.7] text-muted">{openApiSpec.info.description}</p> : null}
         </section>
