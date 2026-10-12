@@ -4,7 +4,7 @@ import { MarketingShell } from '@/components/marketing-shell';
 import { absoluteUrl } from '@/lib/seo';
 
 const otherProjectsDescription =
-  'Explore other projects by TurnKit: Amerikaner and Meksiko card games, RankDrop leaderboards, Hands Free Cooking, Hands Free Notes, Hands Free Appointments, and Zumba Space Marble Blast, plus collaboration and freelance availability.';
+  'Explore other projects by TurnKit: Marjapussi, Mucken, Cego, Manillen, Skaervindsel, Amerikaner and Meksiko card games, RankDrop leaderboards, Hands Free apps, Zumba Space Marble Blast, and collaboration opportunities.';
 
 export const metadata: Metadata = {
   title: 'Other Projects - TurnKit',
@@ -49,6 +49,98 @@ export default function OtherProjectsPage() {
               </Link>
               <a
                 href="https://play.google.com/store/apps/details?id=com.turnkit.marjapussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Mucken</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Traditional Franconian four-player card game with bidding, trumps, fixed teams, and tactical trick-taking.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/mucken"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.turnkit.mucken"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Cego</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Traditional Black Forest card game with bidding, 22 permanent trumps, and tactical trick-taking.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/cego"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.turnkit.cego"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Manillen</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Traditional Flemish four-player partnership card game with trumps, teamwork, and tactical trick-taking.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/manillen"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.turnkit.manillen"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
+              >
+                Download
+              </a>
+            </div>
+          </section>
+
+          <section className="rounded-[4px] border border-border bg-surface p-6">
+            <h2 className="mb-3 font-display text-2xl font-semibold tracking-[-0.02em] text-text">Skaervindsel</h2>
+            <p className="max-w-[780px] text-[15px] leading-[1.8] text-muted">
+              Traditional Danish card game with bidding, trumps, and contracts played with a partner or alone.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/skaervindsel"
+                className="inline-flex items-center rounded-[3px] bg-accent px-[18px] py-[10px] text-[13px] font-medium text-white transition hover:bg-[#3AADF5]"
+              >
+                Read More
+              </Link>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.turnkit.skaervindsel"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center rounded-[3px] border border-border2 px-[18px] py-[10px] text-[13px] text-muted transition hover:border-faint hover:text-text"
