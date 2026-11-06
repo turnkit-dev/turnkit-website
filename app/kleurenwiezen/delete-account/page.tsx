@@ -44,7 +44,8 @@ export default function KleurenwiezenDeleteAccountPage() {
       <h2>Deletion Schedule and Data Covered</h2>
       <p>
         The server schedules deletion seven days after your request. When deletion completes, your Kleurenwiezen player account
-        and associated server-side player data are removed, including player profile and game records linked to that account.
+        and associated server-side player data are removed. This covers the player profile, score and leaderboard records,
+        stored in-game balances, and purchase entitlements associated with the account.
       </p>
       <p>Records held independently by Google Play or Google AdMob are governed by those providers&apos; own policies.</p>
 
