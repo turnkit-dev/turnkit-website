@@ -33,6 +33,8 @@ type SitemapRoute = {
 
 const guideLastModified = '2026-09-26T00:00:00.000Z';
 const skaervindselLastModified = '2026-09-27T00:00:00.000Z';
+const oneTwentyLastModified = '2026-11-06T00:00:00.000Z';
+const kleurenwiezenLastModified = '2026-11-06T00:00:00.000Z';
 
 const routes: SitemapRoute[] = [
   { path: '/', priority: 1.0, changeFrequency: 'weekly' as const },
@@ -64,6 +66,9 @@ const routes: SitemapRoute[] = [
   { path: turnkitAuthBrevoPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: websocketPageMeta.path, priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/other-projects', priority: 0.5, changeFrequency: 'monthly' as const },
+  { path: '/120s', priority: 0.4, changeFrequency: 'monthly' as const, lastModified: oneTwentyLastModified },
+  { path: '/120s/privacy', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: oneTwentyLastModified },
+  { path: '/120s/delete-account', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: oneTwentyLastModified },
   { path: '/rankdrop', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-cooking', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/handsfree-notes', priority: 0.4, changeFrequency: 'monthly' as const },
@@ -72,6 +77,9 @@ const routes: SitemapRoute[] = [
   { path: '/marjapussi', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/marjapussi/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/marjapussi/delete-account', priority: 0.2, changeFrequency: 'yearly' as const },
+  { path: '/kleurenwiezen', priority: 0.4, changeFrequency: 'monthly' as const, lastModified: kleurenwiezenLastModified },
+  { path: '/kleurenwiezen/privacy', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: kleurenwiezenLastModified },
+  { path: '/kleurenwiezen/delete-account', priority: 0.2, changeFrequency: 'yearly' as const, lastModified: kleurenwiezenLastModified },
   { path: '/madrasso', priority: 0.4, changeFrequency: 'monthly' as const },
   { path: '/madrasso/privacy', priority: 0.2, changeFrequency: 'yearly' as const },
   { path: '/madrasso/delete-account', priority: 0.2, changeFrequency: 'yearly' as const },
